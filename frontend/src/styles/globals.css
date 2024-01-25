@@ -3,31 +3,60 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --text-colour-primary: rgb(0, 0, 0);
+  --background-start: rgb(231, 241, 243);
+  --background-end: rgb(221, 215, 248);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --text-colour-primary: rgb(255, 255, 255);
+    --background-start: 0, 0, 0;
+    --background-end: 0, 0, 0;
   }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  color: rgb(var(--text-colour-primary));
   background: linear-gradient(
       to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
+      var(--background-end)
     )
-    rgb(var(--background-start-rgb));
+    var(--background-start);
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+
+
+/*Styles added by Vince (feel free to modify): */
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin: 15px auto;
+  transition: background-color 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background-color: blue;
+  }
+
+  &:focus {
+      outline: none;
   }
 }
