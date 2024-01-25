@@ -5,7 +5,7 @@ import {JSX} from "react";
 const LINKS: { display: string; path: string }[] = [
     {display: "Home", path: "/"},
     {display: "Vince's Page", path: "/test/vince"}
-    // TODO: Add more links here
+    // Add more links here
 ];
 
 /**
