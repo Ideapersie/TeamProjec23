@@ -45,7 +45,7 @@ CREATE TABLE OrderMenu (
 DROP TABLE IF EXISTS StaffOrder CASCADE;
 CREATE TABLE StaffOrder (
     staff_id INTEGER REFERENCES Staff(staff_id) NOT NULL,
-    order_id iNTEGER REFERENCES "Order"(order_id) NOT NULL,
+    order_id INTEGER REFERENCES "Order"(order_id) NOT NULL,
     PRIMARY KEY (staff_id, order_id)
 );
 
