@@ -4,8 +4,12 @@
 
 :root {
   --text-colour-primary: rgb(0, 0, 0);
-  --background-start: rgb(231, 241, 243);
-  --background-end: rgb(221, 215, 248);
+  --background-start: rgb(241, 241, 245);
+  --background-end: rgb(255, 255, 255);
+  --grey-1: rgb(233, 233, 245);
+  --grey-2: rgb(30, 30, 54);
+  --light: rgb(233, 233, 245);
+  --rounded-1: 5px;
 }
 
 @media (prefers-color-scheme: dark) {
