@@ -1,5 +1,5 @@
 """
-A script to which initialises and populates the restaurant schema.
+A script which initialises and populates the restaurant schema.
 """
 import psycopg2
 
