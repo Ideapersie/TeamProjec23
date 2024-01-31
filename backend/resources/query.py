@@ -1,20 +1,24 @@
 """
 A script which initialises and populates the restaurant schema.
+
+To run:
+    `python query.py` or `python3 query.py`
 """
 import psycopg2
+import config
 
 def execute_sql(file_path):
     """
     Executes the SQL query within a specified file.
 
-    :param file_path: The path to the SQL file.
+    Args:
+        file_path: the path to a file containing SQL queries.
     """
     conn = psycopg2.connect(
-        dbname = 'dbname', # Postgres database name
-        user = 'username', # Postgres username (most likely just 'postgres')
-        password = 'password', # Postgres password (possibly '' if you don't remember setting one)
-        host= 'host' # 'localhost' unless you modified port then 'localhost:XXXX'
-    )
+        dbname = config.DATABASE_NAME,
+        user = config.DATABASE_USER,
+        password = config.DATABASE_PASSWORD,
+        host= config.DATABASE_HOST)
 
     cursor = conn.cursor()
     
