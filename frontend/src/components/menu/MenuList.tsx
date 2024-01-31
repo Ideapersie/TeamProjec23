@@ -1,5 +1,5 @@
 import MockData from "../../mockdata/menu-data.json";
-import MenuItem from "@/components/menu/MenuItem";
+//import MenuItem from "@/components/menu/MenuItem";
 import styles from "./Menu.module.css";
 
 // Describing what data should be passed in as props
@@ -26,7 +26,7 @@ export default function MenuList(props: Props) {
                     // and uses the data for each dish to create a MenuItem component
                     <>
                         {i !== 0 && <hr/>}
-                        <MenuItem item={dish} key={dish.menuitem_id}/>
+                        {/* <MenuItem item={dish} key={dish.menuitem_id}/> */}
                     </>
                 ))
             }

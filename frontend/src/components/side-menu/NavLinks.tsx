@@ -3,6 +3,7 @@ import {useRouter} from "next/router";
 import {JSX} from "react";
 import BurgerIcon from "@/components/common/icons/Burger";
 import ReceiptIcon from "@/components/common/icons/Receipt";
+//import View_Menu from "../menu";
 
 // Interfaces allow us to describe the type of data we're dealing with similar to the way you do in Java
 interface NavLink {
@@ -23,12 +24,15 @@ const LINKS: {[group: string]: NavGroup} = {
         links: [
             {
                 display: "View menu",
-                path: "/menu/view",
-            },
+                path: "/menu",
+            }, 
             {
                 display: "Add new item",
                 path: "/menu/item/add"
             },
+            {   display: "Burgers",
+                path: "/menu/burger"
+            }
         ]
     },
     "Orders": {
