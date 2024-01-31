@@ -1,4 +1,3 @@
-import Link from "next/link";
 
 function Menu() { 
 	return (
@@ -39,25 +38,29 @@ export default function View_Menu(){
 					 
 				 <style jsx>{`
 						 .burger {
-								 font-weight: bold;
-								 font-size: 20px;
-								 background: white;
-								 padding: 20px 0px 10px 270px;
-								 border-radius: 10px;
-								 border-colour: black;
+							position:relative;
+							left: 260px;
+							bottom: 10px;
+							font-weight: bold;
+							font-size: 20px;
 						 }
 						 .description {
-								 padding: 0px 0px 10px 170px;
-								 font-size: 15px;
-								 font-style: italic;
+							position:relative;
+							left: 150px;
+							bottom: 10px;
+							font-size: 15px;
+							font-style: italic;
 						 }
 						 .price	{
-								padding: 0px 0px 10px 290px;
-								font-size: 14px;
-								font-style: italic;
+							position:relative;
+							left: 280px;
+							font-size: 14px;
+							font-weight: bold;
+							font-style: italic;
 						 }
 						 .calories	{
-							padding: 0px 0px 10px 270px;
+							position:relative;
+							left: 270px;
 							font-size: 14px;
 							font-style: italic;
 					 	 }
