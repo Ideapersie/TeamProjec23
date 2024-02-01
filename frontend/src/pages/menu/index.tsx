@@ -39,10 +39,10 @@ function Menu() {
 			<div className = "cake_pos">
 				<Link href = "/menu/desserts/">
 					<img
-						src ="https://i.postimg.cc/pLSN2z1D/best-chocolate-cake5.jpg"
+						src ="https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg"
 						alt = "Cake Image"
-						width = "500"
-						height = "500"
+						width = "300"
+						height = "300"
 
 					/>
 				</Link>
@@ -58,13 +58,13 @@ function Menu() {
 					}
 					.drink_pos {
 						position:relative;
-						bottom: 530px;
-						left: 1200px;
+						bottom: 20px;
+						left: 60px;
 					}
 					.cake_pos {
 						position:relative;
-						bottom: 800px;
-						left: 1900px;
+						bottom: 270px;
+						left: 700px;
 					}
 			`}</style>
 		</div>
@@ -136,29 +136,29 @@ export default function View_Menu(){
 							}
 							.drink {
 								position: relative;
-								left: 1390px;
-								bottom: 850px;
+								left: 240px;
+								bottom: 380px;
 								font-weight: bold;
 								font-size: 20px;
 							}
 							.drink_desc {
 								position: relative;
-								left: 1360px;
-								bottom: 850px;
+								left: 210px;
+								bottom: 380px;
 								font-size: 15px;
 								font-style: italic;
 							}
 							.cake {
 								position: relative;
-								left: 2050px;
-								bottom: 900px;
+								left: 780px;
+								bottom: 430px;
 								font-weight: bold;
 								font-size: 20px;
 							}
 							.cake_desc {
 								position: relative;
-								left: 2035px;
-								bottom: 900px;
+								left: 760px;
+								bottom: 430px;
 								font-size: 15px;
 								font-style: italic;
 							}

@@ -4,16 +4,16 @@ function Menu() {
 		<div>
 			<div className ="cake_pos">
 				<img 
-						src="https://i.postimg.cc/pLSN2z1D/best-chocolate-cake5.jpg"
+						src="https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg"
 						alt="Menu picture"
-						width = "500"
-						height = "500"
+						width = "300"
+						height = "300"
 				/>
 				<style jsx>{`
 						.cake_pos {
 							position:relative;
 							bottom: 0px;
-							left: 0px;
+							left: 100px;
 						}
 				`}</style>
 			</div>
