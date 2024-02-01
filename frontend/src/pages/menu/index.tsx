@@ -25,6 +25,28 @@ function Menu() {
 					/>
 				</Link>
 			</div>
+			<div className = "drink_pos">
+				<Link href = "/menu/drinks/">
+					<img
+						src ="https://i.postimg.cc/7hDMGxtt/coke1.png"
+						alt = "Drink Image"
+						width = "500"
+						height = "500"
+
+					/>
+				</Link>
+			</div>
+			<div className = "cake_pos">
+				<Link href = "/menu/desserts/">
+					<img
+						src ="https://i.postimg.cc/pLSN2z1D/best-chocolate-cake5.jpg"
+						alt = "Cake Image"
+						width = "500"
+						height = "500"
+
+					/>
+				</Link>
+			</div>
 			<style jsx>{`
 					.burger_pos {
 						position:static;
@@ -33,6 +55,16 @@ function Menu() {
 						position:relative;
 						bottom: 290px;
 						left: 600px;
+					}
+					.drink_pos {
+						position:relative;
+						bottom: 530px;
+						left: 1200px;
+					}
+					.cake_pos {
+						position:relative;
+						bottom: 800px;
+						left: 1900px;
 					}
 			`}</style>
 		</div>
@@ -60,33 +92,73 @@ export default function View_Menu(){
 					<div className={"fish_desc"}>
             <p>Classic Fish & Chips with Tartar sauce</p>
 					</div>
+					<div className={"drink"}>
+            <p>Coke Original</p>
+					</div>
+					<div className={"drink_desc"}>
+            <p>Coca Cola's Original recipe</p>
+					</div>
+					<div className={"cake"}>
+            <p>Chocolate Cake</p>
+					</div>
+					<div className={"cake_desc"}>
+            <p>Homemade chocolate cake</p>
+					</div>
             
           <style jsx>{`
               .burger {
 								position: relative;
 								left: 230px;
-								bottom: 260px;
+								bottom: 750px;
 								font-weight: bold;
 								font-size: 20px;
               }
 							.burger_desc {
 								position: relative;
 								left: 130px;
-								bottom: 260px;
+								bottom: 750px;
 								font-size: 15px;
 								font-style: italic;
 							}
 							.fish {
 								position: relative;
 								left: 800px;
-								bottom: 310px;
+								bottom: 800px;
 								font-weight: bold;
 								font-size: 20px;
 							}
 							.fish_desc {
 								position: relative;
 								left: 730px;
-								bottom: 310px;
+								bottom: 800px;
+								font-size: 15px;
+								font-style: italic;
+							}
+							.drink {
+								position: relative;
+								left: 1390px;
+								bottom: 850px;
+								font-weight: bold;
+								font-size: 20px;
+							}
+							.drink_desc {
+								position: relative;
+								left: 1360px;
+								bottom: 850px;
+								font-size: 15px;
+								font-style: italic;
+							}
+							.cake {
+								position: relative;
+								left: 2050px;
+								bottom: 900px;
+								font-weight: bold;
+								font-size: 20px;
+							}
+							.cake_desc {
+								position: relative;
+								left: 2035px;
+								bottom: 900px;
 								font-size: 15px;
 								font-style: italic;
 							}

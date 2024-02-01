@@ -36,7 +36,15 @@ const LINKS: {[group: string]: NavGroup} = {
             {
                 display: "Seafood",
                 path: "/menu/seafood"
-            }
+            },           
+            {
+                display: "Drinks",
+                path: "/menu/drinks"
+            },
+            {
+                display: "Desserts",
+                path: "/menu/desserts"
+            },
         ]
     },
     "Orders": {
