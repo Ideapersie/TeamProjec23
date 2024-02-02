@@ -1,5 +1,5 @@
 import MockData from "../../mockdata/menu-data.json";
-//import MenuItem from "@/components/menu/MenuItem";
+import MenuItem from "@/components/menu/MenuItem";
 import styles from "./Menu.module.css";
 
 // Describing what data should be passed in as props
@@ -14,8 +14,26 @@ export default function MenuList(props: Props) {
     return (
         // Styling for the menu can be added in the Menu.module.css file
         <div className={styles.menuList}>
-            {/*Component header*/}
-            <h3>MenuList component</h3>
+            <div className={styles.menuListTopRow}>
+                {/*Filters*/}
+                <div className={styles.menuItemFilters}>
+                    <select name="" id="">
+                        <option value="">Type</option>
+                    </select>
+
+                    <select name="" id="">
+                        <option value="">Price</option>
+                    </select>
+
+                    <select name="" id="">
+                        <option value="">Sort</option>
+                    </select>
+
+                    <button>
+                        <a href="/admin/waiter/menu/add">Add item</a>
+                    </button>
+                </div>
+            </div>
 
             {/*TODO: Eventually add item filters here*/}
 
@@ -26,7 +44,7 @@ export default function MenuList(props: Props) {
                     // and uses the data for each dish to create a MenuItem component
                     <>
                         {i !== 0 && <hr/>}
-                        {/* <MenuItem item={dish} key={dish.menuitem_id}/> */}
+                        <MenuItem item={dish} key={dish.menuitem_id}/>
                     </>
                 ))
             }
