@@ -25,10 +25,6 @@ const LINKS: {[group: string]: NavGroup} = {
             {
                 display: "View menu",
                 path: "/menu",
-            }, 
-            {
-                display: "Add new item",
-                path: "/menu/item/add"
             },
             {   display: "Burgers",
                 path: "/menu/burger"
@@ -44,6 +40,18 @@ const LINKS: {[group: string]: NavGroup} = {
             {
                 display: "Desserts",
                 path: "/menu/desserts"
+            },
+        ]
+    },
+    "Menu Admin": {
+        links: [
+            {
+                display: "View menu items",
+                path: "/admin/waiter/menu/view"
+            },
+            {
+                display: "Add new item",
+                path: "/admin/waiter/menu/add"
             },
         ]
     },
