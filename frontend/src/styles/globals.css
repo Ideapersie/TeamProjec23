@@ -10,6 +10,9 @@
   --grey-2: rgb(30, 30, 54);
   --light: rgb(233, 233, 245);
   --rounded-1: 5px;
+  --dark-blue-1: rgb(0, 14, 68);
+  --blue: #004383;
+  --accent-1: #3d7eb4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +39,12 @@ body {
   }
 }
 
+select {
+  border: 1px solid #dadada;
+  border-radius: 5px;
+  padding: 3px;
+  font-size: 12px;
+}
 
 
 /*Styles added by Vince (feel free to modify): */
@@ -69,4 +78,30 @@ button {
   &:focus {
       outline: none;
   }
+}
+
+.page-title {
+  font-size: 34px;
+  margin-bottom: 5px;
+  color: var(--dark-blue-1);
+  font-weight: 550;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--dark-blue-1);
+  opacity: 50%;
+  margin-bottom: 10px;
+  max-width: 700px;
+}
+
+h4 {
+  font-weight: 500;
+  color: var(--blue);
+  margin-bottom: 3px;
+}
+
+.props-header {
+  margin-bottom: 30px;
 }
