@@ -1,0 +1,57 @@
+/*All styles for burger item */
+
+.burger {
+	position:relative;
+	left: 260px;
+	bottom: 10px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.description {
+	position:relative;
+	left: 150px;
+	bottom: 10px;
+	font-size: 15px;
+	font-style: italic;
+}
+.price	{
+	position:relative;
+	left: 280px;
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+}
+.calories	{
+	position:relative;
+	left: 270px;
+	font-size: 14px;
+	font-style: italic;
+}
+.burger_pos {
+	position: relative;
+}
+
+/* Burger view in view menu page */
+.burger_position {
+	position:relative;
+}
+.burger_title {
+	position: relative;
+	left: 230px;
+	bottom: 750px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.burger_desc {
+	position: relative;
+	left: 130px;
+	bottom: 750px;
+	font-size: 15px;
+	font-style: italic;
+}
+
+/*back buttom*/
+.back	{
+	position:fixed;
+	bottom:0;
+}

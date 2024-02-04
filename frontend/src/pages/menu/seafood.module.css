@@ -1,0 +1,63 @@
+/*seafood*/
+
+.seafood_name {
+	position:relative;
+	left: 260px;
+	top: 70px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.seafood_desc {
+	position:relative;
+	left: 180px;
+	top: 70px;
+	font-size: 15px;
+	font-style: italic;
+}
+.seafood_price	{
+	position:relative;
+	left: 270px;
+	top: 80px;
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+}
+.seafood_calories	{
+	position:relative;
+	left: 260px;
+	top: 80px;
+	font-size: 14px;
+	font-style: italic;
+}
+.fish_pos {
+	position:relative;
+	top: 50px;
+	left: 70px;
+}
+
+/* Fish view in view menu */
+.fish_position {
+	position:relative;
+	bottom: 290px;
+	left: 600px;
+}
+.fish_title {
+	position: relative;
+	left: 800px;
+	bottom: 800px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.fish_desc {
+	position: relative;
+	left: 730px;
+	bottom: 800px;
+	font-size: 15px;
+	font-style: italic;
+}
+
+/*back buttom*/
+.back	{
+	position:fixed;
+	bottom:0;
+}

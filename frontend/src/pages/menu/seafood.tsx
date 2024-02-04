@@ -1,4 +1,4 @@
-import styles from "./items.module.css";
+import styles from "./seafood.module.css";
 
 function Menu() { 
 	return (
@@ -30,7 +30,7 @@ export default function View_Menu(){
 							</button>
 						</form>
 					</div>
-					<div className={styles.seafood}>
+					<div className={styles.seafood_name}>
 						<p>Fish & Chips</p>
 					</div>
 					<div className={styles.seafood_desc}>

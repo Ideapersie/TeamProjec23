@@ -1,9 +1,9 @@
-import styles from "./items.module.css";
+import styles from "./dessert.module.css";
 
 function Menu() { 
 	return (
 		<div>
-			<div className = {styles.cake_pos}>
+			<div className = {styles.dessert_pos}>
 				<img 
 						src="https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg"
 						alt="Menu picture"
@@ -30,7 +30,7 @@ export default function View_Menu(){
 							</button>
 						</form>
 					</div>
-					<div className={styles.dessert}>
+					<div className={styles.dessert_name}>
 						<p>Chocolate Cake</p>
 					</div>
 					<div className={styles.dessert_desc}>

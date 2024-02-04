@@ -1,4 +1,4 @@
-import styles from "./items.module.css";
+import styles from "./drink.module.css";
 
 function Menu() { 
 	return (
@@ -33,13 +33,13 @@ export default function View_Menu(){
 					<div className={styles.drink}>
 						<p>Coke Original</p>
 					</div>
-					<div className={styles.drink_desc}>
+					<div className={styles.desc}>
 						<p>Coca Cola's Original recipe</p>
 					</div>
-					<div className={styles.drink_price}>
+					<div className={styles.price}>
 						<p>Price: £2.50</p>
 					</div>
-					<div className={styles.drink_calories}>
+					<div className={styles.calories}>
 						<p>Calories: 50 Cal</p>
 					</div>
 		 </div>
