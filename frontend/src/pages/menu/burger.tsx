@@ -1,3 +1,4 @@
+import styles from "./items.module.css";
 
 function Menu() { 
 	return (
@@ -18,58 +19,23 @@ export default function View_Menu(){
 			<div>
 					<div className={"panel"}>
 						<form action = "/menu/">
-            	<button className={"back"}>
+            	<button className={styles.back}>
 							back
 							</button>
 						</form>
 					</div>
-					<div className={"burger"}>
+					<div className={styles.burger}>
 						<p>Cheeseburger</p>
 					</div>
-					<div className={"description"}>
+					<div className={styles.burger_desc}>
 						<p>Our classic cheese burger with various toppings</p>
 					</div>
-					<div className={"price"}>
+					<div className={styles.burger_price}>
 						<p>Price: £8.50</p>
 					</div>
-					<div className={"calories"}>
+					<div className={styles.burger_calories}>
 						<p>Calories: 800 Cal</p>
-					</div>
-					 
-				 <style jsx>{`
-						 .burger {
-							position:relative;
-							left: 260px;
-							bottom: 10px;
-							font-weight: bold;
-							font-size: 20px;
-						 }
-						 .description {
-							position:relative;
-							left: 150px;
-							bottom: 10px;
-							font-size: 15px;
-							font-style: italic;
-						 }
-						 .price	{
-							position:relative;
-							left: 280px;
-							font-size: 14px;
-							font-weight: bold;
-							font-style: italic;
-						 }
-						 .calories	{
-							position:relative;
-							left: 270px;
-							font-size: 14px;
-							font-style: italic;
-					 	 }
-						 .back	{
-							position:fixed;
-							bottom:0;
-
-						 }
-				 `}</style>
+					</div>					
 		 </div>
 	 </section>
 	);

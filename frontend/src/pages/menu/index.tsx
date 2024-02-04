@@ -1,9 +1,11 @@
 import Link from "next/link";
+import styles from "./items.module.css";
+
 
 function Menu() { 
 	return (
 		<div>
-			<div className = "burger_pos">
+			<div className = {styles.burger_pos_view}>
 				<Link href = "/menu/burger/">
 					<img 
 						src ="https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg"
@@ -14,7 +16,7 @@ function Menu() {
 					/>
 				</Link>
 			</div>
-			<div className = "fish_pos">
+			<div className = {styles.fish_pos_view}>
 				<Link href = "/menu/seafood/">
 					<img
 						src ="https://i.postimg.cc/L58RR1Lt/fish-and-chips-with-ai-generated-free-png.webp"
@@ -25,7 +27,7 @@ function Menu() {
 					/>
 				</Link>
 			</div>
-			<div className = "drink_pos">
+			<div className = {styles.coke_pos_view}>
 				<Link href = "/menu/drinks/">
 					<img
 						src ="https://i.postimg.cc/7hDMGxtt/coke1.png"
@@ -36,7 +38,7 @@ function Menu() {
 					/>
 				</Link>
 			</div>
-			<div className = "cake_pos">
+			<div className = {styles.cake_pos_view}>
 				<Link href = "/menu/desserts/">
 					<img
 						src ="https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg"
@@ -47,26 +49,6 @@ function Menu() {
 					/>
 				</Link>
 			</div>
-			<style jsx>{`
-					.burger_pos {
-						position:static;
-					}
-					.fish_pos {
-						position:relative;
-						bottom: 290px;
-						left: 600px;
-					}
-					.drink_pos {
-						position:relative;
-						bottom: 20px;
-						left: 60px;
-					}
-					.cake_pos {
-						position:relative;
-						bottom: 270px;
-						left: 700px;
-					}
-			`}</style>
 		</div>
 	);
 }
@@ -80,89 +62,30 @@ export default function View_Menu(){
 			 <h1> Menu</h1>
 			 <Menu />
 			 <div>
-          <div className={"burger"}>
+          <div className={styles.burger_title_view}>
             <p>Cheeseburger</p>
 					</div>
-					<div className={"burger_desc"}>
+					<div className={styles.burger_desc_view}>
 						<p>Our classic cheese burger with various toppings</p>
           </div>
-					<div className={"fish"}>
+					<div className={styles.fish_title_view}>
             <p>Fish & Chips</p>
 					</div>
-					<div className={"fish_desc"}>
+					<div className={styles.fish_desc_view}>
             <p>Classic Fish & Chips with Tartar sauce</p>
 					</div>
-					<div className={"drink"}>
+					<div className={styles.coke_title_view}>
             <p>Coke Original</p>
 					</div>
-					<div className={"drink_desc"}>
+					<div className={styles.coke_desc_view}>
             <p>Coca Cola's Original recipe</p>
 					</div>
-					<div className={"cake"}>
+					<div className={styles.cake_title_view}>
             <p>Chocolate Cake</p>
 					</div>
-					<div className={"cake_desc"}>
+					<div className={styles.cake_desc_view}>
             <p>Homemade chocolate cake</p>
 					</div>
-            
-          <style jsx>{`
-              .burger {
-								position: relative;
-								left: 230px;
-								bottom: 750px;
-								font-weight: bold;
-								font-size: 20px;
-              }
-							.burger_desc {
-								position: relative;
-								left: 130px;
-								bottom: 750px;
-								font-size: 15px;
-								font-style: italic;
-							}
-							.fish {
-								position: relative;
-								left: 800px;
-								bottom: 800px;
-								font-weight: bold;
-								font-size: 20px;
-							}
-							.fish_desc {
-								position: relative;
-								left: 730px;
-								bottom: 800px;
-								font-size: 15px;
-								font-style: italic;
-							}
-							.drink {
-								position: relative;
-								left: 240px;
-								bottom: 380px;
-								font-weight: bold;
-								font-size: 20px;
-							}
-							.drink_desc {
-								position: relative;
-								left: 210px;
-								bottom: 380px;
-								font-size: 15px;
-								font-style: italic;
-							}
-							.cake {
-								position: relative;
-								left: 780px;
-								bottom: 430px;
-								font-weight: bold;
-								font-size: 20px;
-							}
-							.cake_desc {
-								position: relative;
-								left: 760px;
-								bottom: 430px;
-								font-size: 15px;
-								font-style: italic;
-							}
-          `}</style>
       </div>
 		</section>
 	 );
