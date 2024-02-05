@@ -10,6 +10,7 @@ function Menu() {
 		<div>
 			<div className = {burger.burger_position}>
 				<Link href = "/menu/burger/">
+					{/* TODO: make into grids therefore don't have to manually move*/}
 					<img 
 						src ="https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg"
 						alt ="Burger Image"
