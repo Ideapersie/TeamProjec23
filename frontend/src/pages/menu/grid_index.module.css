@@ -1,0 +1,22 @@
+/*all styles for view menu*/
+.name {
+	font-weight: bold;
+	font-size: 20px;
+    text-align: center;
+}
+.description {
+	font-size: 15px;
+	font-style: italic;
+    text-align: center;
+}
+.price	{
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+    text-align: center;
+}
+.calories	{
+	font-size: 14px;
+	font-style: italic;
+    text-align: center;
+}
