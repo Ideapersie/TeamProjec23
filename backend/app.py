@@ -9,7 +9,7 @@ The app defines the following endpoints:
 To run:
     `flask run` 
 """
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import psycopg2
 from resources import config
 
@@ -51,5 +51,26 @@ def get_menuitems():
                    "calories": item[5]} for item in menuitem]
     
     return jsonify(menuitems)
+
+@app.route('/api/additem', methods=['POST'])
+def add_item():
+    """
+    API endpoint to add a menu item to the database.
+    Returns:
+        A message to inform the user if the item has been successfully added.
+    """
+    newItem = request.get_json()
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT name FROM menuitem WHERE name = %s;' % (newItem["name"]))
+    menuitems = cursor.fetchall()
+    if (menuitems == None):
+        cursor.execute('INSERT INTO menuitem (menuitem_id, name, description, type, price, calories) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
+                       % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories'])
+        )
+    return
+
 
 app.run(debug=True)
