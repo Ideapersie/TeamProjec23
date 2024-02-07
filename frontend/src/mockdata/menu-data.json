@@ -1,0 +1,90 @@
+[
+  {
+    "calories": 800,
+    "description": "Our classic cheese burger with various toppings",
+    "menuitem_id": 1,
+    "name": "Cheeseburger",
+    "price": "8.50",
+    "type": "Burgers"
+  },
+  {
+    "calories": 700,
+    "description": "Delicious vegan burger",
+    "menuitem_id": 2,
+    "name": "Vegan Burger",
+    "price": "9.50",
+    "type": "Burgers"
+  },
+  {
+    "calories": 500,
+    "description": "Classic grilled chicken",
+    "menuitem_id": 3,
+    "name": "Grilled Chicken Sandwich",
+    "price": "10.50",
+    "type": "Sandwiches"
+  },
+  {
+    "calories": 600,
+    "description": "Freshly baked pizza",
+    "menuitem_id": 4,
+    "name": "Margherita Pizza",
+    "price": "12.00",
+    "type": "Pizzas"
+  },
+  {
+    "calories": 450,
+    "description": "Homemade pasta with tomato sauce",
+    "menuitem_id": 5,
+    "name": "Spaghetti Pomodoro",
+    "price": "14.00",
+    "type": "Pastas"
+  },
+  {
+    "calories": 350,
+    "description": "Traditional Caesar salad",
+    "menuitem_id": 6,
+    "name": "Caesar Salad",
+    "price": "6.50",
+    "type": "Salads"
+  },
+  {
+    "calories": 550,
+    "description": "Classic fish and chips",
+    "menuitem_id": 7,
+    "name": "Fish and Chips",
+    "price": "11.00",
+    "type": "Seafood"
+  },
+  {
+    "calories": 300,
+    "description": "Homemade soup of the day",
+    "menuitem_id": 8,
+    "name": "Soup of the Day",
+    "price": "5.00",
+    "type": "Soups"
+  },
+  {
+    "calories": 650,
+    "description": "Barbecue chicken wings",
+    "menuitem_id": 9,
+    "name": "Chicken Wings",
+    "price": "9.00",
+    "type": "Starters"
+  },
+  {
+    "calories": 500,
+    "description": "Traditional steak and fries",
+    "menuitem_id": 10,
+    "name": "Steak Frites",
+    "price": "15.00",
+    "type": "Mains"
+  },
+  {
+    "calories": 400,
+    "description": "Homemade chocolate cake",
+    "menuitem_id": 11,
+    "name": "Chocolate Cake",
+    "price": "7.00",
+    "type": "Desserts"
+  }
+]
