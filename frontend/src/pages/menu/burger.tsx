@@ -18,7 +18,7 @@ function Menu() {
 	);
 }
 
-export default function View_Menu(props: Props){
+export default function View_Menu(){
 
 	return (
 		<section>

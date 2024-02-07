@@ -1,16 +1,46 @@
-import Link from "next/link";
 import burger from "./burger.module.css";
 import seafood from "./seafood.module.css";
 import drink from "./drink.module.css";
 import dessert from "./dessert.module.css";
+import MockData from "../../mockdata/menu-data.json";
+import Data from "@/pages/menu/data";
 
 
-function Menu() { 
-	return (
-		<div>
-			<div className = {burger.burger_position}>
+interface Props {
+	data: typeof MockData
+}
+
+export default function Menu(props: Props) {
+    return (
+        <section>
+            <h1 style={{ textAlign: 'center' }}> Menu</h1>
+            <div className={"grid grid-cols-2 gap-10"}>
+                {props.data.map(item => (
+                    <Data
+                        link={item.link}
+                        image_url={item.image}
+                        name={item.name}
+                        description={item.description}
+                        price={item.price}
+                        calories={item.calories}
+                    />
+                ))}
+            </div>
+        </section>
+    );
+}
+
+// Importing data on the server and sending it to the react component above
+export function getServerSideProps() {
+    const response = MockData;
+    return {
+        props: {
+            data: response
+        }
+    }
+}
+			{/* <div className = {burger.burger_position}>
 				<Link href = "/menu/burger/">
-					{/* TODO: make into grids therefore don't have to manually move*/}
 					<img 
 						src ="https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg"
 						alt ="Burger Image"
@@ -48,13 +78,15 @@ function Menu() {
 						height = "300"
 					/>
 				</Link>
+			
 			</div>
-		</div>
+		</section> 
 	);
 }
+*/}
 
 
-export default function View_Menu(){
+/**export default function View_Menu(){
 
 	 return (
 		 <section>
@@ -88,6 +120,6 @@ export default function View_Menu(){
       </div>
 		</section>
 	 );
-}
+}**/
 
  

@@ -5,47 +5,9 @@
     "menuitem_id": 1,
     "name": "Cheeseburger",
     "price": "8.50",
-    "type": "Burgers"
-  },
-  {
-    "calories": 700,
-    "description": "Delicious vegan burger",
-    "menuitem_id": 2,
-    "name": "Vegan Burger",
-    "price": "9.50",
-    "type": "Burgers"
-  },
-  {
-    "calories": 500,
-    "description": "Classic grilled chicken",
-    "menuitem_id": 3,
-    "name": "Grilled Chicken Sandwich",
-    "price": "10.50",
-    "type": "Sandwiches"
-  },
-  {
-    "calories": 600,
-    "description": "Freshly baked pizza",
-    "menuitem_id": 4,
-    "name": "Margherita Pizza",
-    "price": "12.00",
-    "type": "Pizzas"
-  },
-  {
-    "calories": 450,
-    "description": "Homemade pasta with tomato sauce",
-    "menuitem_id": 5,
-    "name": "Spaghetti Pomodoro",
-    "price": "14.00",
-    "type": "Pastas"
-  },
-  {
-    "calories": 350,
-    "description": "Traditional Caesar salad",
-    "menuitem_id": 6,
-    "name": "Caesar Salad",
-    "price": "6.50",
-    "type": "Salads"
+    "type": "Burgers",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
   },
   {
     "calories": 550,
@@ -53,7 +15,59 @@
     "menuitem_id": 7,
     "name": "Fish and Chips",
     "price": "11.00",
-    "type": "Seafood"
+    "type": "Seafood",
+    "image": "https://i.postimg.cc/L58RR1Lt/fish-and-chips-with-ai-generated-free-png.webp",
+    "link": "/menu/seafood"
+  },
+  {
+    "calories": 700,
+    "description": "Delicious vegan burger",
+    "menuitem_id": 2,
+    "name": "Vegan Burger",
+    "price": "9.50",
+    "type": "Burgers",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
+  },
+  {
+    "calories": 500,
+    "description": "Classic grilled chicken",
+    "menuitem_id": 3,
+    "name": "Grilled Chicken Sandwich",
+    "price": "10.50",
+    "type": "Sandwiches",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
+  },
+  {
+    "calories": 600,
+    "description": "Freshly baked pizza",
+    "menuitem_id": 4,
+    "name": "Margherita Pizza",
+    "price": "12.00",
+    "type": "Pizzas",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
+  },
+  {
+    "calories": 450,
+    "description": "Homemade pasta with tomato sauce",
+    "menuitem_id": 5,
+    "name": "Spaghetti Pomodoro",
+    "price": "14.00",
+    "type": "Pastas",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
+  },
+  {
+    "calories": 350,
+    "description": "Traditional Caesar salad",
+    "menuitem_id": 6,
+    "name": "Caesar Salad",
+    "price": "6.50",
+    "type": "Salads",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
   },
   {
     "calories": 300,
@@ -61,7 +75,9 @@
     "menuitem_id": 8,
     "name": "Soup of the Day",
     "price": "5.00",
-    "type": "Soups"
+    "type": "Soups",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
   },
   {
     "calories": 650,
@@ -69,7 +85,9 @@
     "menuitem_id": 9,
     "name": "Chicken Wings",
     "price": "9.00",
-    "type": "Starters"
+    "type": "Starters",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
   },
   {
     "calories": 500,
@@ -77,7 +95,9 @@
     "menuitem_id": 10,
     "name": "Steak Frites",
     "price": "15.00",
-    "type": "Mains"
+    "type": "Mains",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
   },
   {
     "calories": 400,
@@ -85,6 +105,8 @@
     "menuitem_id": 11,
     "name": "Chocolate Cake",
     "price": "7.00",
-    "type": "Desserts"
+    "type": "Desserts",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "link": "/menu/burger"
   }
 ]
