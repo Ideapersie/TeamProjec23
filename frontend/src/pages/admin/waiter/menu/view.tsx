@@ -30,15 +30,16 @@ export default function AddItemPage(props: Props) {
 }
 
 // Loads data on the server (instead of on the browser) -> more secure + data available on page load
-export function getServerSideProps(): {props: Props} {
+export async function getServerSideProps(): Promise<{props: Props}> {
 
     // TODO: Replace mock data with a call to the backend server here
-    const response = MockData;
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const data = await response.json();
 
     // ...and passes it to the ViewMenuPage component via props
     return {
         props: {
-            data: response
+            data: data
         }
     };
 }
