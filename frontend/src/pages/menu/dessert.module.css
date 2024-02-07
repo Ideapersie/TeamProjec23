@@ -1,0 +1,64 @@
+/*All styles for desserts item */
+
+.dessert_name {
+    position:relative;
+    left: 185px;
+    top: 20px;
+    font-weight: bold;
+    font-size: 20px;
+}
+.dessert_desc {
+    position:relative;
+    left: 160px;
+    top: 20px;
+    font-size: 15px;
+    font-style: italic;
+}
+.dessert_price	{
+    position:relative;
+    left: 210px;
+    top: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+}
+.dessert_calories   {
+    position:relative;
+    left: 200px;
+    top: 30px;
+    font-size: 14px;
+    font-style: italic;
+}
+.dessert_pos {
+    position:relative;
+    bottom: 0px;
+    left: 100px;
+}
+
+/* Cake view in view menu */
+.cake_position {
+    position:relative;
+    bottom: 270px;
+    left: 700px;
+}
+.cake_title {
+    position: relative;
+    left: 780px;
+    bottom: 430px;
+    font-weight: bold;
+    font-size: 20px;
+}
+.cake_desc {
+    position: relative;
+    left: 760px;
+    bottom: 430px;
+    font-size: 15px;
+    font-style: italic;
+}
+
+/*back buttom*/
+.back	{
+	position:fixed;
+	bottom:0;
+}
+

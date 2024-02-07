@@ -3,7 +3,6 @@ import {useRouter} from "next/router";
 import {JSX} from "react";
 import BurgerIcon from "@/components/common/icons/Burger";
 import ReceiptIcon from "@/components/common/icons/Receipt";
-//import View_Menu from "../menu";
 
 // Interfaces allow us to describe the type of data we're dealing with similar to the way you do in Java
 interface NavLink {

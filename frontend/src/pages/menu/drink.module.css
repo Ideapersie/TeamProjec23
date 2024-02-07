@@ -1,0 +1,62 @@
+/*drinks*/
+
+.drink {
+	position:relative;
+	left: 185px;
+	top: 70px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.desc {
+	position:relative;
+	left: 160px;
+	top: 70px;
+	font-size: 15px;
+	font-style: italic;
+}
+.price	{
+	position:relative;
+	left: 210px;
+	top: 80px;
+	font-size: 14px;
+	font-weight: bold;
+	font-style: italic;
+}
+.calories	{
+	position:relative;
+	left: 195px;
+	top: 80px;
+	font-size: 14px;
+	font-style: italic;
+}
+.coke_pos {
+	position:relative;
+	top: 50px;
+}
+
+/* Coke view in view menu */
+.coke_position {
+	position:relative;
+	bottom: 20px;
+	left: 60px;
+}
+.coke_title {
+	position: relative;
+	left: 240px;
+	bottom: 380px;
+	font-weight: bold;
+	font-size: 20px;
+}
+.coke_desc {
+	position: relative;
+	left: 210px;
+	bottom: 380px;
+	font-size: 15px;
+	font-style: italic;
+}
+
+/*back buttom*/
+.back	{
+	position:fixed;
+	bottom:0;
+}
