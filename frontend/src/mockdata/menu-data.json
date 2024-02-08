@@ -4,7 +4,7 @@
     "description": "Our classic cheese burger with various toppings",
     "menuitem_id": 1,
     "name": "Cheeseburger",
-    "price": "8.50",
+    "price": "£8.50",
     "type": "Burgers",
     "src": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link": "/menu/burger"

@@ -12,12 +12,12 @@ export default function View_Menu(props: Props) {
             <div className={"grid grid-cols-3 gap-5"}>
                 {props.data.map(item => (
                     <GridIndex
-                        link={item.link}
-                        image_url={item.src}
-                        name={item.name}
-                        description={item.description}
-                        price={item.price}
-                        calories={item.calories}
+                        link = {"/menu/"+ item.type}
+                        //image_url = {item.image_url}
+                        name = {item.name}
+                        description = {item.description}
+                        price = {item.price}
+                        calories = {item.calories}
                     />
                 ))}
             </div>
@@ -26,11 +26,16 @@ export default function View_Menu(props: Props) {
 }
 
 // Importing data on the server and sending it to the react component above
-export function getServerSideProps() {
-    const response = MockData;
+export async function getServerSideProps(): Promise<{props: Props}> {
+
+    // TODO: Replace mock data with a call to the backend server here
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const data = await response.json();
+
+    // ...and passes it to the ViewMenuPage component via props
     return {
         props: {
-            data: response
+            data: data
         }
-    }
+    };
 }
