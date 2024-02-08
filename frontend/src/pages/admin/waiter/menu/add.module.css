@@ -1,0 +1,31 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    padding: 15px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+    color: var(--blue);
+    font-weight: 500;
+}
+
+.input {
+    border: 1px solid #ddd;
+    color: #888ea7;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 5px;
+}
+
+.select {
+    border: 1px solid #ddd;
+    color: #888ea7; 
+    font-size: 16px;
+    background-color: white;
+    font-weight: 500;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+}
