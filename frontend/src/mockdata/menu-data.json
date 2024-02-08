@@ -4,7 +4,7 @@
     "description": "Our classic cheese burger with various toppings",
     "menuitem_id": 1,
     "name": "Cheeseburger",
-    "price": "8.50",
+    "price": "£8.50",
     "type": "Burgers",
     "src": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link": "/menu/burger"
@@ -105,9 +105,20 @@
     "description": "Homemade chocolate cake",
     "menuitem_id": 11,
     "name": "Chocolate Cake",   
-    "price": "7.00",
+    "price": "£7.00",
     "type": "Desserts",
-    "src": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
-    "link": "/menu/burger"
+    "src": "https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg",
+    "link": "/menu/desserts"
+  }, 
+  {
+    "calories": 400,
+    "description": "Coca Cola's Original recipe",
+    "menuitem_id": 11,
+    "name": "Coke Original",   
+    "price": "£2.50",
+    "type": "Drinks",
+    "src": "https://i.postimg.cc/7hDMGxtt/coke1.png",
+    "link": "/menu/drinks"
   }
+  
 ]
