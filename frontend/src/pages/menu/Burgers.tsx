@@ -1,50 +1,36 @@
-import styles from "./burger.module.css";
+import {GridIndex} from "./grid_submenu";
 import MockData from "../../mockdata/menu-data.json";
-
+import styles from "./grid_submenu.module.css";
 interface Props {
-	data: typeof MockData
+    data: typeof MockData
 }
 
-function Menu() { 
-	return (
-		<div>
-			<div className = {styles.burger_pos}>
-				<img 
-					src="https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg"
-					alt="Menu picture"
-				/>
-			</div>
+export default function View_Menu(props: Props) {
+    return (
+        <section>
 			<div>
-				<form action = "/menu/">
-            		<button className={styles.back}>
-						back
-					</button>
-				</form>
+			<form action = "/menu/">
+            	<button className={styles.back}>
+					back
+				</button>
+			</form>
 			</div>
-			<div className={styles.burger}>
-				<p>Cheeseburger</p>
-			</div>
-			<div className={styles.description}>
-				<p>Our classic cheese burger with various toppings</p>
-			</div>
-			<div className={styles.price}>
-				<p>Price: £8.50</p>
-			</div>
-			<div className={styles.calories}>
-				<p>Calories: 800 Cal</p>
-			</div>
-		</div>
-	);
-}
-
-export default function View_Menu(){
-
-	return (
-		<section>
-			<h1> Burgers</h1>
-			<Menu/>
-	 	</section>
-	);
+            <h1> Burgers</h1>
+            <div className={"grid grid-cols-3 gap-5"}>
+                {props.data
+					.filter(item => item.type === "Burgers")
+					.map(item => (
+                    	<GridIndex
+                        	image_url={item.src}
+                        	name={item.name}
+                        	description={item.description}
+                        	price={item.price}
+                        	calories={item.calories}
+                    	/>
+                ))}
+            </div>
+        </section>
+    );
 }
 
 // Importing data on the server and sending it to the react component above

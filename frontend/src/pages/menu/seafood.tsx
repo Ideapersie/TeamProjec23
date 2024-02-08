@@ -1,48 +1,44 @@
-import styles from "./seafood.module.css";
-
-function Menu() { 
-	return (
-		<div>
-			<div className = {styles.fish_pos}>
-				<img 
-						src="https://i.postimg.cc/L58RR1Lt/fish-and-chips-with-ai-generated-free-png.webp"
-						alt="Menu picture"
-						width = "500"
-						height = "500"
-				/>
-			</div>
-		</div>
-	);
+import {GridIndex} from "./grid_submenu";
+import MockData from "../../mockdata/menu-data.json";
+import styles from "./grid_submenu.module.css";
+interface Props {
+    data: typeof MockData
 }
 
-export default function View_Menu(){
-
-
-	return (
-		<section>
-			<h1> Seafood</h1>
-			<Menu />
+export default function View_Menu(props: Props) {
+    return (
+        <section>
 			<div>
-					<div className={"panel"}>
-						<form action = "/menu/">
+			<form action = "/menu/">
             	<button className={styles.back}>
-							back
-							</button>
-						</form>
-					</div>
-					<div className={styles.seafood_name}>
-						<p>Fish & Chips</p>
-					</div>
-					<div className={styles.seafood_desc}>
-						<p>Classic Fish & Chips with Tartar sauce</p>
-					</div>
-					<div className={styles.seafood_price}>
-						<p>Price: £11.00</p>
-					</div>
-					<div className={styles.seafood_calories}>
-						<p>Calories: 550 Cal</p>
-					</div>
-		 </div>
-	 </section>
-	);
+					back
+				</button>
+			</form>
+			</div>
+            <h1> Seafood</h1>
+            <div className={"grid grid-cols-3 gap-5"}>
+                {props.data
+					.filter(item => item.type === "Seafood")
+					.map(item => (
+                    	<GridIndex
+                        	image_url={item.src}
+                        	name={item.name}
+                        	description={item.description}
+                        	price={item.price}
+                        	calories={item.calories}
+                    	/>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+// Importing data on the server and sending it to the react component above
+export function getServerSideProps() {
+    const response = MockData;
+    return {
+        props: {
+            data: response
+        }
+    }
 }

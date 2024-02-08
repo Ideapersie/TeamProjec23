@@ -1,48 +1,44 @@
-import styles from "./dessert.module.css";
-
-function Menu() { 
-	return (
-		<div>
-			<div className = {styles.dessert_pos}>
-				<img 
-						src="https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg"
-						alt="Menu picture"
-						width = "300"
-						height = "300"
-				/>
-			</div>
-		</div>
-	);
+import {GridIndex} from "./grid_submenu";
+import MockData from "../../mockdata/menu-data.json";
+import styles from "./grid_submenu.module.css";
+interface Props {
+    data: typeof MockData
 }
 
-export default function View_Menu(){
-
-
-	return (
-		<section>
-			<h1> Desserts</h1>
-			<Menu />
+export default function View_Menu(props: Props) {
+    return (
+        <section>
 			<div>
-					<div className={"panel"}>
-						<form action = "/menu/">
+			<form action = "/menu/">
             	<button className={styles.back}>
-							back
-							</button>
-						</form>
-					</div>
-					<div className={styles.dessert_name}>
-						<p>Chocolate Cake</p>
-					</div>
-					<div className={styles.dessert_desc}>
-						<p>Homemade chocolate cake</p>
-					</div>
-					<div className={styles.dessert_price}>
-						<p>Price: £7.00</p>
-					</div>
-					<div className={styles.dessert_calories}>
-						<p>Calories: 400 Cal</p>
-					</div>
-		 </div>
-	 </section>
-	);
+					back
+				</button>
+			</form>
+			</div>
+            <h1> Desserts</h1>
+            <div className={"grid grid-cols-3 gap-5"}>
+                {props.data
+					.filter(item => item.type === "Desserts")
+					.map(item => (
+                    	<GridIndex
+                        	image_url={item.src}
+                        	name={item.name}
+                        	description={item.description}
+                        	price={item.price}
+                        	calories={item.calories}
+                    	/>
+                ))}
+            </div>
+        </section>
+    );
+}
+
+// Importing data on the server and sending it to the react component above
+export function getServerSideProps() {
+    const response = MockData;
+    return {
+        props: {
+            data: response
+        }
+    }
 }
