@@ -12,6 +12,7 @@ To run:
 from flask import Flask, jsonify, request
 import psycopg2
 from resources import config
+from _overlapped import NULL
 
 app = Flask(__name__)
 
@@ -70,6 +71,26 @@ def add_item():
         cursor.execute('INSERT INTO menuitem (menuitem_id, name, description, type, price, calories) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
                        % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories'])
         )
+    return
+
+@app.route('\api\updateitem', methods=['POST'])
+def update_item():
+    """
+    API endpoint to update the the details of an existing menu item in the database
+    """
+
+    existingItem = request.get_json()
+    attributeToUpdate = request.get_json()
+    newValue = request.get_json()
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(f'SELECT * FROM menuitem WHERE name = {existingItem}')   #find existing item
+    menuItem = cursor.fetchone()
+    
+    cursor.execute(f'UPDATE menuitem SET {attributeToUpdate} = {newValue} WHERE menuitem_id = {menuItem[0]}') #updates the element
+    
     return
 
 
