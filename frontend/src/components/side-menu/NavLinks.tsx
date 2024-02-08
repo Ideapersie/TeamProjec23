@@ -26,7 +26,7 @@ const LINKS: {[group: string]: NavGroup} = {
                 path: "/menu",
             },
             {   display: "Burgers",
-                path: "/menu/burger"
+                path: "/menu/Burgers"
             },
             {
                 display: "Seafood",
