@@ -6,11 +6,14 @@ CREATE TABLE Customer (
 DROP TABLE IF EXISTS Staff CASCADE;
 CREATE TABLE Staff (
     staff_id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    admin BOOLEAN NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL
 );
 
-DROP TABLE IF EXISTS "Order" CASCADE; -- Order is a reserved keyword, "" required
+DROP TABLE IF EXISTS "Order" CASCADE; -- 'Order' is a reserved keyword, "" required
 CREATE TABLE "Order" (
     order_id SERIAL PRIMARY KEY,
     customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,

@@ -9,7 +9,7 @@ The app defines the following endpoints:
 To run:
     `flask run` 
 """
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 import psycopg2
 from resources import config
 
@@ -28,7 +28,7 @@ def get_db_connection():
                             host = config.DATABASE_HOST)
     return conn
 
-@app.route("/api/menuitems", methods = ['GET'])
+@app.route("/api/menuitems", methods = ["GET"])
 def get_menuitems():
     """
     API endpoint to retrieve all menu items.
@@ -38,7 +38,7 @@ def get_menuitems():
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM MenuItem;')
+    cursor.execute("SELECT * FROM MenuItem;")
     menuitem = cursor.fetchall()
     cursor.close()
     conn.close()
