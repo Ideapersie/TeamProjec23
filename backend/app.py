@@ -10,10 +10,12 @@ To run:
     `flask run` 
 """
 from flask import Flask, request, jsonify
-import psycopg2
 from resources import config
+from auth.routes import auth_bp
+import psycopg2
 
 app = Flask(__name__)
+app.register_blueprint(auth_bp)
 
 def get_db_connection():
     """

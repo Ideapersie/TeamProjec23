@@ -32,13 +32,13 @@ def insert_admin_user(conn):
     Args:
         conn: an active psycopg2 database connection.
     """
-    username = "admin"
+    email = config.MY_EMAIL
     password = "teamproject23"
     hashed_password = generate_password_hash(password)
     
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Staff(username, password, admin, first_name, last_name) VALUES(%s, %s, %s, %s, %s)",
-                   (username, hashed_password, True, "Super", "User"))
+    cursor.execute("INSERT INTO Staff(email, password, admin, first_name, last_name) VALUES(%s, %s, %s, %s, %s)",
+                   (email, hashed_password, True, "Super", "User"))
     
     conn.commit()
 
