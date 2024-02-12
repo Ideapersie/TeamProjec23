@@ -56,6 +56,7 @@ def get_menuitems():
 def add_item():
     """
     API endpoint to add a menu item to the database.
+    
     Returns:
         A message to inform the user if the item has been successfully added.
     """
@@ -68,9 +69,16 @@ def add_item():
     menuitems = cursor.fetchall()
     if (menuitems == None):
         cursor.execute('INSERT INTO menuitem (menuitem_id, name, description, type, price, calories) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
-                       % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories'])
-        )
-    return
-
+                       % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories']))
+        message = {
+            "message" : "Menu item successfully added."
+        } 
+    else:
+        message = {
+        "message" : "Adding menu item unsuccessful."
+        }
+    cursor.close()
+    conn.close()
+    return jsonify(message)
 
 app.run(debug=True)
