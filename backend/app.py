@@ -84,5 +84,30 @@ def update_item():
     
     return jsonify({"message" : "The item was successfully updated."})
 
-
+@app.route('/api/additem', methods=['POST'])
+def add_item():
+    """
+    API endpoint to add a menu item to the database.
+    
+    Returns:
+        A message to inform the user if the item has been successfully added.
+    """
+    newItem = request.get_json()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM menuitem WHERE name = %s;' % (newItem["name"]))
+    menuitems = cursor.fetchall()
+    if (menuitems == None):
+        cursor.execute('INSERT INTO menuitem (menuitem_id, name, description, type, price, calories) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
+                       % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories']))
+        message = {
+            "message" : "Menu item successfully added."
+        } 
+    else:
+        message = {
+        "message" : "Adding menu item unsuccessful."
+        }
+    cursor.close()
+    conn.close()
+    return jsonify(message)
 app.run(debug=True)
