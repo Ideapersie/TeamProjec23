@@ -1,6 +1,7 @@
 import {GridIndex} from "./grid_submenu";
 import MockData from "../../mockdata/menu-data.json";
 import styles from "./grid_submenu.module.css";
+
 interface Props {
     data: typeof MockData
 }

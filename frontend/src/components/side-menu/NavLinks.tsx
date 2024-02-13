@@ -29,16 +29,16 @@ const LINKS: {[group: string]: NavGroup} = {
                 path: "/menu/Burgers"
             },
             {
-                display: "Seafood",
-                path: "/menu/seafood"
+                display: "Sides",
+                path: "/menu/Sides"
             },           
             {
                 display: "Drinks",
-                path: "/menu/drinks"
+                path: "/menu/Drinks"
             },
             {
                 display: "Desserts",
-                path: "/menu/desserts"
+                path: "/menu/Desserts"
             },
         ]
     },

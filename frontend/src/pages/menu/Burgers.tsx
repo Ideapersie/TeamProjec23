@@ -15,7 +15,7 @@ export default function View_Menu(props: Props) {
 				</button>
 			</form>
 			</div>
-            <h1> Burgers</h1>
+            <h1> Burgers </h1>
             <div className={"grid grid-cols-3 gap-5"}>
                 {props.data
 					.filter(item => item.type === "Burgers")
