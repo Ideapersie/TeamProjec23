@@ -30,8 +30,8 @@ def execute_sql(file_path):
     cursor.close()
     conn.close()
 
-init_schema_path = 'backend/resources/init_schema.sql'
-populate_schema_path = 'backend/resources/populate_schema.sql'
+init_schema_path = './init_schema.sql'
+populate_schema_path = './populate_schema.sql'
 
 execute_sql(init_schema_path)
 execute_sql(populate_schema_path)
