@@ -25,7 +25,8 @@ CREATE TABLE MenuItem (
     description TEXT,
     type VARCHAR(20) NOT NULL, -- Not nullable as items must be filterable
     price DECIMAL(5, 2) NOT NULL,
-    calories INTEGER
+    calories INTEGER,
+    image VARCHAR(140)
 );
 
 DROP TABLE IF EXISTS Allergen CASCADE;
