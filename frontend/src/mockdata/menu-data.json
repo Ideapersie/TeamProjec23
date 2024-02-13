@@ -6,7 +6,7 @@
     "name": "Cheeseburger",
     "price": "£8.50",
     "type": "Burgers",
-    "src": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image": "https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link": "/menu/burger"
   },
   {
@@ -16,7 +16,7 @@
     "name": "Vegan Burger",
     "price": "£9.50",
     "type": "Burgers",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
 
   },
@@ -27,7 +27,7 @@
     "name": "Grilled Chicken Sandwich",
     "price": "£10.50",
     "type": "Sandwiches",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -37,7 +37,7 @@
     "name": "Margherita Pizza",
     "price": "£12.00",
     "type": "Pizzas",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -47,7 +47,7 @@
     "name": "Spaghetti Pomodoro",
     "price": "£14.00",
     "type": "Pastas",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -57,7 +57,7 @@
     "name": "Caesar Salad",
     "price": "£6.50",
     "type": "Salads",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -67,7 +67,7 @@
     "name": "Fish and Chips",
     "price": "£11.00",
     "type": "Seafood",
-    "src":"https://i.postimg.cc/L58RR1Lt/fish-and-chips-with-ai-generated-free-png.webp",
+    "image":"https://i.postimg.cc/L58RR1Lt/fish-and-chips-with-ai-generated-free-png.webp",
     "link":"/./menu/seafood"
   },
   {
@@ -77,7 +77,7 @@
     "name": "Soup of the Day",
     "price": "£5.00",
     "type": "Soups",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -87,7 +87,7 @@
     "name": "Chicken Wings",
     "price": "£9.00",
     "type": "Starters",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -97,7 +97,7 @@
     "name": "Steak Frites",
     "price": "£15.00",
     "type": "Mains",
-    "src":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
+    "image":"https://i.postimg.cc/rFM2sQfq/360-F-585291338-0-J8-Q8v-Yb-KDCu8yqqw-AO8-Ps-QZ4-ESP2zd8.jpg",
     "link":"/./menu/burger"
   },
   {
@@ -107,7 +107,7 @@
     "name": "Chocolate Cake",   
     "price": "£7.00",
     "type": "Desserts",
-    "src": "https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg",
+    "image": "https://i.postimg.cc/0QWCxYbK/chocolate-cake-slice-white-background-720722-8497.jpg",
     "link": "/menu/desserts"
   }, 
   {
@@ -117,7 +117,7 @@
     "name": "Coke Original",   
     "price": "£2.50",
     "type": "Drinks",
-    "src": "https://i.postimg.cc/7hDMGxtt/coke1.png",
+    "image": "https://i.postimg.cc/7hDMGxtt/coke1.png",
     "link": "/menu/drinks"
   }
   

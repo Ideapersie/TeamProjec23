@@ -22,7 +22,7 @@ export default function View_Menu(props: Props) {
 					.filter(item => item.type === "Drinks")
 					.map(item => (
                     	<GridIndex
-                        	image_url={item.src}
+                        	image={item.image}
                         	name={item.name}
                         	description={item.description}
                         	price={item.price}

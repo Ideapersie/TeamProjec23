@@ -3,11 +3,11 @@ import styles from "./grid_index.module.css";
 
 interface Props {
     link: string
-    //image_url: string
     name: string
     description: string
     price: string
     calories: number
+    image: string
 }
 
 export function GridIndex(props: Props) {
@@ -15,10 +15,10 @@ export function GridIndex(props: Props) {
         <div>
             <Link href={props.link}>
                 <img
-                    //src={props.image_url}
+                    src={props.image}
                     alt={`${props.name} image`}
-                    width="600"
-                    height="600"
+                    width="500"
+                    height="500"
                 />
                 <div className={styles.name}>{props.name}</div>
                 <div className={styles.description}>{props.description}</div>

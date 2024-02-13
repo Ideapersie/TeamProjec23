@@ -13,11 +13,11 @@ export default function View_Menu(props: Props) {
                 {props.data.map(item => (
                     <GridIndex
                         link = {"/menu/"+ item.type}
-                        //image_url = {item.image_url}
                         name = {item.name}
                         description = {item.description}
                         price = {item.price}
                         calories = {item.calories}
+                        image = {item.image}
                     />
                 ))}
             </div>

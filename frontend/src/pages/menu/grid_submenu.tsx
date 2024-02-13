@@ -1,18 +1,18 @@
 import styles from "./grid_submenu.module.css";
 
 interface Props {
-    image_url: string
     name: string
     description: string
     price: string
     calories: number
+    image: string
 }
 
 export function GridIndex(props: Props) {
     return (
         <div>
             <img
-                src={props.image_url}
+                src={props.image}
                 alt={`${props.name} image`}
                 width="600"
                 height="600"

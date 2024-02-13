@@ -21,12 +21,12 @@ export default function View_Menu(props: Props) {
 					.filter(item => item.type === "Burgers")
 					.map(item => (
                     	<GridIndex
-                        	image_url={item.src}
-                        	name={item.name}
-                        	description={item.description}
-                        	price={item.price}
-                        	calories={item.calories}
-                    	/>
+							name={item.name}
+							description={item.description}
+							price={item.price}
+							calories={item.calories}
+							image={item.image}            
+							/>
                 ))}
             </div>
         </section>
