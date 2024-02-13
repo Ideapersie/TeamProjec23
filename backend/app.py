@@ -54,7 +54,7 @@ def get_menuitems():
     
     return jsonify(menuitems)
 
-@app.route('\api\updateitem', methods=['POST'])
+@app.route('/api/updateitem', methods=['POST'])
 def update_item():
     """
     API endpoint to update the the details of an existing menu item in the database
@@ -110,4 +110,31 @@ def add_item():
     cursor.close()
     conn.close()
     return jsonify(message)
+
+@app.route('/api/deleteitem', methods=['POST'])
+def delete_item():
+    """
+    API endpoint to remove a menu item from the database.
+
+    Returns:
+        A message to inform the user if the item has been deleted.
+    """
+    item_to_delete = request.get_json()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT name FROM menuitem WHERE name = %s;' % (item_to_delete["name"]))
+    item_in_database = cursor.fetchall()
+    if (item_in_database == None):
+        message = {
+            "message" : "Item does not exist in the menu."
+        }
+    else:
+        cursor.execute('DELETE FROM menuitem WHERE name = %s;' % (item_to_delete["name"]))
+        message = {
+            "message" : "Item has been successfully deleted."
+        }
+    cursor.close()
+    conn.close()
+    return jsonify(message)
+
 app.run(debug=True)
