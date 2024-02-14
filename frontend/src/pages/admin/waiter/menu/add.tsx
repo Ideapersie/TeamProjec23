@@ -15,6 +15,9 @@ export default function AddItemPage() {
     // Get user input from the form.
     function handleSubmit(event) {
 
+        // Prevent page refresh (default behaviour of button).
+        event.preventDefault();
+
         // Change name of button to "Submitted" for user feedback.
         setButtonText('Submitted!');
         setTimeout(() => {
