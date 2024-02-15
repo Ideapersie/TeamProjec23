@@ -1,6 +1,7 @@
 import {GridIndex} from "./grid_submenu";
 import MockData from "../../mockdata/menu-data.json";
 import styles from "./grid_submenu.module.css";
+
 interface Props {
     data: typeof MockData
 }
@@ -23,8 +24,8 @@ export default function View_Menu(props: Props) {
                     	<GridIndex
 							name={item.name}
 							description={item.description}
-							price={item.price}
-							calories={item.calories}
+							price={"£"+item.price}
+							calories={item.calories+" Cal"}
 							image={item.image}            
 							/>
                 ))}

@@ -4,7 +4,7 @@ interface Props {
     name: string
     description: string
     price: string
-    calories: number
+    calories: string
     image: string
 }
 
