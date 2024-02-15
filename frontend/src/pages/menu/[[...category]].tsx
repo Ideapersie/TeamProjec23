@@ -1,6 +1,6 @@
 import {MenuItem} from "@/types";
 import {GetServerSidePropsContext} from "next";
-import {GridIndex} from "@/components/menu/grid_index";
+import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
 import Link from "next/link";
 
 // Declaring expected prop types
@@ -27,7 +27,7 @@ export default function ViewMenu(props: Props) {
             <div className={"grid grid-cols-3 gap-5"}>
                 {props?.data?.length ?
                     props.data.map(item => (
-                        <GridIndex
+                        <CustomerMenuItem
                             key={item.menuitem_id}
                             link={item.link}
                             name={item.name}

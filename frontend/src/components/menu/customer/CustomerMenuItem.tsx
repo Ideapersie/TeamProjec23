@@ -1,4 +1,4 @@
-import styles from "./grid_index.module.css";
+import styles from "./CustomerMenuItem.module.css";
 
 interface Props {
     link: string
@@ -9,7 +9,7 @@ interface Props {
     image: string
 }
 
-export function GridIndex(props: Props) {
+export function CustomerMenuItem(props: Props) {
     return (
         <div className={"rounded-xl bg-white shadow px-10 py-5"}>
             <div>
