@@ -3,6 +3,7 @@ import MockData from "../../mockdata/menu-data.json";
 import {MenuItem} from "@/types";
 import {GetServerSidePropsContext} from "next";
 import {GridIndex} from "@/components/menu/grid_index";
+import Link from "next/link";
 
 // Declaring expected prop types
 interface Props {
@@ -14,8 +15,17 @@ interface Props {
 export default function ViewMenu(props: Props) {
     return <>
         <section>
-            <h1 className={"mb-2"}>{props.category || "All items"}</h1>
-            <p className={"mb-5 text-stone-400"}>All our food is prepared with only the highest-quality ingredients, provided by local independent farms.</p>
+            <div className={"mb-5"}>
+                {props.category &&
+                    <Link href={"/menu"} className={"text-sky-500 text-xs"}>
+                        Go back to all items
+                    </Link>
+                }
+                <h1 className={"mb-2"}>{props.category || "All items"}</h1>
+                <p className={"text-stone-400"}>All our food is prepared with only the highest-quality ingredients,
+                    provided by local independent farms.</p>
+            </div>
+
             <div className={"grid grid-cols-3 gap-5"}>
                 {props?.data.map(item => (
                     <GridIndex
