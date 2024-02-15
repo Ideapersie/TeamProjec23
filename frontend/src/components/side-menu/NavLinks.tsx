@@ -62,31 +62,6 @@ const LINKS: {[group: string]: NavGroup} = {
                 path: "/order/addlinkshere"
             },
         ]
-    },
-    "Test Pages": {
-        icon: <ReceiptIcon/>,
-        links: [
-            {
-                display: "Home",
-                path: "/"
-            },
-            {
-                display: "Vince's Page",
-                path: "/test/vince"
-            },
-            {
-                display: "Alvis's Page",
-                path: "/test/alvis"
-            },
-            {
-                display: "Madeleine's Page",
-                path: "/test/madeleine"
-            },
-            {
-                display: "Idea's Page",
-                path: "/test/idea"
-            },
-        ]
     }
 };
 
