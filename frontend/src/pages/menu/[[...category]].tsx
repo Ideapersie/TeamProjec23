@@ -27,17 +27,21 @@ export default function ViewMenu(props: Props) {
             </div>
 
             <div className={"grid grid-cols-3 gap-5"}>
-                {props?.data.map(item => (
-                    <GridIndex
-                        key={item.menuitem_id}
-                        link={item.link}
-                        name={item.name}
-                        description={item.description}
-                        price={item.price}
-                        calories={item.calories}
-                        image={item.image}
-                    />
-                ))}
+                {props?.data?.length ?
+                    props.data.map(item => (
+                        <GridIndex
+                            key={item.menuitem_id}
+                            link={item.link}
+                            name={item.name}
+                            description={item.description}
+                            price={item.price}
+                            calories={item.calories}
+                            image={item.image}
+                        />
+                    ))
+                    :
+                    <p>No items for this category</p>
+                }
             </div>
         </section>
     </>
@@ -47,7 +51,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const category = context.query?.category?.[0] as string | undefined;
 
-    let menuItems = MockData as MenuItem[];
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    let menuItems = (await response.json()) as MenuItem[];
 
     if (category) {
         menuItems = menuItems.filter(item => item.type === category);
