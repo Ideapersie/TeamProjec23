@@ -1,5 +1,3 @@
-import styles from "../../components/menu/grid_submenu.module.css";
-import MockData from "../../mockdata/menu-data.json";
 import {MenuItem} from "@/types";
 import {GetServerSidePropsContext} from "next";
 import {GridIndex} from "@/components/menu/grid_index";
