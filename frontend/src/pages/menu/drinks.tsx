@@ -25,8 +25,8 @@ export default function View_Menu(props: Props) {
                         	image={item.image}
                         	name={item.name}
                         	description={item.description}
-                        	price={item.price}
-                        	calories={item.calories}
+                        	price={"£"+ item.price}
+                        	calories={item.calories+" Cal"}
                     	/>
                 ))}
             </div>
