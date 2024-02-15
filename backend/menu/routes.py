@@ -1,9 +1,14 @@
 """
 A Flask blueprint defining the API routes for interacting with the menu.
+
+The app defines the following endpoints:
+- /api/menuitems (GET): Retreives a list of all menu items in JSON format.
+- /api/update_item (POST): Updates an existing items attribute with a new value.
+- /api/add_item (POST): Adds an item to the database.
+- /api/delete_item (POST): Deletes an item to the database.
 """
 from flask import Blueprint, request, jsonify
-import psycopg2
-from resources import config
+from menu.connection import get_db_connection
 
 menu_bp = Blueprint("menu", __name__)
 
