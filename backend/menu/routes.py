@@ -32,7 +32,8 @@ def get_menuitems():
                    "description": item[2],
                    "type": item[3],
                    "price": item[4],
-                   "calories": item[5]} for item in menuitem]
+                   "calories": item[5],
+                   "image": item[6]} for item in menuitem]
     
     return jsonify(menuitems)
 
