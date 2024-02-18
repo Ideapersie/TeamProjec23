@@ -1,76 +1,93 @@
 """
 A Flask blueprint defining the API routes for interacting with the menu.
 
-The app defines the following endpoints:
+The blueprint defines the following endpoints:
 - /api/menuitems (GET): Retreives a list of all menu items in JSON format.
-- /api/update_item (POST): Updates an existing items attribute with a new value.
+- /api/update_item (PUT): Updates an existing items attribute with a new value.
 - /api/add_item (POST): Adds an item to the database.
 - /api/delete_item (POST): Deletes an item to the database.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
 
-menu_bp = Blueprint("menu", __name__)
+menu_bp = Blueprint('menu', __name__)
 
-@menu_bp.route("/api/menuitems", methods = ['GET'])
+@menu_bp.route('/api/menuitems', methods = ['GET'])
 def get_menuitems():
     """
-    API endpoint to retrieve all menu items.
+    An API endpoint to retrieve all menu items from the database.
 
     Returns:
-        A flask response object containing the fetched JSON data.
+        A JSON object containing all fetched menu items.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
+
     cursor.execute('SELECT * FROM MenuItem;')
     menuitem = cursor.fetchall()
+
     cursor.close()
     conn.close()
 
-    menuitems = [{"menuitem_id": item[0],
-                   "name": item[1],
-                   "description": item[2],
-                   "type": item[3],
-                   "price": item[4],
-                   "calories": item[5],
-                   "image": item[6]} for item in menuitem]
-    
-    return jsonify(menuitems)
+    menuitems = [{'menuitem_id': item[0],
+                   'name': item[1],
+                   'description': item[2],
+                   'type': item[3],
+                   'price': item[4],
+                   'calories': item[5],
+                   'image': item[6]} for item in menuitem]
+    return jsonify(menuitems), 200
 
-@menu_bp.route('/api/updateitem', methods=['POST'])
-def update_item():
+@menu_bp.route('/api/updateitem/<menuitem_id>', methods=['PUT'])
+def update_item(menuitem_id):
     """
-    API endpoint to update the the details of an existing menu item in the database
+    An API endpoint to update an existing menu item in the database.
+
+    This function expects a JSON payload and a header to identify the resource:
+    localhost/api/updateitem/<menuitem_id>
+    {
+        'name': '<varchar(50)>',
+        'description': '<text>',
+        'type': '<varchar(20)>',
+        'price': '<numeric(5,2)>',
+        'calories': '<integer>',
+        'image': '<varchar(140)>'
+    }
+
+    Args:
+        menuitem_id: The ID of the menu item to update.
     
     Returns: 
-        A json response object with status message.
+        A JSON statement indicating success.
     """
+    data = request.get_json()
+    name = data['name']
+    description = data['description']
+    price = data['price']
+    type = data['type']
+    calories = data['calories']
+    image = data['image']
 
-    existingItem = request.get_json()   #item that is edited
-    attributeToUpdate = request.get_json()  #inidivdual attribute to change
-    newValue = request.get_json()   #the new value of the attribute
-    
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute(f'SELECT * FROM menuitem WHERE name = {existingItem}')   #sql statement to find item
-    menuItem = cursor.fetchone()
-    
-    if menuItem is None:
-        return jsonify({"message" : "The item selected does not exist in this database."})
-    
-    cursor.execute(f'UPDATE menuitem SET {attributeToUpdate} = {newValue}'
-                   f'WHERE menuitem_id = {menuItem[0]}')    #sql statment to update the item
-    
+    statement = f"""
+    UPDATE MenuItem
+    SET name='{name}', description='{description}', price='{price}', type='{type}', calories='{calories}', image='{image}'
+    WHERE menuitem_id={menuitem_id}
+    """
+    cursor.execute(statement)
+    conn.commit()
+
     cursor.close()
     conn.close()
     
-    return jsonify({"message" : "The item was successfully updated."})
+    return jsonify({'message' : f'Item {menuitem_id} has been updated.'}), 200
 
 @menu_bp.route('/api/additem', methods=['POST'])
 def add_item():
     """
-    API endpoint to add a menu item to the database.
+    An API endpoint to add a menu item to the database.
     
     Returns:
         A message to inform the user if the item has been successfully added.
