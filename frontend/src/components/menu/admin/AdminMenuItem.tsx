@@ -56,12 +56,6 @@ export default function AdminMenuItem(props: Props) {
                         color: var(--accent-1);
                     }
                 }
-                
-                .menu-item-image-container {
-                    background-color: var(--grey-1);
-                    border-radius: 10px;
-                    width: 125px;
-                }
 
                 .item-type {
                     font-size: 0.8rem;
