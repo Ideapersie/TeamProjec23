@@ -38,7 +38,9 @@ export default function ViewMenu(props: Props) {
                         />
                     ))
                     :
-                    <p>No items for this category</p>
+                    <div className={"bg-white shadow rounded-lg px-3 py-2 text-xs text-sky-800"}>
+                        No items for this category
+                    </div>
                 }
             </div>
         </section>
