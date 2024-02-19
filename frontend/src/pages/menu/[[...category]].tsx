@@ -2,6 +2,8 @@ import {MenuItem} from "@/types";
 import {GetServerSidePropsContext} from "next";
 import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
 import Link from "next/link";
+import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
+import {useState} from "react";
 
 // Declaring expected prop types
 interface Props {
@@ -24,6 +26,10 @@ export default function ViewMenu(props: Props) {
                     provided by local independent farms.</p>
             </div>
 
+            {/*Filters*/}
+            <CustomerMenuFilters />
+
+            {/*Displaying menu items*/}
             <div className={"grid grid-cols-3 gap-5"}>
                 {props?.data?.length ?
                     props.data.map(item => (
