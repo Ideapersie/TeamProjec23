@@ -1,5 +1,5 @@
-import MockData from "../../mockdata/menu-data.json";
-import MenuItem from "@/components/menu/MenuItem";
+import MockData from "../../../mockdata/menu-data.json";
+import MenuItem from "@/components/menu/admin/MenuItem";
 import styles from "./Menu.module.css";
 
 // Describing what data should be passed in as props
