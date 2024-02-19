@@ -1,6 +1,8 @@
 import MockData from "../../../mockdata/menu-data.json";
 import AdminMenuItem from "@/components/menu/admin/AdminMenuItem";
-import styles from "./Menu.module.css";
+import styles from "./AdminMenu.module.css";
+import Link from "next/link";
+import {MenuItem} from "@/types";
 
 // Describing what data should be passed in as props
 interface Props {
