@@ -1,7 +1,7 @@
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import PageHeader from "@/components/common/text/PageHeader";
-import AdminMenuList from "@/components/menu/admin/MenuList";
+import AdminMenuList from "@/components/menu/admin/AdminMenuList";
 import MockData from "../../../../mockdata/menu-data.json";
 
 // The data to be passed in as props

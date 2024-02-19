@@ -1,7 +1,7 @@
 import MockData from "../../../mockdata/menu-data.json";
 import styles from "./Menu.module.css";
 
-// Describing the props to be passed in to MenuItem
+// Describing the props to be passed in to AdminMenuItem
 interface Props {
     item: typeof MockData[0]
 }
@@ -9,7 +9,7 @@ interface Props {
 /**
  * Represents a specific item on the menu e.g. a dish, or a drink
  */
-export default function MenuItem(props: Props) {
+export default function AdminMenuItem(props: Props) {
     return (
         <div className={styles.menuItem}>
 
@@ -42,7 +42,7 @@ export default function MenuItem(props: Props) {
                 <button>Delete</button>
             </div>
 
-            {/*TODO: Add code for MenuItem react component*/}
+            {/*TODO: Add code for AdminMenuItem react component*/}
             <style jsx>{`
                 .menu-list-item {
                     margin-bottom: 1px;

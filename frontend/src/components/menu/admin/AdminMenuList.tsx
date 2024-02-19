@@ -1,5 +1,5 @@
 import MockData from "../../../mockdata/menu-data.json";
-import MenuItem from "@/components/menu/admin/MenuItem";
+import AdminMenuItem from "@/components/menu/admin/AdminMenuItem";
 import styles from "./Menu.module.css";
 
 // Describing what data should be passed in as props
@@ -10,7 +10,7 @@ interface Props {
 /**
  * This component represents our Menu i.e. a list of dishes with some filtering options
  */
-export default function MenuList(props: Props) {
+export default function AdminMenuList(props: Props) {
     return (
         // Styling for the menu can be added in the Menu.module.css file
         <div className={styles.menuList}>
@@ -41,10 +41,10 @@ export default function MenuList(props: Props) {
             {
                 // .map loops through the list of dishes passed in as props
                 props.dishes.map((dish, i) => (
-                    // and uses the data for each dish to create a MenuItem component
+                    // and uses the data for each dish to create a AdminMenuItem component
                     <>
                         {i !== 0 && <hr/>}
-                        <MenuItem item={dish} key={dish.menuitem_id}/>
+                        <AdminMenuItem item={dish} key={dish.menuitem_id}/>
                     </>
                 ))
             }
