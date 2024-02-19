@@ -27,7 +27,7 @@ export default function MainLayout({ children }: any): React.ReactNode {
                     {/*Logo*/}
                     <Link href={"/"}>
                         <div className={"relative h-16 mb-3 rounded-lg"}>
-                            <Image src={"/logo.png"} alt={"Wahaha logo"} fill={true} objectFit={"contain"}/>
+                            <Image src={"/logo.png"} alt={"Wahaca logo"} fill={true} objectFit={"contain"}/>
                         </div>
                     </Link>
 
