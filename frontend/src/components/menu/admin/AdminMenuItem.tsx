@@ -14,8 +14,11 @@ export default function AdminMenuItem(props: Props) {
         <div className={styles.menuItem}>
 
             {/*Menu item image*/}
-            <div className={"menu-item-image-container"}>
-
+            <div className={"bg-white w-36 rounded-xl shadow overflow-hidden p-3"}>
+                <div
+                    className={"h-full !bg-contain !bg-center !bg-no-repeat"}
+                    style={{background: `url(${props.item.image})`}}
+                />
             </div>
 
             {/*Menu item overview*/}
