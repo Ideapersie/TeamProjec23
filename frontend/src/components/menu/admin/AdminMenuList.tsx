@@ -13,7 +13,7 @@ interface Props {
  */
 export default function AdminMenuList(props: Props) {
     return (
-        // Styling for the menu can be added in the Menu.module.css file
+        // Styling for the menu can be added in the AdminMenu.module.css file
         <div className={styles.menuList}>
             <div className={styles.menuListTopRow}>
                 {/*Filters*/}
@@ -31,7 +31,7 @@ export default function AdminMenuList(props: Props) {
                     </select>
 
                     <button>
-                        <a href="/admin/waiter/menu/add">Add item</a>
+                        <Link href="/admin/waiter/menu/add">Add item</Link>
                     </button>
                 </div>
             </div>
