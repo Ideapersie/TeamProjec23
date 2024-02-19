@@ -23,20 +23,22 @@ export default function AdminMenuItem(props: Props) {
 
             {/*Menu item overview*/}
             <div className={styles.menuItemOverview}>
-                <h4 className={"menu-list-item"}>
+                <h4 className={"mb-px"}>
                     {props.item.name}
-                    <span className={"menu-item-price"}>
+                    <span className={"ml-1.5 text-sky-600 font-semibold"}>
                         £{props.item.price}
                     </span>
                 </h4>
 
-                <div className={"item-type"}>
+                <div className={"text-xs font-medium text-sky-900 opacity-50"}>
                     {props.item.type}
                     <span> | </span>
                     {props.item.calories} cals
                 </div>
 
-                <div className={"item-description"}>{props.item.description}</div>
+                <div className={"mt-2 text-xs max-w-xl truncate text-sky-900"}>
+                    {props.item.description}
+                </div>
             </div>
 
             {/*Menu item controls*/}
@@ -44,33 +46,6 @@ export default function AdminMenuItem(props: Props) {
                 <button>Edit</button>
                 <button>Delete</button>
             </div>
-
-            {/*TODO: Add code for AdminMenuItem react component*/}
-            <style jsx>{`
-                .menu-list-item {
-                    margin-bottom: 1px;
-                    
-                    .menu-item-price {
-                        margin-left: 10px;
-                        font-weight: 600;
-                        color: var(--accent-1);
-                    }
-                }
-
-                .item-type {
-                    font-size: 0.8rem;
-                    font-weight: 500;
-                    color: var(--blue);
-                    opacity: 50%;
-                }
-                
-                .item-description {
-                    margin-top: 10px;
-                    font-size: 0.8rem;
-                    font-weight: 500;
-                    color: var(--grey-2);
-                }
-            `}</style>
         </div>
     )
 }
