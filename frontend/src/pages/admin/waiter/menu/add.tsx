@@ -13,7 +13,7 @@ export default function AddItemPage() {
     const [buttonText, setButtonText] = useState('Submit');
 
     // Get user input from the form.
-    function handleSubmit(event) {
+    function handleSubmit(event: any) {
 
         // Prevent page refresh (default behaviour of button).
         event.preventDefault();
