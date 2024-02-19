@@ -1,7 +1,7 @@
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import PageHeader from "@/components/common/text/PageHeader";
-import MenuList from "@/components/menu/MenuList";
+import AdminMenuList from "@/components/menu/admin/MenuList";
 import MockData from "../../../../mockdata/menu-data.json";
 
 // The data to be passed in as props
@@ -22,9 +22,9 @@ export default function AddItemPage(props: Props) {
                 </PageSubtitle>
             </PageHeader>
 
-            <MenuList dishes={props.data}>
+            <AdminMenuList dishes={props.data}>
 
-            </MenuList>
+            </AdminMenuList>
         </>
     )
 }
