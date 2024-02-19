@@ -16,6 +16,7 @@ export default function AdminMenuList(props: Props) {
         // Styling for the menu can be added in the AdminMenu.module.css file
         <div className={styles.menuList}>
             <div className={styles.menuListTopRow}>
+
                 {/*Filters*/}
                 <div className={styles.menuItemFilters}>
                     <select name="" id="">
@@ -36,13 +37,9 @@ export default function AdminMenuList(props: Props) {
                 </div>
             </div>
 
-            {/*TODO: Eventually add item filters here*/}
-
             {/*Displays each item/dish/drink in the menu*/}
             {
-                // .map loops through the list of dishes passed in as props
                 props.dishes.map((dish, i) => (
-                    // and uses the data for each dish to create a AdminMenuItem component
                     <>
                         {i !== 0 && <hr/>}
                         <AdminMenuItem item={dish} key={dish.menuitem_id}/>

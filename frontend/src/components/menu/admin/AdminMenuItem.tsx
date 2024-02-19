@@ -1,6 +1,8 @@
 import styles from "./AdminMenu.module.css";
 import {MenuItem} from "@/types";
 import Link from "next/link";
+import {useContext} from "react";
+import {AdminViewMenuPageContext} from "@/pages/admin/waiter/menu/view";
 
 // Describing the props to be passed in to AdminMenuItem
 interface Props {
@@ -11,6 +13,10 @@ interface Props {
  * Represents a specific item on the menu e.g. a dish, or a drink
  */
 export default function AdminMenuItem(props: Props) {
+
+    // Getting context for View Menu Item page
+    const PageContext = useContext(AdminViewMenuPageContext);
+
     return (
         <div className={styles.menuItem}>
 
@@ -60,7 +66,7 @@ export default function AdminMenuItem(props: Props) {
 
                 <button
                     className={"m-0 bg-pink-800"}
-                    onClick={() => alert("Delete item")}
+                    onClick={() => PageContext?.setItemToDelete(props.item)}
                 >
                     Delete
                 </button>
