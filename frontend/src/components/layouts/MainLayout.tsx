@@ -3,6 +3,7 @@ import {Inter} from "next/font/google";
 import Link from "next/link";
 import CurrentUser from "@/components/side-menu/CurrentUser";
 import React from "react";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,7 +26,9 @@ export default function MainLayout({ children }: any): React.ReactNode {
                 <div className={"p-5"}>
                     {/*Logo*/}
                     <Link href={"/"}>
-                        <h1 className={"text-center"}>LOGO</h1>
+                        <div className={"relative h-16 mb-3 rounded-lg"}>
+                            <Image src={"/logo.png"} alt={"Wahaha logo"} fill={true} objectFit={"contain"}/>
+                        </div>
                     </Link>
 
                     {/*Side-menu Links*/}
