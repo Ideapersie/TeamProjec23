@@ -1,5 +1,6 @@
 import styles from "./AdminMenu.module.css";
 import {MenuItem} from "@/types";
+import Link from "next/link";
 
 // Describing the props to be passed in to AdminMenuItem
 interface Props {
@@ -42,9 +43,27 @@ export default function AdminMenuItem(props: Props) {
             </div>
 
             {/*Menu item controls*/}
-            <div className={styles.menuItemControls}>
-                <button>Edit</button>
-                <button>Delete</button>
+            <div className={"ml-auto flex gap-1 items-center text-xs"}>
+                <Link href={`/menu/view/${props.item.menuitem_id}`}
+                      target={"_blank"}
+                >
+                    <button className={"m-0 w-full bg-sky-700"}>
+                        View Page
+                    </button>
+                </Link>
+
+                <Link href={`/admin/waiter/menu/edit/${props.item.menuitem_id}`}>
+                    <button className={"m-0 w-full bg-emerald-700"}>
+                        Edit
+                    </button>
+                </Link>
+
+                <button
+                    className={"m-0 bg-pink-800"}
+                    onClick={() => alert("Delete item")}
+                >
+                    Delete
+                </button>
             </div>
         </div>
     )

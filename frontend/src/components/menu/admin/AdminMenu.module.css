@@ -16,14 +16,6 @@
     padding: 7px 0;
 }
 
-.menuItemControls {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    font-size: small;
-    gap: 5px;
-}
-
 .menuItemFilters {
     display: flex;
     align-items: center;
