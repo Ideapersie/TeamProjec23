@@ -15,13 +15,13 @@ interface Props {
 export default function ViewMenu(props: Props) {
     return <>
         <section>
-            <div className={"mb-5"}>
+            <div className={"mb-4"}>
                 {props.category &&
-                    <Link href={"/menu"} className={"text-sky-500 text-xs"}>
+                    <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:ml-0.5 hover:ease-in"}>
                         Go back to all items
                     </Link>
                 }
-                <h1 className={"mb-2"}>{props.category || "All items"}</h1>
+                <h1 className={"mb-0 font-semibold"}>{props.category || "All items"}</h1>
                 <p className={"text-stone-400"}>All our food is prepared with only the highest-quality ingredients,
                     provided by local independent farms.</p>
             </div>

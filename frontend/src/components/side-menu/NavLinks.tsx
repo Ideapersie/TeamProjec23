@@ -79,7 +79,7 @@ export default function NavLinks(): JSX.Element {
         <>
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
                 <div className={"nav-link-group rounded"} key={groupName}>
-                    <h4 className={"nav-link-group-heading flex items-center gap-1 fill-sky-500"}>
+                    <h4 className={"nav-link-group-heading flex items-center gap-1 fill-blue-500"}>
                         {navGroup.icon}
                         {groupName}
                     </h4>
