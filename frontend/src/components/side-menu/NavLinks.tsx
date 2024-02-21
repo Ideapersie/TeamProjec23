@@ -3,7 +3,8 @@ import {useRouter} from "next/router";
 import {JSX} from "react";
 import BurgerIcon from "@/components/common/icons/Burger";
 import ReceiptIcon from "@/components/common/icons/Receipt";
-
+import {MenuItem} from "@/types";
+import {GetServerSidePropsContext} from "next";
 // Interfaces allow us to describe the type of data we're dealing with similar to the way you do in Java
 interface NavLink {
     display: string;
@@ -15,55 +16,29 @@ interface NavGroup {
     icon?: JSX.Element;
     links: NavLink[]
 }
+interface Props {
+    data: MenuItem[],
+    category: string | null
+}
+export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props }> {
 
-// An object mapping out the structure of our side menu links
-const LINKS: {[group: string]: NavGroup} = {
-    "Menu Items": {
-        icon: <BurgerIcon/>,
-        links: [
-            {
-                display: "View menu",
-                path: "/menu",
-            },
-            {   display: "Burgers",
-                path: "/menu/Burgers"
-            },
-            {
-                display: "Sides",
-                path: "/menu/Sides"
-            },           
-            {
-                display: "Drinks",
-                path: "/menu/Drinks"
-            },
-            {
-                display: "Desserts",
-                path: "/menu/Desserts"
-            },
-        ]
-    },
-    "Menu Admin": {
-        links: [
-            {
-                display: "View menu items",
-                path: "/admin/waiter/menu/view"
-            },
-            {
-                display: "Add new item",
-                path: "/admin/waiter/menu/add"
-            },
-        ]
-    },
-    "Orders": {
-        icon: <ReceiptIcon/>,
-        links: [
-            {
-                display: "Add links here",
-                path: "/order/addlinkshere"
-            },
-        ]
+    const category = context.query?.category?.[0] as string | undefined;
+
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    let menuItems = (await response.json()) as MenuItem[];
+
+    if (category) {
+        menuItems = menuItems.filter(item => item.type === category);
     }
-};
+
+    return {
+        props: {
+            data: menuItems,
+            category: category || null
+        }
+    }
+}
+// An object mapping out the structure of our side menu links
 
 /**
  * A component containing all the links we want to display in our navigation bar.
@@ -71,10 +46,46 @@ const LINKS: {[group: string]: NavGroup} = {
  * @returns {JSX.Element} - The navigation links component.
  * @author Vince Chapman (zlac465@live.rhul.ac.uk)
  */
-export default function NavLinks(): JSX.Element {
+export default function NavLinks(props: Props): JSX.Element {
 
     const router = useRouter(); // Allows us to access the current path/url
-
+    const LINKS: {[group: string]: NavGroup} = {
+        "Menu Items": {
+            icon: <BurgerIcon/>,
+            links: [
+                {
+                    display: "View menu",
+                    path: "/menu",
+                },
+                ...(props.category ? [{
+                    display: props.category, 
+                    path: `/menu/${props.category}`
+                }] : [])
+            ]
+        },
+        "Menu Admin": {
+            links: [
+                {
+                    display: "View menu items",
+                    path: "/admin/waiter/menu/view"
+                },
+                {
+                    display: "Add new item",
+                    path: "/admin/waiter/menu/add"
+                },
+            ]
+        },
+        "Orders": {
+            icon: <ReceiptIcon/>,
+            links: [
+                {
+                    display: "Add links here",
+                    path: "/order/addlinkshere"
+                },
+            ]
+        }
+    };
+    
     return (
         <>
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
