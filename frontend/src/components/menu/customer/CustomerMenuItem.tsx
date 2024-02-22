@@ -7,6 +7,7 @@ interface Props {
     price: string
     calories: number
     image: string
+    menuitem_id: number
 }
 
 export function CustomerMenuItem(props: Props) {

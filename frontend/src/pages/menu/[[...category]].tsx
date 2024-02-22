@@ -41,6 +41,7 @@ export default function ViewMenu(props: Props) {
                             price={item.price}
                             calories={item.calories}
                             image={item.image}
+                            menuitem_id={item.menuitem_id}
                         />
                     ))
                     :
