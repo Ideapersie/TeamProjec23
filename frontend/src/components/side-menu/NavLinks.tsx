@@ -1,11 +1,10 @@
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {JSX} from "react";
+import {JSX, useEffect, useState} from "react";
 import BurgerIcon from "@/components/common/icons/Burger";
 import ReceiptIcon from "@/components/common/icons/Receipt";
 import {MenuItem} from "@/types";
-import {GetServerSidePropsContext} from "next";
-// Interfaces allow us to describe the type of data we're dealing with similar to the way you do in Java
+
 interface NavLink {
     display: string;
     path: string;
@@ -16,29 +15,6 @@ interface NavGroup {
     icon?: JSX.Element;
     links: NavLink[]
 }
-interface Props {
-    data: MenuItem[],
-    category: string | null
-}
-export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props }> {
-
-    const category = context.query?.category?.[0] as string | undefined;
-
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
-    let menuItems = (await response.json()) as MenuItem[];
-
-    if (category) {
-        menuItems = menuItems.filter(item => item.type === category);
-    }
-
-    return {
-        props: {
-            data: menuItems,
-            category: category || null
-        }
-    }
-}
-// An object mapping out the structure of our side menu links
 
 /**
  * A component containing all the links we want to display in our navigation bar.
@@ -46,10 +22,39 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
  * @returns {JSX.Element} - The navigation links component.
  * @author Vince Chapman (zlac465@live.rhul.ac.uk)
  */
-export default function NavLinks(props: Props): JSX.Element {
+export default function NavLinks(): JSX.Element {
 
     const router = useRouter(); // Allows us to access the current path/url
-    const LINKS: {[group: string]: NavGroup} = {
+    const [categories, setCategories] = useState<string[]>([]);
+
+    // Gets menuitems when NavLinks is first mounted
+    useEffect(() => {
+        fetch("/api/menuitems")
+            .then(res => res.json())
+            .then(data => {
+                getCategories(data.data.menuItems)
+                    .then(categories => setCategories(categories));
+            });
+    }, []);
+
+    // Gets all categories
+    async function getCategories(menuItems: MenuItem[]) {
+        const categories = new Set<string>();
+
+        try {
+            for (const menuItem of menuItems) {
+                categories.add(menuItem.type);
+            }
+
+        } catch (e) {
+            console.error(e);
+        }
+
+        return Array.from(categories);
+    }
+
+    // An object mapping out the structure of our side menu links
+    const LINKS: { [group: string]: NavGroup } = {
         "Menu Items": {
             icon: <BurgerIcon/>,
             links: [
@@ -57,10 +62,12 @@ export default function NavLinks(props: Props): JSX.Element {
                     display: "View menu",
                     path: "/menu",
                 },
-                ...(props.category ? [{
-                    display: props.category, 
-                    path: `/menu/${props.category}`
-                }] : [])
+                ...categories.map(category => (
+                    {
+                        display: category,
+                        path: `/menu/${category}`
+                    }
+                ))
             ]
         },
         "Menu Admin": {
@@ -85,7 +92,7 @@ export default function NavLinks(props: Props): JSX.Element {
             ]
         }
     };
-    
+
     return (
         <>
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
@@ -119,7 +126,6 @@ export default function NavLinks(props: Props): JSX.Element {
                     }
 
                     // Active
-
                     &.active {
                         color: #001f9a;
                         //margin-left: 7px;
