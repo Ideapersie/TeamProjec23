@@ -1,4 +1,5 @@
 import styles from "./CustomerMenuItem.module.css";
+import Link from "next/link";
 
 interface Props {
     link: string
@@ -12,7 +13,7 @@ interface Props {
 
 export function CustomerMenuItem(props: Props) {
     return (
-        <div className={"rounded-xl bg-white shadow px-10 py-5"}>
+        <Link href={`/menu/view/${props.menuitem_id}`} className={"rounded-xl bg-white shadow px-10 py-5"}>
             <div>
                 <div className={"mb-3"} style={{
                     height: 200,
@@ -26,7 +27,7 @@ export function CustomerMenuItem(props: Props) {
                 <div className={styles.price}>£{props.price}</div>
                 <div className={styles.calories}>{props.calories} Cal</div>
             </div>
-        </div>
+        </Link>
     );
 }
 
