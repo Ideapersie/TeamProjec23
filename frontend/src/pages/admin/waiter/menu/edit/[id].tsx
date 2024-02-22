@@ -2,7 +2,7 @@ import {GetServerSidePropsContext} from "next";
 import {MenuItem} from "@/types";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
-import {useState} from "react";
+import {FormEvent, useState} from "react";
 
 /**
  * Defining component props
@@ -28,6 +28,24 @@ export default function EditMenuItemPage(props: Props) {
     // If no item found for given id, display error message
     if (props.data === null) return <>Item not found</>;
 
+    // Saves changes for the current item
+    function handleSaveChanges(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        const payload = {
+            itemName,
+            itemDescription,
+            itemType,
+            itemPrice,
+            itemCalories,
+            itemImage
+        };
+
+        console.log(payload);
+
+        alert("Hook this up to an api")
+    }
+
     return (
         <>
             <PageTitle>Edit item {"->"} <span className={"text-sky-700"}>{props.data.name}</span></PageTitle>
@@ -35,58 +53,88 @@ export default function EditMenuItemPage(props: Props) {
 
             <hr/>
 
-            <form className={"bg-white shadow p-10 rounded-xl mt-5 flex flex-col gap-5"}>
-                <label>
-                    Item name
-                    <input
-                        type="text"
-                        value={itemName}
-                        onInput={e => setItemName(e.currentTarget.value)}
-                    />
-                </label>
+            <form onSubmit={handleSaveChanges} className={"bg-white shadow p-10 rounded-xl mt-5 flex gap-7"}>
+                {/*Left column*/}
+                <div className={"flex flex-col gap-5 flex-grow"}>
+                    <label>
+                        Item name
+                        <input
+                            type="text"
+                            value={itemName}
+                            onInput={e => setItemName(e.currentTarget.value)}
+                        />
+                    </label>
 
-                <label>
-                    Item description
-                    <input
-                        type="text"
-                        value={itemDescription}
-                        onInput={e => setItemDescription(e.currentTarget.value)}
-                    />
-                </label>
+                    <label>
+                        Item description
+                        <textarea
+                            value={itemDescription}
+                            onInput={e => setItemDescription(e.currentTarget.value)}
+                            rows={3}
+                        />
+                    </label>
 
-                <label>
-                    Item type
-                    <select
-                        value={itemType}
-                        onChange={e => setItemType(e.currentTarget.value)}
-                    >
-                        <option value="type1">Type 1</option>
-                        <option value="type2">Type 2</option>
-                        <option value="type3">Type 3</option>
-                    </select>
-                </label>
+                    <label>
+                        Item type
+                        <select
+                            value={itemType}
+                            onChange={e => setItemType(e.currentTarget.value)}
+                        >
+                            {/*TODO: Come up with a better solution here*/}
+                            <option value="Burgers">Burgers</option>
+                            <option value="Sides">Sides</option>
+                            <option value="Drinks">Drinks</option>
+                            <option value="Desserts">Desserts</option>
+                        </select>
+                    </label>
 
-                <label>
-                    Item price
-                    <input
-                        type="number"
-                        min={0}
-                        step={0.01}
-                        value={itemPrice}
-                        onInput={e => e.currentTarget.value ? setItemPrice(parseFloat(e.currentTarget.value)) : undefined}
-                    />
-                </label>
+                    <label>
+                        Item price
+                        <input
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            value={itemPrice}
+                            onInput={e => e.currentTarget.value ? setItemPrice(parseFloat(e.currentTarget.value)) : undefined}
+                        />
+                    </label>
 
-                <label>
-                    Item calories
-                    <input
-                        type="number"
-                        value={itemCalories}
-                        min={0}
-                        step={1}
-                        onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
-                    />
-                </label>
+                    <label>
+                        Item calories
+                        <input
+                            type="number"
+                            value={itemCalories}
+                            min={0}
+                            step={1}
+                            onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
+                        />
+                    </label>
+
+                    <div>
+                        <button className={"bg-emerald-500 hover:bg-emerald-700"}>Save changes</button>
+                    </div>
+                </div>
+
+                {/*Right column*/}
+                <div className={"flex flex-col gap-5 flex-grow max-w-80"}>
+                    <label>
+                        Image preview
+                        <div className={"bg-white shadow h-48 rounded-xl overflow-hidden p-5"}>
+                            <div
+                                className={"h-full w-full bg-red-200 !bg-center !bg-contain !bg-no-repeat"}
+                                style={{background: `url(${itemImage})`}}
+                            />
+                        </div>
+                    </label>
+
+                    <label>
+                        Image URL
+                        <input type="url"
+                               value={itemImage}
+                               onChange={e => setItemImage(e.currentTarget.value)}
+                        />
+                    </label>
+                </div>
             </form>
         </>
     )
