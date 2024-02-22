@@ -84,37 +84,124 @@ def send_invite(email, token, base_url='http://127.0.0.1:5000/api/menuitems'): #
         print(f'An error occured trying to send a SendGrid request: {e.message}')
 
 def generate_customer_token(email, secret_key, salt='customer-salt', expiration=3600):
+    """
+    Generates a session token for a customer user with a dedicated salt.
+
+    The salt will be used in authenticating whether the session token decrypts to a customer.
+
+    Args:
+        email: The email address for which the session token is generated for.
+        secret_key: The secret key used to sign the token.
+        salt: Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'customer-salt'.
+        expiration: The expiration time of the token in seconds, defaults to 3600 (60 minutes).
+
+    Returns:
+        The generated session token.
+    """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
 
 def validate_customer_token(token, secret_key, salt='customer-salt'):
+    """
+    Validates a session token by checking if it was generated for a customer.
+
+    Args:
+        token: The session token to validate.
+        secret_key: The secret key used to sign the token.
+        salt: The salt used in the token signing process, defaults to 'customer-salt'.
+
+    Returns:
+        True if the token is valid, false otherwise.
+
+    Raises:
+        BadSignature: If the token has been tampered with.
+        SignatureExpired: If the token has expired.
+    """
     serializer = URLSafeTimedSerializer(secret_key)
     try:
-        email = serializer.loads(token, salt=salt, max_age=3600)
+        serializer.loads(token, salt=salt, max_age=3600)
         return True
     except (BadSignature, SignatureExpired):
         return False
     
 def generate_staff_token(email, secret_key, salt='staff-salt', expiration=3600):
+    """
+    Generates a session token for a staff user with a dedicated salt.
+
+    The salt will be used in authenticating whether the session token decrypts to a staff.
+
+    Args:
+        email: The email address for which the session token is generated for.
+        secret_key: The secret key used to sign the token.
+        salt: Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'staff-salt'.
+        expiration: The expiration time of the token in seconds, defaults to 3600 (60 minutes).
+
+    Returns:
+        The generated session token.
+    """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
 
 def validate_staff_token(token, secret_key, salt='staff-salt'):
+    """
+    Validates a session token by checking if it was generated for a staff.
+
+    Args:
+        token: The session token to validate.
+        secret_key: The secret key used to sign the token.
+        salt: The salt used in the token signing process, defaults to 'staff-salt'.
+
+    Returns:
+        True if the token is valid, false otherwise.
+
+    Raises:
+        BadSignature: If the token has been tampered with.
+        SignatureExpired: If the token has expired.
+    """
     serializer = URLSafeTimedSerializer(secret_key)
     try:
-        email = serializer.loads(token, salt=salt, max_age=3600)
+        serializer.loads(token, salt=salt, max_age=3600)
         return True
     except (BadSignature, SignatureExpired):
         return False
     
 def generate_admin_token(email, secret_key, salt='admin-salt', expiration=3600):
+    """
+    Generates a session token for an admin user with a dedicated salt.
+
+    The salt will be used in authenticating whether the session token decrypts to an admin.
+
+    Args:
+        email: The email address for which the session token is generated for.
+        secret_key: The secret key used to sign the token.
+        salt: Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'admin-salt'.
+        expiration: The expiration time of the token in seconds, defaults to 3600 (60 minutes).
+
+    Returns:
+        The generated session token.
+    """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
 
 def validate_admin_token(token, secret_key, salt='admin-salt'):
+    """
+    Validates a session token by checking if it was generated for an admin.
+
+    Args:
+        token: The session token to validate.
+        secret_key: The secret key used to sign the token.
+        salt: The salt used in the token signing process, defaults to 'admin-salt'.
+
+    Returns:
+        True if the token is valid, false otherwise.
+
+    Raises:
+        BadSignature: If the token has been tampered with.
+        SignatureExpired: If the token has expired.
+    """
     serializer = URLSafeTimedSerializer(secret_key)
     try:
-        email = serializer.loads(token, salt=salt, max_age=3600)
+        serializer.loads(token, salt=salt, max_age=3600)
         return True
     except (BadSignature, SignatureExpired):
         return False
