@@ -103,7 +103,7 @@ export default function NavLinks(): JSX.Element {
                     </h4>
                     <ul className={"nav-link-list"}>
                         {navGroup.links.map(link => (
-                            <li key={link.path} className={`nav-link ${router.pathname === link.path ? "active" : ""}`}>
+                            <li key={link.path} className={`nav-link ${router.asPath === link.path ? "active" : ""}`}>
                                 <Link href={link.path}>{link.display}</Link>
                             </li>
                         ))}
