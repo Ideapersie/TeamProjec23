@@ -1,16 +1,23 @@
 DROP TABLE IF EXISTS Customer CASCADE;
 CREATE TABLE Customer (
-    customer_id SERIAL PRIMARY KEY
+    customer_id SERIAL PRIMARY KEY,
+    email VARCHAR(320) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL
 );
 
 DROP TABLE IF EXISTS Staff CASCADE;
 CREATE TABLE Staff (
     staff_id SERIAL PRIMARY KEY,
+    email VARCHAR(320) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    admin BOOLEAN NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL
 );
 
-DROP TABLE IF EXISTS "Order" CASCADE; -- Order is a reserved keyword, "" required
+DROP TABLE IF EXISTS "Order" CASCADE; -- 'Order' is a reserved keyword, "" required
 CREATE TABLE "Order" (
     order_id SERIAL PRIMARY KEY,
     customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,
@@ -25,7 +32,8 @@ CREATE TABLE MenuItem (
     description TEXT,
     type VARCHAR(20) NOT NULL, -- Not nullable as items must be filterable
     price DECIMAL(5, 2) NOT NULL,
-    calories INTEGER
+    calories INTEGER,
+    image VARCHAR(140) NOT NULL
 );
 
 DROP TABLE IF EXISTS Allergen CASCADE;
@@ -45,7 +53,7 @@ CREATE TABLE OrderMenu (
 DROP TABLE IF EXISTS StaffOrder CASCADE;
 CREATE TABLE StaffOrder (
     staff_id INTEGER REFERENCES Staff(staff_id) NOT NULL,
-    order_id iNTEGER REFERENCES "Order"(order_id) NOT NULL,
+    order_id INTEGER REFERENCES "Order"(order_id) NOT NULL,
     PRIMARY KEY (staff_id, order_id)
 );
 
