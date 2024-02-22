@@ -1,0 +1,28 @@
+/*TODO: @madeline Added some temporary styling for the menu here, feel free to change as you see fit - Vince*/
+
+.menuList {
+    /*padding: 10px;*/
+    /*border: 1px solid #cccccc;*/
+}
+
+.menuItem {
+    /*TODO: add styling for menu item/dish/drink*/
+    padding: 10px 0;
+    display: flex;
+    gap: 15px;
+}
+
+.menuItemOverview {
+    padding: 7px 0;
+}
+
+.menuItemFilters {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.menuListTopRow {
+    margin-bottom: 10px;
+    display: flex;
+}
