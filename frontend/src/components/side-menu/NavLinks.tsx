@@ -1,10 +1,10 @@
 import Link from "next/link";
 import {useRouter} from "next/router";
-import {JSX} from "react";
+import {JSX, useEffect, useState} from "react";
 import BurgerIcon from "@/components/common/icons/Burger";
 import ReceiptIcon from "@/components/common/icons/Receipt";
+import {MenuItem} from "@/types";
 
-// Interfaces allow us to describe the type of data we're dealing with similar to the way you do in Java
 interface NavLink {
     display: string;
     path: string;
@@ -16,55 +16,6 @@ interface NavGroup {
     links: NavLink[]
 }
 
-// An object mapping out the structure of our side menu links
-const LINKS: {[group: string]: NavGroup} = {
-    "Menu Items": {
-        icon: <BurgerIcon/>,
-        links: [
-            {
-                display: "View menu",
-                path: "/menu",
-            },
-            {   display: "Burgers",
-                path: "/menu/Burgers"
-            },
-            {
-                display: "Sides",
-                path: "/menu/Sides"
-            },           
-            {
-                display: "Drinks",
-                path: "/menu/Drinks"
-            },
-            {
-                display: "Desserts",
-                path: "/menu/Desserts"
-            },
-        ]
-    },
-    "Menu Admin": {
-        links: [
-            {
-                display: "View menu items",
-                path: "/admin/waiter/menu/view"
-            },
-            {
-                display: "Add new item",
-                path: "/admin/waiter/menu/add"
-            },
-        ]
-    },
-    "Orders": {
-        icon: <ReceiptIcon/>,
-        links: [
-            {
-                display: "Add links here",
-                path: "/order/addlinkshere"
-            },
-        ]
-    }
-};
-
 /**
  * A component containing all the links we want to display in our navigation bar.
  *
@@ -74,6 +25,73 @@ const LINKS: {[group: string]: NavGroup} = {
 export default function NavLinks(): JSX.Element {
 
     const router = useRouter(); // Allows us to access the current path/url
+    const [categories, setCategories] = useState<string[]>([]);
+
+    // Gets menuitems when NavLinks is first mounted
+    useEffect(() => {
+        fetch("/api/menuitems")
+            .then(res => res.json())
+            .then(data => {
+                getCategories(data.data.menuItems)
+                    .then(categories => setCategories(categories));
+            });
+    }, []);
+
+    // Gets all categories
+    async function getCategories(menuItems: MenuItem[]) {
+        const categories = new Set<string>();
+
+        try {
+            for (const menuItem of menuItems) {
+                categories.add(menuItem.type);
+            }
+
+        } catch (e) {
+            console.error(e);
+        }
+
+        return Array.from(categories);
+    }
+
+    // An object mapping out the structure of our side menu links
+    const LINKS: { [group: string]: NavGroup } = {
+        "Menu Items": {
+            icon: <BurgerIcon/>,
+            links: [
+                {
+                    display: "View menu",
+                    path: "/menu",
+                },
+                ...categories.map(category => (
+                    {
+                        display: category,
+                        path: `/menu/${category}`
+                    }
+                ))
+            ]
+        },
+        "Menu Admin": {
+            links: [
+                {
+                    display: "View menu items",
+                    path: "/admin/waiter/menu/view"
+                },
+                {
+                    display: "Add new item",
+                    path: "/admin/waiter/menu/add"
+                },
+            ]
+        },
+        "Orders": {
+            icon: <ReceiptIcon/>,
+            links: [
+                {
+                    display: "Add links here",
+                    path: "/order/addlinkshere"
+                },
+            ]
+        }
+    };
 
     return (
         <>
@@ -108,7 +126,6 @@ export default function NavLinks(): JSX.Element {
                     }
 
                     // Active
-
                     &.active {
                         color: #001f9a;
                         //margin-left: 7px;
