@@ -88,7 +88,7 @@ def signup():
     conn.commit()
     cursor.close()
     conn.close()
-    return jsonify({'message': f'An account for {email} created.'}), 201
+    return jsonify({'message': f'An account for {email} has been created.'}), 201
 
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
