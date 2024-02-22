@@ -39,11 +39,21 @@ body {
   }
 }
 
-select {
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #9a9a9a;
+}
+
+select, input, textarea {
   border: 1px solid #dadada;
   border-radius: 5px;
-  padding: 3px;
-  font-size: 12px;
+  padding: 4px 7px;
+  font-size: 0.8rem;
+  color: #073357;
 }
 
 
