@@ -10,7 +10,7 @@ from flask import Blueprint, request, jsonify, abort
 from werkzeug.security import check_password_hash, generate_password_hash
 import psycopg2
 from resources import config
-from auth.authentication import generate_signup_token, validate_signup_token, send_invite, secret_key
+from auth.authentication import generate_signup_token, validate_signup_token, generate_customer_token, generate_staff_token, generate_admin_token, send_invite, secret_key
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -101,18 +101,38 @@ def login():
                             password=config.DATABASE_PASSWORD,
                             host=config.DATABASE_HOST)
     cursor = conn.cursor()
+    
+    try:
+        cursor.execute('SELECT * FROM Staff WHERE email = %s', (email,))
 
-    cursor.execute('SELECT password FROM Staff WHERE email = %s', (email,))
-    record = cursor.fetchone()
+        data = cursor.fetchall()
+        password_hash = data[0][2]
+        admin = data[0][3]
+
+        if admin:
+            type = 'admin'
+            token = generate_admin_token(email, secret_key)
+        else:
+            type = 'staff'
+            token = generate_staff_token(email, secret_key)
+    except:
+        cursor.execute('SELECT * FROM Customer WHERE email = %s', (email,))
+        data = cursor.fetchall()
+
+        if data:
+            password_hash = data[0][2]
+            type = 'customer'
+            token = generate_customer_token(email, secret_key)
+        else:
+            return jsonify({'message': 'Invalid email or password.'}), 401
 
     cursor.close()
     conn.close()
 
-    if record:
-        password_hash = record[0]
+    if data:
         if check_password_hash(password_hash, password):
-            return jsonify({'message': 'Login successful'}), 200
+            return jsonify({'message': 'Login successful.', 'token': token, 'type': type}), 200
         else:
-            return jsonify({'message': 'Invalid email or password'}), 401
+            return jsonify({'message': 'Invalid email or password.'}), 401
     else:
-        return jsonify({'message': 'Invalid email or password'}), 401
+        return jsonify({'message': 'Invalid email or password.'}), 401
