@@ -50,9 +50,7 @@ export default function AdminMenuItem(props: Props) {
 
             {/*Menu item controls*/}
             <div className={"ml-auto flex gap-1 items-center text-xs"}>
-                <Link href={`/menu/view/${props.item.menuitem_id}`}
-                      target={"_blank"}
-                >
+                <Link href={`/menu/view/${props.item.menuitem_id}`}>
                     <button className={"m-0 w-full bg-sky-700"}>
                         View Page
                     </button>
