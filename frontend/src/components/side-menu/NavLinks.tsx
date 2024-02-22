@@ -14,11 +14,14 @@ interface NavLink {
 
 interface NavGroup {
     icon?: JSX.Element;
-    links: NavLink[]
+    links: NavLink[];
 }
+
 interface Props {
     data: MenuItem[],
-    category: string | null
+    category: string | null,
+    types: string[];
+
 }
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props }> {
 
@@ -26,15 +29,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const response = await fetch("http://127.0.0.1:5000/api/menuitems");
     let menuItems = (await response.json()) as MenuItem[];
-
-    if (category) {
-        menuItems = menuItems.filter(item => item.type === category);
-    }
+    
+    // Set to store unique types of menu items
+    const typesSet = new Set<string>();
+    // Populate the set with types from fetched menu items
+    menuItems.forEach(item => typesSet.add(item.type));
+    // Filter menu items if a specific category was requested
+    const filteredMenuItems = category ? menuItems.filter(item => item.type === category) : menuItems;
 
     return {
         props: {
-            data: menuItems,
-            category: category || null
+            data: filteredMenuItems,
+            category: category || null,
+            types: Array.from(typesSet),// Convert Set to Array for easier processing in the component
         }
     }
 }
@@ -49,6 +56,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 export default function NavLinks(props: Props): JSX.Element {
 
     const router = useRouter(); // Allows us to access the current path/url
+    console.log(props);
     const LINKS: {[group: string]: NavGroup} = {
         "Menu Items": {
             icon: <BurgerIcon/>,
@@ -57,11 +65,11 @@ export default function NavLinks(props: Props): JSX.Element {
                     display: "View menu",
                     path: "/menu",
                 },
-                ...(props.category ? [{
-                    display: props.category, 
-                    path: `/menu/${props.category}`
-                }] : [])
-            ]
+                ...((props.types || []).map(type => ({
+                    display: type,
+                    path: `/menu/${type}`,
+                }))),
+            ],
         },
         "Menu Admin": {
             links: [
@@ -85,7 +93,6 @@ export default function NavLinks(props: Props): JSX.Element {
             ]
         }
     };
-    
     return (
         <>
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (

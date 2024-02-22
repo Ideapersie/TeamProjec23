@@ -34,14 +34,14 @@ export default function ViewMenu(props: Props) {
                 {props?.data?.length ?
                     props.data.map(item => (
                         <CustomerMenuItem
-                            key={item.menuitem_id}
+                            menuitem_id={item.menuitem_id}
                             link={item.link}
                             name={item.name}
                             description={item.description}
                             price={item.price}
                             calories={item.calories}
-                            image={item.image}
-                        />
+                            image={item.image} 
+                                />
                     ))
                     :
                     <div className={"bg-white shadow rounded-lg px-3 py-2 text-xs text-sky-800"}>
