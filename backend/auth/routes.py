@@ -19,6 +19,9 @@ def invite():
     """
     Sends a sign-up invitation email to the specified email address.
 
+    Args:
+        email: the email address of the staff member to invite.
+
     Returns:
         JSON response and a HTTP code.
     """
@@ -41,30 +44,45 @@ def signup():
     data = request.get_json()
     email = data['email']
     password = data['password']
-    admin = data['admin']
+    try:
+        admin = data['admin']
+    except KeyError:
+        admin = None
     first_name = data['first_name']
     last_name = data['last_name']
-    token = data['token']
-
-    if not token or not validate_signup_token(token, secret_key):
-        abort(403, 'Invalid or expired token.')
+    try:
+        token = data['token']
+    except KeyError:
+        token = None
 
     conn = psycopg2.connect(dbname=config.DATABASE_NAME,
                             user=config.DATABASE_USER,
                             password=config.DATABASE_PASSWORD,
                             host=config.DATABASE_HOST)
     cursor = conn.cursor()
-    
+
     hashed_password = generate_password_hash(password)
-    cursor.execute('INSERT INTO Staff(email, password, admin, first_name, last_name) VALUES(%s, %s, %s, %s, %s)',
-                   (email, hashed_password, admin, first_name, last_name))
+
+    if not admin and not token:
+        cursor.execute("""
+                       INSERT INTO Customer(email, password, first_name, last_name)
+                       VALUES(%s, %s, %s, %s)
+                       """, (email, hashed_password, first_name, last_name))
+    else:
+        if not validate_signup_token(token, secret_key):
+            abort(403, 'Invalid or expired token.')
+        
+        cursor.execute("""
+                       INSERT INTO Staff(email, password, admin, first_name, last_name)
+                       VALUES(%s, %s, %s, %s, %s)
+                       """, (email, hashed_password, admin, first_name, last_name))
     
     conn.commit()
 
     cursor.close()
     conn.close()
 
-    return jsonify({'message': 'Account created successfully.'}), 201
+    return jsonify({'message': 'Account created.'}), 201
 
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
