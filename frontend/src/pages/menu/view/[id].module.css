@@ -32,3 +32,11 @@
 	left: 40px;
 	bottom: 500px;
 }
+
+.button {
+	position:relative;
+	left: 70px;
+	bottom: 450px;
+	width:200px;
+	height:70px;
+}

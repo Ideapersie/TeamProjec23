@@ -23,13 +23,10 @@ export default function ItemPage(props: PageProps) {
 
     return (
         <>
-            <button className={"text-base text-white-500 background-color:white hover:text-white-600  hover:ml-0.5 hover:ease-in"} onClick={() => router.back()}>Go back</button>
+            <button className={"text-base text-white-500 hover:bg-sky-600  hover:ml-0.5 hover:ease-in"} onClick={() => router.back()}>Go back</button>
 
             {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> // temporary display for each data items */}
 
-            {/* <h1 className = {""}>
-                {props.data.name}    
-            </h1> */}
                 <div className={"mt-5 mb-5 rounded-xl bg-white shadow-lg"} style={{
                         height: 500,
                         width: 500,
@@ -43,6 +40,7 @@ export default function ItemPage(props: PageProps) {
                     <div className={styles.description}>{props.data.description}</div>
                     <div className={styles.price}>Price: £{props.data.price}</div>
                     <div className={styles.calories}>Calories: {props.data.calories} Cal</div>
+                    <button className={`${styles.button} text-lg text-white-500 hover:bg-sky-600 `}> ORDER NOW </button>
                 </div>
         </>
     )
