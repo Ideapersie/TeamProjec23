@@ -17,41 +17,38 @@ export default function AddItemPage() {
      * Manage the state of the elements.
      * Update value of variable when form is submitted.
      */
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [price, setPrice] = useState('');
-    const [type, setType] = useState('');
-    const [calories, setCalories] = useState('');
-    const [image, setImage] = useState('');
+    const [newItem, setNewItem] = useState({
+        name: '',
+        description: '',
+        type: '',
+        price: '',
+        calories: '',
+        image: ''
+    });
+
+    const handleChange = (e:any) => {
+        const { name, value } = e.target;
+        setNewItem({ ...newItem, [name]: value });
+    };
 
     /**
      * Send the form data to Flask API route.
      * 
-     * @param e The event object.
+     * @param e The event object representing the form submission event.
      */
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: any) => {
 
         e.preventDefault();
+        console.log(JSON.stringify(newItem));
 
-        const formData = { name, description, price, type, calories, image };
-
-        try {
-            const response = await fetch("http://127.0.0.1:5000/api/additem", {
+        const response = await fetch("http://127.0.0.1:5000/api/additem", {
                 method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData),
-            });
-            if (response.ok) {
-                console.log('Item added successfully');
-            
-            } else {
-                console.error('Failed to add item');
-            }
-        } catch (error) {
-          console.error('Error:', error);
-        }
+                body: JSON.stringify(newItem),
+                mode: 'no-cors'
+        });
     }
 
     /**
@@ -71,36 +68,36 @@ export default function AddItemPage() {
             <form onSubmit={handleSubmit} className={styles.form}>
 
                 <label className={styles.label}>Item name
-                    <input type="text" name="name" className={styles.input} value={name} onChange={(e) => setName(e.target.value)}/>
+                    <input type="text" name="name" className={styles.input} value={newItem.name} onChange={handleChange}/>
                 </label>
                 
                 <label className={styles.label}>Item description
-                    <input type="text" name="description" className={styles.input} value={description} onChange={(e) => setDescription(e.target.value)}/>
+                    <input type="text" name="description" className={styles.input} value={newItem.description} onChange={handleChange}/>
                 </label>
 
                 <label className={styles.label}>Item price
-                    <input type="number" name="price" min="1" step="any" className={styles.input} value={price} onChange={(e) => setPrice(e.target.value)}/>
+                    <input type="number" name="price" min="1" step="any" className={styles.input} value={newItem.price} onChange={handleChange}/>
                 </label>
 
                 <label className={styles.label}>Calories
-                    <input type="text" name="calories" className={styles.input} value={calories} onChange={(e) => setCalories(e.target.value)}/>
+                    <input type="number" name="calories" className={styles.input} value={newItem.calories} onChange={handleChange}/>
                 </label>
                 
                 <label className={styles.label}>Item type
-                    <select name="type" className={styles.select} value={type} onChange={(e) => setType(e.target.value)}>
-                        <option value="burgers">Burgers</option>
-                        <option value="sandwiches">Sandwiches</option>
-                        <option value="pizzas">Pizzas</option>
-                        <option value="pastas">Pastas</option>
-                        <option value="salads">Salads</option>
-                        <option value="seafood">Seafood</option>
-                        <option value="soups">Soups</option>
-                        <option value="desserts">Desserts</option>
+                    <select name="type" className={styles.select} value={newItem.type} onChange={handleChange}>
+                        <option value="Burgers">Burgers</option>
+                        <option value="Sandwiches">Sandwiches</option>
+                        <option value="Pizzas">Pizzas</option>
+                        <option value="Pastas">Pastas</option>
+                        <option value="Salads">Salads</option>
+                        <option value="Seafood">Seafood</option>
+                        <option value="Soups">Soups</option>
+                        <option value="Desserts">Desserts</option>
                     </select>
                 </label>
                 
                 <label className={styles.label}>Image URL
-                    <input type="text" name="image" className={styles.input} value={image} onChange={(e) => setImage(e.target.value)} />
+                    <input type="text" name="image" className={styles.input} value={newItem.image} onChange={handleChange}/>
                 </label>
 
                 <button type="submit" name="button" value="submit"className={styles.button}>Submit</button>
