@@ -92,14 +92,14 @@ def add_item():
     Returns:
         A message to inform the user if the item has been successfully added.
     """
-    newItem = request.get_json()
+    newItem = request.get_json(force = true)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT name FROM menuitem WHERE name = %s;' % (newItem["name"]))
     menuitems = cursor.fetchall()
     if (menuitems == None):
-        cursor.execute('INSERT INTO menuitem (menuitem_id, name, description, type, price, calories) VALUES (DEFAULT, %s, %s, %s, %s, %s)'
-                       % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories']))
+        cursor.execute('INSERT INTO menuitem (menuitem_id, name, description, type, price, calories) VALUES (DEFAULT, %s, %s, %s, %s, %s, %s)'
+                       % (newItem["name"], newItem['description'], newItem['type'], newItem['price'], newItem['calories'], newItem['image']))
         message = {
             "message" : "Menu item successfully added."
         } 
