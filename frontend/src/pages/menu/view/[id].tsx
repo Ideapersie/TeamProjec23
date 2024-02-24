@@ -21,6 +21,30 @@ export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
 
+    function handleAddToCart(){
+
+        let cartString = sessionStorage.getItem("Cart")
+
+        if (cartString === null) {
+
+            cartString = "{}"
+
+            sessionStorage.setItem("Cart", JSON.stringify({}))
+        }
+        
+        const cart = JSON.parse(cartString)
+        const id = props.data.menuitem_id
+
+        if (id in cart) {
+            cart[id] += 1
+
+        } else {
+            cart[id] = 1
+        }
+
+        sessionStorage.setItem("Cart",JSON.stringify(cart))
+
+    }
 
     return (
         <section className = {"min-h-screen flex flex-col"}>
@@ -44,8 +68,8 @@ export default function ItemPage(props: PageProps) {
                     <div className={styles.price}>Price: £{props.data.price}</div>
                     <div className={styles.calories}>Calories: {props.data.calories} Cal</div>
                     <div> 
-                        <button className={`${styles.button} text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW </button>
-                        {/* onClick={(handleAddToCart)}  */}
+                        <button onClick={(handleAddToCart)} className={`${styles.button} 
+                        text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW </button>
                     </div>
                 </div>
             </div>  
@@ -53,9 +77,9 @@ export default function ItemPage(props: PageProps) {
             <hr/>
             <div className = {"grid grid-cols-2 p-5 flex-grow "}>
                 <div>DESCRIPTION</div>
-                <div className = {"border-l border-white-500 pl-5"}> INGREDIENTS </div>
+                <div className = {"border-l border-white-500 pl-5"}> INGREDIENTS </div> {/* Currently need to hard code ingredients */}
             </div>
-
+            {/* Need to add more like this section, like alike food type */}
         </section>
     )
 }
@@ -67,7 +91,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const id = context.query.id as string;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems"); //New api route returning specific details for id
     let allMenuItems = (await response.json()) as MenuItem[];
 
     const menuItem = allMenuItems.find(item => {
