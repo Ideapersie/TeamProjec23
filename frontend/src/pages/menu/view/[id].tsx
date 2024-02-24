@@ -1,6 +1,7 @@
 import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router"
 import {MenuItem} from "@/types";
+import {env} from "../../../../env.config";
 
 /**
  * The props to be passed to our ItemPage page component.
@@ -34,7 +35,7 @@ export default function ItemPage(props: PageProps) {
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: PageProps }> {
     const id = context.query.id as string;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const response = await fetch(env.BACKEND_HOST + "/api/menuitems");
     let allMenuItems = (await response.json()) as MenuItem[];
 
     const menuItem = allMenuItems.find(item => {

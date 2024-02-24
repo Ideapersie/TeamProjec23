@@ -5,6 +5,7 @@ import AdminMenuList from "@/components/menu/admin/AdminMenuList";
 import {MenuItem} from "@/types";
 import {DeleteItemPopup} from "@/components/menu/admin/DeleteItemPopup";
 import {createContext, Dispatch, JSX, SetStateAction, useState} from "react";
+import {env} from "../../../../../env.config";
 
 // The data to be passed in as props
 interface Props {
@@ -55,7 +56,7 @@ export default function AdminViewMenuPage(props: Props): JSX.Element {
 // Loads data on the server (instead of on the browser) -> more secure + data available on page load
 export async function getServerSideProps(): Promise<{props: Props}> {
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const response = await fetch(env.BACKEND_HOST + "/api/menuitems");
     const data = await response.json() as MenuItem[];
 
     // ...and passes it to the ViewMenuPage component via props

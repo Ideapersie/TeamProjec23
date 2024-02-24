@@ -1,5 +1,6 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {MenuItem} from "@/types";
+import {env} from "../../../env.config";
 
 type ResponseData = {
     message: string,
@@ -9,7 +10,7 @@ type ResponseData = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const response = await fetch(env.BACKEND_HOST + '/api/menuitems');
     const menuItems = (await response.json()) as MenuItem[];
 
     return res.status(200).json({

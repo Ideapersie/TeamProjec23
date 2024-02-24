@@ -3,6 +3,7 @@ import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import styles from "./add.module.css";
+import {env} from "../../../../../env.config";
 
 
 /**
@@ -41,7 +42,7 @@ export default function AddItemPage() {
         e.preventDefault();
         console.log(JSON.stringify(newItem));
 
-        const response = await fetch("http://127.0.0.1:5000/api/additem", {
+        const response = await fetch(env.BACKEND_HOST + "/api/additem", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
