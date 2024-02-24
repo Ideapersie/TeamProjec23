@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash
 import psycopg2
 import config
 
+
 def execute_sql(file_path, conn):
     """
     Executes the SQL query within a specified file.
@@ -24,6 +25,7 @@ def execute_sql(file_path, conn):
         conn.commit()
 
     cursor.close()
+
 
 def insert_admin_user(conn):
     """
@@ -42,15 +44,17 @@ def insert_admin_user(conn):
     
     conn.commit()
 
+
 def main():
     """
     The main entry point of this application. 
     """
     conn = psycopg2.connect(
-        dbname = config.DATABASE_NAME,
-        user = config.DATABASE_USER,
-        password = config.DATABASE_PASSWORD,
-        host= config.DATABASE_HOST)
+        dbname=config.DATABASE_NAME,
+        user=config.DATABASE_USER,
+        password=config.DATABASE_PASSWORD,
+        host=config.DATABASE_HOST,
+    )
 
     init_schema_path = "./init_schema.sql"
     execute_sql(init_schema_path, conn)
@@ -61,6 +65,7 @@ def main():
     insert_admin_user(conn)
 
     conn.close()
+
 
 if __name__ == "__main__":
     main()
