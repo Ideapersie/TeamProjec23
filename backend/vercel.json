@@ -3,7 +3,6 @@
   "builds": [
     { "src": "app.py", "use": "@vercel/python" }
   ],
-  "installCommand": "pip install -r ./resources/requirements.txt",
   "routes": [
     { "src": "/(.*)", "dest": "/app.py" }
   ]
