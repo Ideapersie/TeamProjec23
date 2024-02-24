@@ -17,7 +17,7 @@ export default function ViewMenu(props: Props) {
         <section>
             <div className={"mb-4"}>
                 {props.category &&
-                    <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:ml-0.5 hover:ease-in"}>
+                    <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
                         Go back to all items
                     </Link>
                 }

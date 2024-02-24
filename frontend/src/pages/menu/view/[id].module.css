@@ -2,41 +2,26 @@
 .name {
 	font-weight: bold;
 	font-size: 50px;
-    text-align: center;
-	position: relative;
-	left: 150px;
-	bottom: 500px;
 }
+
 .description {
 	font-size: 15px;
 	font-style: italic;
-    text-align: center;
-	position:relative;
-	left:230px;
-	bottom: 500px;
+
 }
+
 .price	{
 	font-size: 20px;
 	font-weight: bold;
 	font-style: italic;
-    text-align: center;
-	position: relative;
-	left: 30px;
-	bottom: 500px;
 }
+
 .calories	{
 	font-size: 18px;
 	font-style: italic;
-    text-align: center;
-	position:relative;
-	left: 40px;
-	bottom: 500px;
 }
 
 .button {
-	position:relative;
-	left: 70px;
-	bottom: 450px;
 	width:200px;
 	height:70px;
 }
