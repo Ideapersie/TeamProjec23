@@ -35,13 +35,14 @@ export default function ViewMenu(props: Props) {
                     props.data.map(item => (
                         <CustomerMenuItem
                             key={item.menuitem_id}
-                            link={item.link}
+                            link={props.category ? `/menu/view/${item.menuitem_id}`:`/menu/${item.type}`  }
                             name={item.name}
                             description={item.description}
                             price={item.price}
                             calories={item.calories}
                             image={item.image}
                             menuitem_id={item.menuitem_id}
+                            type={item.type}
                         />
                     ))
                     :
