@@ -16,4 +16,11 @@ app.register_blueprint(menu_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(order_bp)
 
-app.run(debug=True)
+
+@app.route("/api/healthchecker", methods=["GET"])
+def healthchecker():
+    return {"status": "success", "message": "Integrate Flask Framework with Next.js"}
+
+
+if __name__ == "__main__":
+    app.run()
