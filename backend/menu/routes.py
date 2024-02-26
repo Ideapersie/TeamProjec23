@@ -9,6 +9,7 @@ The blueprint defines the following endpoints:
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
+from auth.authentication import validate_admin_token, validate_staff_token, secret_key
 
 menu_bp = Blueprint('menu', __name__)
 
@@ -53,6 +54,7 @@ def update_item(menuitem_id):
         'calories': '<integer>',
         'image': '<varchar(140)>'
     }
+    The request will only succeed if the user is authenticated as an admin or staff.
 
     Args:
         menuitem_id: The ID of the menu item to update.
@@ -60,6 +62,11 @@ def update_item(menuitem_id):
     Returns: 
         A JSON statement indicating success.
     """
+    if not request.cookies.get('token'):
+        return jsonify({'message' : 'Unauthorized access.'}), 401
+    elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
+        return jsonify({'message' : 'Unauthorized access.'}), 401
+
     data = request.get_json()
     name = data['name']
     description = data['description']
@@ -92,7 +99,7 @@ def add_item():
     Returns:
         A message to inform the user if the item has been successfully added.
     """
-    newItem = request.get_json(force = true)
+    newItem = request.get_json(force = True)
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('SELECT name FROM menuitem WHERE name = %s;' % (newItem["name"]))
