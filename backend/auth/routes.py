@@ -145,3 +145,18 @@ def login():
             return jsonify({'message': 'Email or password is invalid.'}), 401
     else:
         return jsonify({'message': 'Email or password is invalid.'}), 401
+    
+@auth_bp.route('/api/logout', methods=['POST'])
+def logout():
+    """
+    Logs the user out by deleting the token cookie.
+
+    The cookie is deleted by setting the expiration time to 0.
+    The browser detects this and automatically deletes the cookie.
+
+    Returns:
+        A JSON response and a HTTP code.
+    """
+    response = make_response(jsonify({'message': 'Logged out successfully.'}), 200)
+    response.set_cookie('token', '', expires=0, httponly=True, secure=True)
+    return response
