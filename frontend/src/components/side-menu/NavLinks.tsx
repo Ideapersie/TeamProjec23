@@ -89,6 +89,10 @@ export default function NavLinks(): JSX.Element {
                     display: "Add links here",
                     path: "/order/addlinkshere"
                 },
+                {
+                    display: "Customer orders (Waiter)",
+                    path: "/admin/waiter/orders"
+                },
             ]
         }
     };
