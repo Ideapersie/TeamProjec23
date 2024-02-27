@@ -3,7 +3,7 @@ import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import styles from "./add.module.css";
-
+import { error } from "console";
 
 /**
  * A form to add a new food item to the menu.
@@ -40,7 +40,7 @@ export default function AddItemPage() {
 
         e.preventDefault();
         console.log(JSON.stringify(newItem));
-
+        
         const response = await fetch("http://127.0.0.1:5000/api/additem", {
                 method: 'POST',
                 headers: {
@@ -48,6 +48,19 @@ export default function AddItemPage() {
                 },
                 body: JSON.stringify(newItem),
                 mode: 'no-cors'
+        })
+        .then(response => {
+            if (response) {
+                console.log('Request sent successfully');
+                alert("Menu item successfully added.")
+                
+            } else {
+                console.error('Request failed');
+                alert("Adding menu item unsuccessful.")
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
     }
 
@@ -68,19 +81,19 @@ export default function AddItemPage() {
             <form onSubmit={handleSubmit} className={styles.form}>
 
                 <label className={styles.label}>Item name
-                    <input type="text" name="name" className={styles.input} value={newItem.name} onChange={handleChange}/>
+                    <input type="text" name="name" className={styles.input} value={newItem.name} onChange={handleChange} required/>
                 </label>
                 
                 <label className={styles.label}>Item description
-                    <input type="text" name="description" className={styles.input} value={newItem.description} onChange={handleChange}/>
+                    <input type="text" name="description" className={styles.input} value={newItem.description} onChange={handleChange} required/>
                 </label>
 
                 <label className={styles.label}>Item price
-                    <input type="number" name="price" min="1" step="any" className={styles.input} value={newItem.price} onChange={handleChange}/>
+                    <input type="number" name="price" min="1" step="any" className={styles.input} value={newItem.price} onChange={handleChange} required/>
                 </label>
 
                 <label className={styles.label}>Calories
-                    <input type="number" name="calories" className={styles.input} value={newItem.calories} onChange={handleChange}/>
+                    <input type="number" name="calories" className={styles.input} value={newItem.calories} onChange={handleChange} required/>
                 </label>
                 
                 <label className={styles.label}>Item type
@@ -97,14 +110,11 @@ export default function AddItemPage() {
                 </label>
                 
                 <label className={styles.label}>Image URL
-                    <input type="text" name="image" className={styles.input} value={newItem.image} onChange={handleChange}/>
+                    <input type="text" name="image" className={styles.input} value={newItem.image} onChange={handleChange} required/>
                 </label>
 
                 <button type="submit" name="button" value="submit"className={styles.button}>Submit</button>
-        
             </form>
-
         </>
     )
-
 }
