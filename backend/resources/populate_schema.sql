@@ -17,3 +17,13 @@ INSERT INTO MenuAllergen(menuitem_id, allergen_name) VALUES
 (1, 'Cheese'),
 (1, 'Eggs'),
 (3, 'Cheese');
+
+INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
+(1, 'Cheese'),
+(1, 'Eggs'),
+(1, 'Beef'),
+(1, 'Burger bun'),
+(3, 'Cheese'),
+(5, 'Potato'),
+(5, 'Salt'),
+(8, 'Water');

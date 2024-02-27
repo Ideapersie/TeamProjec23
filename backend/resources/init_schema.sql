@@ -63,3 +63,10 @@ CREATE TABLE MenuAllergen (
     allergen_name VARCHAR(50) REFERENCES Allergen(allergen_name) NOT NULL,
     PRIMARY KEY (menuitem_id, allergen_name)
 );
+
+DROP TABLE IF EXISTS MenuIngredient CASCADE;
+CREATE TABLE MenuIngredient (
+    menuitem_id INTEGER REFERENCES MenuItem(menuitem_id) NOT NULL,
+    ingredient_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (menuitem_id, ingredient_name)
+);
