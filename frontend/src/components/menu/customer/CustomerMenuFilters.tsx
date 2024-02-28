@@ -6,9 +6,8 @@ import { useState } from "react"
 
 // Array of filter options
 const FILTERS = [
-  'Vegan',
-  'Low calories to high',
-  'Low price to high'
+  'Eggs',
+  'Cheese',
 ]
 
 // filter component
@@ -40,9 +39,10 @@ export function CustomerMenuFilters(){
       <div 
         className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-inset hover:bg-gray-100"
         onClick={() => setOpen(!open)}>
-        Filter Our Menu
+        ALLERGENS FILTER
       </div>
       <div className={`w-56 rounded-md bg-white shadow-lg py-1 ${open ? '' : 'hidden'}`}>
+          Does not contain:
           {filters.map((item) => 
             <div 
               key={item.name} 
