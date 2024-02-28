@@ -33,6 +33,7 @@ CREATE TABLE MenuItem (
     type VARCHAR(20) NOT NULL, -- Not nullable as items must be filterable
     price DECIMAL(5, 2) NOT NULL,
     calories INTEGER,
+    spice INTEGER CHECK(spice<=3) CHECK(0<=spice) NOT NULL,
     image VARCHAR(140) NOT NULL
 );
 
