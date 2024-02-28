@@ -50,8 +50,7 @@ export default function ItemPage(props: PageProps) {
         <section className = {"min-h-screen flex flex-col"}>
             <button className = {"bg-white text-base text-sky-500"} onClick={() => router.back()}>Go back</button>
 
-            {/* <pre>{JSON.stringify(props, undefined, 2)}</pre> // temporary display for each data items */}
-            <div className = {"flex gap-10"}>
+            <div className = {"flex gap-8 pb-8"}>
                 <div className = {"mt-5 mb-5 p-10 rounded-xl bg-white shadow-lg"} style = {{height:500 ,width:600}}>
                     <div style={{
                             height: "100%",
@@ -59,10 +58,10 @@ export default function ItemPage(props: PageProps) {
                             background: `url(${props.data.image})`,
                             backgroundPosition: "center",
                             backgroundSize: "contain",
-                            backgroundRepeat: "no-repeat"
+                            backgroundRepeat: "no-repeat",
                     }}/>
                 </div>
-                <div className={"flex flex-col gap-5"}>
+                <div className={"flex flex-col gap-5 pt-10"}>
                     <div className={styles.name}>{props.data.name}</div>
                     <div className={styles.description}>{props.data.description}</div>
                     <div className={styles.price}>Price: £{props.data.price}</div>
@@ -74,10 +73,26 @@ export default function ItemPage(props: PageProps) {
                 </div>
             </div>  
 
-            <hr/>
-            <div className = {"grid grid-cols-2 p-5 flex-grow "}>
-                <div>DESCRIPTION</div>
-                <div className = {"border-l border-white-500 pl-5"}> INGREDIENTS </div> {/* Currently need to hard code ingredients */}
+            <hr className = {"border-gray-300"}></hr>
+            <div className = {"grid grid-cols-2 pt-5 flex-grow"}>
+                <p> 
+                    <h1 className = {"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
+                    "Delicious burger with beef patty from local cows fed with organic grass, cows raised in northern 
+                    England in perfect conditions for growth. Our sauce is also housemade prepared with daily ingredients for a fresh flavour" 
+                </p>
+                <div className = {"border-l border-gray-300 pl-10"}> 
+                    <ol className = {"list-disc"}> 
+                        <h1 className = {"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
+                        <li> Burger Bun </li>
+                        <li> Patty </li>
+                        <li> Lettuce </li>
+                        <li> Tomato </li>
+                        <li> Onions </li>
+                        <li> Pickles </li>
+                        <li> Cheddar Cheese </li>
+                        <li> Burger Sauce </li>
+                    </ol>
+                </div>
             </div>
             {/* Need to add more like this section, like alike food type */}
         </section>
