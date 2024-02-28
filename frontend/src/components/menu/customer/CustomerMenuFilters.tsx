@@ -1,7 +1,7 @@
 
 import { MenuItem } from "@/types";
 import { GetServerSidePropsContext } from "next";
-import { useMemo, useState } from "react"
+import { useState } from "react"
 
 
 // Array of filter options
@@ -29,13 +29,11 @@ export function CustomerMenuFilters(){
   // Function to handle click events on filters
   const clickFilter = (name: string) => {
     setFilters(filters.map((item) => {
-        if (item.name === name) {
-            return { ...item, enabled: !item.enabled };
-        } else {
-            return { ...item, enabled: false };
-        }
-    }));
-};
+      if (item.name == name) return {...item, enabled: !item.enabled}
+      else return {...item}
+  }))
+  }
+
 
   return (
     <div>
