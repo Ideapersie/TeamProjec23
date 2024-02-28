@@ -9,11 +9,14 @@ interface Props {
     calories: number
     image: string
     menuitem_id: number
+    type: string
 }
+
+
 
 export function CustomerMenuItem(props: Props) {
     return (
-        <Link href={`/menu/view/${props.menuitem_id}`} className={"rounded-xl bg-white shadow px-10 py-5"}>
+        <Link href={props.link} className={"rounded-xl bg-white shadow px-10 py-5"}>
             <div>
                 <div className={"mb-3"} style={{
                     height: 200,
