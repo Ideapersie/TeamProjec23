@@ -33,6 +33,7 @@ CREATE TABLE MenuItem (
     type VARCHAR(20) NOT NULL, -- Not nullable as items must be filterable
     price DECIMAL(5, 2) NOT NULL,
     calories INTEGER,
+    spice INTEGER CHECK(spice<=3) CHECK(0<=spice) NOT NULL,
     image VARCHAR(140) NOT NULL
 );
 
@@ -62,4 +63,11 @@ CREATE TABLE MenuAllergen (
     menuitem_id INTEGER REFERENCES MenuItem(menuitem_id) NOT NULL,
     allergen_name VARCHAR(50) REFERENCES Allergen(allergen_name) NOT NULL,
     PRIMARY KEY (menuitem_id, allergen_name)
+);
+
+DROP TABLE IF EXISTS MenuIngredient CASCADE;
+CREATE TABLE MenuIngredient (
+    menuitem_id INTEGER REFERENCES MenuItem(menuitem_id) NOT NULL,
+    ingredient_name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (menuitem_id, ingredient_name)
 );
