@@ -27,7 +27,9 @@ export default function ViewMenu(props: Props) {
             </div>
 
             {/*Filters*/}
-            <CustomerMenuFilters />
+            <div className='mb-4 pt-10'>
+                <CustomerMenuFilters/>
+            </div>
 
             {/*Displaying menu items*/}
             <div className={"grid grid-cols-3 gap-5"}>
