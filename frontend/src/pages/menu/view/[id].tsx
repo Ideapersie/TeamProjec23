@@ -112,7 +112,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const id = context.query.id as string;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems"); //New api route returning specific details for id
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}"); //New api route returning specific details for id
     let allMenuItems = (await response.json()) as MenuItem[];
 
     const menuItem = allMenuItems.find(item => {

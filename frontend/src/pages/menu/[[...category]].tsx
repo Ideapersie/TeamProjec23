@@ -58,7 +58,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const category = context.query?.category?.[0] as string | undefined;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
     let menuItems = (await response.json()) as MenuItem[];
 
     if (category) {

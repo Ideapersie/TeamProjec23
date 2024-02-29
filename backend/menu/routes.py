@@ -27,7 +27,7 @@ def get_menuitems(menuitem_id):
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    if type(item_id) is int:
+    if type(menuitem_id) is int:
         cursor.execute(f"SELECT * FROM MenuItem WHERE menuitem_id = {menuitem_id}")
         menuitem = cursor.fetchone()
         
