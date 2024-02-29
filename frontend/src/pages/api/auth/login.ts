@@ -11,7 +11,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const {email, password} = req.body;
 
-    console.log("Received:", {email, password});
+    if (password !== 'test') {
+        return res.status(401).json({
+            message: "Incorrect password"
+        });
+    }
 
     const session = new Session();
     session.email = email;
