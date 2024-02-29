@@ -9,7 +9,7 @@ type ResponseData = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
+    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
     const menuItems = (await response.json()) as MenuItem[];
 
     return res.status(200).json({

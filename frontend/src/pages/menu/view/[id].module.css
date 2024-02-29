@@ -1,0 +1,26 @@
+/*all styles for order page*/
+.name {
+	font-weight: bold;
+	font-size: 50px;
+}
+
+.description {
+	font-size: 15px;
+	font-style: italic;
+}
+
+.price	{
+	font-size: 20px;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.calories	{
+	font-size: 18px;
+	font-style: italic;
+}
+
+.button {
+	width:200px;
+	height:70px;
+}
