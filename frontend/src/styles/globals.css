@@ -76,13 +76,14 @@ button {
   border-radius: 5px;
   padding: 5px 10px;
   margin: 15px auto;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease,translate 0.3s;
   border: none;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background-color: blue;
+    /* background-color: #0284c7; */
+    translate: 5px;
   }
 
   &:focus {

@@ -12,31 +12,46 @@ from menu.connection import get_db_connection
 
 menu_bp = Blueprint('menu', __name__)
 
-@menu_bp.route('/api/menuitems', methods = ['GET'])
-def get_menuitems():
+@menu_bp.route('/api/menuitems/<menuitem_id>', methods = ['GET'])
+def get_menuitems(menuitem_id):
     """
-    An API endpoint to retrieve all menu items from the database.
+    An API endpoint to retrieve all or one menu items from the database.
+    
+    Args:
+        menuitem_id: the ID of a single item to retrieve from the database.
 
     Returns:
         A JSON object containing all fetched menu items.
     """
+    
     conn = get_db_connection()
     cursor = conn.cursor()
+    
+    if type(menuitem_id) is int:
+        cursor.execute(f"SELECT * FROM MenuItem WHERE menuitem_id = {menuitem_id}")
+        menuitem = cursor.fetchone()
+        
+        cursor.close()
+        conn.close()
+        
+        return jsonify(menuitem), 200
+        
+    else:   #if no ID is given all items are returned
+        cursor.execute('SELECT * FROM MenuItem;')
+        menuitem = cursor.fetchall()
 
-    cursor.execute('SELECT * FROM MenuItem;')
-    menuitem = cursor.fetchall()
+        cursor.close()
+        conn.close()
 
-    cursor.close()
-    conn.close()
-
-    menuitems = [{'menuitem_id': item[0],
-                   'name': item[1],
-                   'description': item[2],
-                   'type': item[3],
-                   'price': item[4],
-                   'calories': item[5],
-                   'image': item[6]} for item in menuitem]
-    return jsonify(menuitems), 200
+        menuitems = [{'menuitem_id': item[0],
+                       'name': item[1],
+                       'description': item[2],
+                       'type': item[3],
+                       'price': item[4],
+                       'calories': item[5],
+                       'image': item[6]} for item in menuitem]
+        
+        return jsonify(menuitems), 200
 
 @menu_bp.route('/api/updateitem/<menuitem_id>', methods=['PUT'])
 def update_item(menuitem_id):
