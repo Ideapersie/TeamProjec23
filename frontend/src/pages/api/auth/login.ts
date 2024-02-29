@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     session.firstName = "Test";
     session.lastName = "Account";
 
-    res.appendHeader('Set-Cookie', `${sessionCookieName}=${session.toString()}`)
+    res.setHeader('Set-Cookie', `${sessionCookieName}=${session.toString()}; Path=/`);
 
     res.status(200).json({
         message: 'Hello from Next.js!',
