@@ -22,23 +22,31 @@ export default function LoginPage() {
 
         console.log("Payload:", payload);
 
-        try {
-            const res = await fetch("http://127.0.0.1:5000/api/login", {
-                method: "POST",
-                body: JSON.stringify(payload),
-                mode: "no-cors",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+        await fetch("/api/auth/login", {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
 
-            const data = await res.json();
-
-            console.log("Response data:", data);
-
-        } catch (e) {
-            console.error(e);
-        }
+        // try {
+        //     const res = await fetch("http://127.0.0.1:5000/api/login", {
+        //         method: "POST",
+        //         body: JSON.stringify(payload),
+        //         mode: "no-cors",
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         }
+        //     });
+        //
+        //     const data = await res.json();
+        //
+        //     console.log("Response data:", data);
+        //
+        // } catch (e) {
+        //     console.error(e);
+        // }
     }
 
     return (
