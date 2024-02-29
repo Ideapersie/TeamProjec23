@@ -2,6 +2,7 @@ import { GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router"
 import {MenuItem} from "@/types";
 import styles from "./[id].module.css";
+import Link from "next/link";
 
 
 /**
@@ -48,8 +49,14 @@ export default function ItemPage(props: PageProps) {
 
     return (
         <section>
-            {/* Button onside of the flex therefore can be top-left */}
+            {/* Needs to be adjusted to same row */}
             <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button>
+
+            <div className ={"flex justify-end"}> 
+                <Link href={"/menu/view/cart"}>
+                    <img className = "hover:translate-y-1" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
+                </Link>
+            </div>
 
             <div className = {"min-h-screen flex flex-col"}>
                 <div className = {"flex gap-8 pb-8"}>
