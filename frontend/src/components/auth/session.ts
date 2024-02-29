@@ -94,17 +94,24 @@ export class Session {
     }
 
     /**
-     * Converts session object to a string that can be stored in a cookie.
-     * @return {string} The session object as a string.
+     * Return a JSON object representing the session.
      */
-    toString(): string {
-        return JSON.stringify({
+    get json() {
+        return {
            role: this._role,
            firstName: this._firstName,
            lastName: this._lastName,
            email: this._email,
            sessionId: this._sessionId
-        });
+        }
+    }
+
+    /**
+     * Converts session object to a string that can be stored in a cookie.
+     * @return {string} The session object as a string.
+     */
+    toString(): string {
+        return JSON.stringify(this.json);
     }
 }
 
