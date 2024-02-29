@@ -16,6 +16,11 @@ export default function ViewMenu(props: Props) {
     return <>
         <section>
             <div className={"mb-4"}>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Link href={"/menu/view/cart"}>
+                        <img className = "hover:translate-y-1" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
+                    </Link>
+                </div>
                 {props.category &&
                     <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
                         Go back to all items

@@ -28,6 +28,7 @@ export function CustomerMenuItem(props: Props) {
                 <div className={styles.calories}>{props.calories} Cal</div>
             </div>
         </Link>
+            
     );
 }
 
