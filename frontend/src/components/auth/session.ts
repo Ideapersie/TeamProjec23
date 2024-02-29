@@ -14,7 +14,7 @@ export class Session {
 
     constructor(params?: ConstructorParams) {
         if (params?.cookie !== undefined) {
-            this._cookie = params.cookie;
+            this.cookie = params.cookie;
         }
     }
 
@@ -91,6 +91,19 @@ export class Session {
      */
     set role(value: Role | undefined) {
         this._role = value;
+    }
+
+    get cookie(): SessionCookie | undefined {
+        return this._cookie;
+    }
+
+    set cookie(value: SessionCookie) {
+        this._cookie = value;
+        this._role = value.role;
+        this._firstName = value.firstName;
+        this._lastName = value.lastName;
+        this._email = value.email;
+        this._sessionId = value.sessionId;
     }
 
     /**
