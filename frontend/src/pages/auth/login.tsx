@@ -1,6 +1,7 @@
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent} from "react";
+import {useRouter} from "next/router";
 
 /**
  * A component for rendering the login page
@@ -8,6 +9,8 @@ import {FormEvent} from "react";
  * @author Vincent Chapman (zlac465@live.rhul.ac.uk)
  */
 export default function LoginPage() {
+
+    const router = useRouter();
 
     // Handler for form submission event
     async function handleLogin(e: FormEvent<HTMLFormElement>) {
@@ -22,13 +25,17 @@ export default function LoginPage() {
 
         console.log("Payload:", payload);
 
-        await fetch("/api/auth/login", {
+        const res = await fetch("/api/auth/login", {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {
                 "Content-Type": "application/json"
             }
         });
+
+        if (res.status === 200) {
+            await router.push('/');
+        }
 
         // try {
         //     const res = await fetch("http://127.0.0.1:5000/api/login", {
