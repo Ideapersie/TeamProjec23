@@ -8,7 +8,7 @@ The app defines the following endpoints:
     /api/signup (POST): Creates either a customer or a staff account if the token is valid.
     /api/login (POST): Confirms whether email/password are authentic and returns a session token.
 """
-from flask import Blueprint, request, jsonify, abort
+from flask import Blueprint, request, jsonify, abort, make_response
 import psycopg2
 from werkzeug.security import check_password_hash, generate_password_hash
 from resources import config
@@ -95,12 +95,12 @@ def login():
     """
     API endpoint to confirm whether email/password are authentic.
 
-    If email/password are authentic, a token session token is returned as well as the user type.
-    This token and user type is stored locally on the browser and used to authenticate future requests.
+    If email/password are authentic, a cookie is set, and a JSON response is returned.
+    This cookie is used to authenticate future requests.
     The user type can be either customer, staff or admin.
 
     Returns:
-        A HTTP response status code as well as a JSON response.
+        A JSON response and a HTTP code.
     """
     data = request.get_json()
     email = data['email']
@@ -138,8 +138,25 @@ def login():
 
     if data:
         if check_password_hash(password_hash, password):
-            return jsonify({'message': f'Logged into {email} successfully.', 'token': token, 'type': type}), 200
+            response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
+            response.set_cookie('token', token, httponly=True, secure=True)
+            return response
         else:
             return jsonify({'message': 'Email or password is invalid.'}), 401
     else:
         return jsonify({'message': 'Email or password is invalid.'}), 401
+    
+@auth_bp.route('/api/logout', methods=['POST'])
+def logout():
+    """
+    Logs the user out by deleting the token cookie.
+
+    The cookie is deleted by setting the expiration time to 0.
+    The browser detects this and automatically deletes the cookie.
+
+    Returns:
+        A JSON response and a HTTP code.
+    """
+    response = make_response(jsonify({'message': 'Logged out successfully.'}), 200)
+    response.set_cookie('token', '', expires=0, httponly=True, secure=True)
+    return response
