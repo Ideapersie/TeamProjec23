@@ -147,9 +147,9 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
 
     const id = ctx.query.id as string;
 
-    const res = await fetch(`http://127.0.0.1:5000/api/menuitems`);
+    const res = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
     const allItems = await res.json() as MenuItem[];
-
+	
     const data = allItems.find(item => item.menuitem_id === parseInt(id)) || null;
 
     return {
