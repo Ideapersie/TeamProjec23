@@ -55,8 +55,6 @@ def get_menuitems(menuitem_id):
         return jsonify(menuitems), 200
 
 
-@menu_bp.route('/api/updateitem/<menuitem_id>', methods=['PUT'])
-
 @menu_bp.route('/api/menu/item/<int:item_id>', methods=['GET'])
 def get_menu_item_by_id(item_id: int):
     """
@@ -87,6 +85,7 @@ def get_menu_item_by_id(item_id: int):
         return jsonify("Something went wrong"), 500
 
 
+@menu_bp.route('/api/updateitem/<menuitem_id>', methods=['POST'])
 def update_item(menuitem_id):
     """
     An API endpoint to update an existing menu item in the database.
