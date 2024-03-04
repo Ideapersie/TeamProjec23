@@ -77,10 +77,11 @@ def update_item(menuitem_id):
     Returns: 
         A JSON statement indicating success.
     """
-    if not request.cookies.get('token'):
-        return jsonify({'message' : 'Unauthorized access.'}), 401
-    elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
-        return jsonify({'message' : 'Unauthorized access.'}), 401
+
+    # if not request.cookies.get('token'):
+    #     return jsonify({'message' : 'Unauthorized access.'}), 401
+    # elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
+    #     return jsonify({'message' : 'Unauthorized access.'}), 401
 
     data = request.get_json()
     name = data['name']
