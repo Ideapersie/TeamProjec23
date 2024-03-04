@@ -1,9 +1,10 @@
 """
 Auxiliary methods used in the payment routes.
 
-This module is concerned with authenticating credit card numbers.
+This modules defines credit card authentication methods as well as fetch/insert methods for the database.
 """
 import psycopg2
+from flask import jsonify
 from resources import config
 
 def get_db_connection():
@@ -58,18 +59,57 @@ def luhn_check(card_number):
         return False
     
 def get_payment_info(customer_id):
+    """
+    Returns the payment information associated with a user.
+
+    This method either returns the payment information on success, or an error message if such information does not exist.
+
+    Args:
+        customer_id: The id of the customer to which the data is fetched for.
+
+    Returns:
+        A JSON payload on success or a JSON error message.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute(f'SELECT * FROM PaymentInfo WHERE customer_id = {customer_id}')
-    data = cursor.fetchall()
-
-    print("test")
+    data = cursor.fetchone()
 
     cursor.close()
     conn.close()
 
-    payment_info = [{'card_number': item[2],
-                     'holder_name': item[3],
-                     'expiration_date': item[4]} for item in data]
-    return payment_info
+    if data:
+        payment_info = [{'card_number': data['card_number'],
+                        'holder_name': data['holder_name'],
+                        'expiration_date': data['expiration_date']}]
+        return payment_info
+    else:
+        return jsonify({'message': 'Payment information not found.'}), 400
+    
+def store_payment_info(customer_id, card_number, holder_name, expiration_date):
+    """
+    Stores payment data associated to a customer in the database.
+
+    Args:
+        customer_id: The ID of the customer which the data is being stored for.
+        card_number: The card number to store.
+        holder_name: The full name of the card holder.
+        expiration_date: The expiry date of the card.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+                   DELETE FROM PaymentInfo
+                   WHERE customer_id = %s
+                   """, (customer_id))
+    cursor.execute("""
+                   INSERT INTO PaymentInfo (customer_id, card_number, holder_name, expiration_date)
+                   VALUES (%s, %s, %s, %s)
+                   """, (customer_id, card_number, holder_name, expiration_date))
+    
+    conn.commit()
+
+    cursor.close()
+    conn.close()
