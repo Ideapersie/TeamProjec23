@@ -174,3 +174,42 @@ def delete_item():
     cursor.close()
     conn.close()
     return jsonify(message)
+
+
+@menu_bp.route('/api/menu/types', methods=['GET'])
+def get_all_types():
+    """
+    API endpoint to return all menu item types currently stored in the database.
+
+    Returns:
+        A success message.
+    """
+
+    try:
+        # Querying the database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT DISTINCT "type" AS test FROM menuitem;')
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        # Processing the response
+        types = set()
+        for row in data:
+            for item in row:
+                types.add(item)
+
+        # Return success message + data
+        return jsonify({
+            "message": "Success",
+            "data": list(types)
+        }), 200
+
+    # Else return error response
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "message": "Something went wrong",
+            "data": None
+        }), 500
