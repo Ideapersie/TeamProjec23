@@ -42,6 +42,15 @@ CREATE TABLE Allergen (
     allergen_name VARCHAR(50) PRIMARY KEY
 );
 
+DROP TABLE IF EXISTS PaymentInfo CASCADE;
+CREATE TABLE PaymentInfo (
+    paymentinfo_id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,
+    card_number CHAR(16) NOT NULL,
+    holder_name VARCHAR(100) NOT NULL,
+    expiration_date DATE NOT NULL
+);
+
 /* Junction Tables */
 
 DROP TABLE IF EXISTS OrderMenu CASCADE;
