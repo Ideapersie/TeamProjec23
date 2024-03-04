@@ -9,7 +9,7 @@ The blueprint defines the following endpoints:
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
-from auth.authentication import validate_admin_token, validate_staff_token, secret_key
+from auth.authentication import validate_admin_token, validate_staff_token, secret_key, protect_customer
 
 menu_bp = Blueprint('menu', __name__)
 
@@ -77,10 +77,8 @@ def update_item(menuitem_id):
     Returns: 
         A JSON statement indicating success.
     """
-    if not request.cookies.get('token'):
-        return jsonify({'message' : 'Unauthorized access.'}), 401
-    elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
-        return jsonify({'message' : 'Unauthorized access.'}), 401
+    if not protect_customer():
+        return jsonify({'message': 'Unauthorised access.'}), 403
 
     data = request.get_json()
     name = data['name']
