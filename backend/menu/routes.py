@@ -90,6 +90,7 @@ def update_item(menuitem_id):
     type = data['type']
     calories = data['calories']
     image = data['image']
+        data = request.get_json(force=True)
 
     conn = get_db_connection()
     cursor = conn.cursor()
