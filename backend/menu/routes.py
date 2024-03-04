@@ -68,16 +68,48 @@ def get_menu_item_by_id(item_id: int):
     """
 
     try:
-        # Query database
+        # Connect to database
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM MenuItem WHERE menuitem_id = {item_id}")
-        menuitem = cursor.fetchone()
+
+        # Prepare sql query
+        sql = f"""
+            SELECT menuitem_id, name, description, type, price, calories, image
+            FROM MenuItem
+            WHERE menuitem_id = {item_id}
+        """
+
+        # Execute query + pull data into python
+        cursor.execute(sql)
+        data = cursor.fetchone()
+
+        # Close connection
         cursor.close()
         conn.close()
 
-        # Return success response + data
-        return jsonify(menuitem), 200
+        if data:
+            [menuitem_id, name, description, type, price, calories, image] = data
+
+            # Return success response + data
+            return jsonify({
+                "message": f"Successfully retrieved item {item_id}",
+                "item": {
+                    "menuitem_id": int(menuitem_id),
+                    "name": name,
+                    "description": description,
+                    "type": type,
+                    "price": float(price),
+                    "calories": int(calories),
+                    "image": image
+                }
+            }), 200
+
+        else:
+            # Return failed response
+            return jsonify({
+                "message": f"Item {item_id} not found",
+                "item": None
+            }), 404
 
     # Handle any exceptions
     except Exception as e:
