@@ -5,7 +5,7 @@ This blueprint defines the following routes:
     /api/validate (POST): Checks whether card details are correct.
 """
 from flask import Blueprint, request, jsonify
-from payment import luhn_algorithm
+from payment.payment import luhn_check
 
 payment_bp = Blueprint('payment', __name__)
 
@@ -23,7 +23,7 @@ def validate():
     data = request.get_json()
     card_number = data['card_number']
 
-    if luhn_algorithm(f'{card_number}'):
-        return jsonify({'message': 'Credit card validated.'}), 200
+    if luhn_check(f'{card_number}'):
+        return jsonify({'message': 'Card validated.'}), 200
     else:
-        return jsonify({'message': 'Incorrect information provided'}), 400
+        return jsonify({'message': 'Incorrect information provided.'}), 400

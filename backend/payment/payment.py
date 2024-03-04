@@ -3,7 +3,23 @@ Auxiliary methods used in the payment routes.
 
 This module is concerned with authenticating credit card numbers.
 """
-def luhn_algorithm(card_number):
+import psycopg2
+from resources import config
+
+def get_db_connection():
+    """
+    Establishes a connection to Postgres.
+    
+    Returns:
+        A psycopg2 connection object.
+    """
+    conn = psycopg2.connect(dbname = config.DATABASE_NAME,
+                            user = config.DATABASE_USER,
+                            password = config.DATABASE_PASSWORD,
+                            host = config.DATABASE_HOST)
+    return conn
+
+def luhn_check(card_number):
     """
     Validates whether a card number has the possibility of being correct.
 
@@ -24,7 +40,7 @@ def luhn_algorithm(card_number):
 
 
     for i in range(len(card_number_list) - 1, -1, -1):
-        if (i % 2 == 0):
+        if (len(card_number_list) - i) % 2 != 0:
             continue
         doubled = card_number_list[i] * 2
         if (doubled > 9):
@@ -40,3 +56,20 @@ def luhn_algorithm(card_number):
         return True
     else:
         return False
+    
+def get_payment_info(customer_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(f'SELECT * FROM PaymentInfo WHERE customer_id = {customer_id}')
+    data = cursor.fetchall()
+
+    print("test")
+
+    cursor.close()
+    conn.close()
+
+    payment_info = [{'card_number': item[2],
+                     'holder_name': item[3],
+                     'expiration_date': item[4]} for item in data]
+    return payment_info
