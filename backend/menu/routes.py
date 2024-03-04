@@ -265,7 +265,7 @@ def get_all_types():
         # Return success message + data
         return jsonify({
             "message": "Success",
-            "data": list(types)
+            "types": list(types)
         }), 200
 
     # Else return error response
