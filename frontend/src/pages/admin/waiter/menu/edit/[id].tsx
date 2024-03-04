@@ -8,7 +8,8 @@ import {FormEvent, useState} from "react";
  * Defining component props
  */
 interface Props {
-    data: MenuItem | null
+    data: MenuItem | null,
+    types: string[]
 }
 
 /**
@@ -147,14 +148,27 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
 
     const id = ctx.query.id as string;
 
-    const res = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
-    const allItems = await res.json() as MenuItem[];
-	
-    const data = allItems.find(item => item.menuitem_id === parseInt(id)) || null;
+    let data = null;
+
+    if (id !== 'undefined') {
+        const res = await fetch(env.apiHost + `/api/menu/item/${id}?test`);
+
+        // If item fetched successfully...
+        if (res.status === 200) {
+            data = (await res.json())["item"] as MenuItem;
+            console.log(data);
+        }
+    }
+
+    const res = await fetch(env.apiHost + "/api/menu/types");
+    const typesData = await res.json();
+
+    let types: string[] = typesData.types || [];
 
     return {
         props: {
-            data
+            data,
+            types
         }
     }
 }
