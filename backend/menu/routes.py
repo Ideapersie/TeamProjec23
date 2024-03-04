@@ -54,6 +54,7 @@ def get_menuitems(menuitem_id):
         
         return jsonify(menuitems), 200
 
+
 @menu_bp.route('/api/updateitem/<menuitem_id>', methods=['PUT'])
 def update_item(menuitem_id):
     """
@@ -83,30 +84,42 @@ def update_item(menuitem_id):
     # elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
     #     return jsonify({'message' : 'Unauthorized access.'}), 401
 
-    data = request.get_json()
-    name = data['name']
-    description = data['description']
-    price = data['price']
-    type = data['type']
-    calories = data['calories']
-    image = data['image']
+    try:
         data = request.get_json(force=True)
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+        name = data['name']
+        description = data['description']
+        price = data['price']
+        type = data['type']
+        calories = data['calories']
+        image = data['image']
 
-    statement = f"""
-    UPDATE MenuItem
-    SET name='{name}', description='{description}', price='{price}', type='{type}', calories='{calories}', image='{image}'
-    WHERE menuitem_id={menuitem_id}
-    """
-    cursor.execute(statement)
-    conn.commit()
+        conn = get_db_connection()
+        cursor = conn.cursor()
 
-    cursor.close()
-    conn.close()
-    
-    return jsonify({'message' : f'Item {menuitem_id} has been updated.'}), 200
+        statement = f"""
+                UPDATE MenuItem
+                SET name='{name}',
+                    description='{description}',
+                    price='{price}',
+                    type='{type}',
+                    calories='{calories}',
+                    image='{image}'
+                WHERE menuitem_id={menuitem_id}
+            """
+
+        cursor.execute(statement)
+        conn.commit()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({'message': f'Item {menuitem_id} has been updated.'}), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify("Something went wrong"), 500
+
 
 @menu_bp.route('/api/additem', methods=['POST'])
 def add_item():
