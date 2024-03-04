@@ -4,6 +4,7 @@ import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent, useState} from "react";
 import {useRouter} from "next/router";
+import {env} from "../../../../../../env.config";
 
 /**
  * Defining component props
@@ -30,7 +31,9 @@ export default function EditMenuItemPage(props: Props) {
     const [itemImage, setItemImage] = useState(props.data?.image);
 
     // If no item found for given id, display error message
-    if (props.data === null) return <>Item not found</>;
+    if (props.data === null) {
+        return <>Item not found</>;
+    }
 
     // Saves changes for the current item
     async function handleSaveChanges(e: FormEvent<HTMLFormElement>) {
@@ -89,20 +92,23 @@ export default function EditMenuItemPage(props: Props) {
 
                     <label>
                         Item type
-                        <select
+                        <input
+                            type="text"
                             value={itemType}
                             onChange={e => setItemType(e.currentTarget.value)}
-                        >
-                            {/*TODO: Come up with a better solution here*/}
-                            <option value="Burgers">Burgers</option>
-                            <option value="Sides">Sides</option>
-                            <option value="Drinks">Drinks</option>
-                            <option value="Desserts">Desserts</option>
-                        </select>
+                            list={"datalist-types"}
+                        />
+
+                        <datalist id={"datalist-types"}>
+                            {props.types.map(type => <option key={type}>
+                                {type}
+                            </option>)
+                            }
+                        </datalist>
                     </label>
 
                     <label>
-                        Item price
+                        Item price (£)
                         <input
                             type="number"
                             min={0}
