@@ -3,6 +3,7 @@ import {MenuItem} from "@/types";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent, useState} from "react";
+import {useRouter} from "next/router";
 
 /**
  * Defining component props
@@ -19,6 +20,8 @@ interface Props {
  */
 export default function EditMenuItemPage(props: Props) {
 
+    const router = useRouter();
+
     const [itemName, setItemName] = useState(props.data?.name);
     const [itemDescription, setItemDescription] = useState(props.data?.description);
     const [itemType, setItemType] = useState(props.data?.type);
@@ -30,21 +33,30 @@ export default function EditMenuItemPage(props: Props) {
     if (props.data === null) return <>Item not found</>;
 
     // Saves changes for the current item
-    function handleSaveChanges(e: FormEvent<HTMLFormElement>) {
+    async function handleSaveChanges(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const payload = {
-            itemName,
-            itemDescription,
-            itemType,
-            itemPrice,
-            itemCalories,
-            itemImage
+            name: itemName,
+            description: itemDescription,
+            price: itemPrice,
+            type: itemType,
+            calories: itemCalories,
+            image: itemImage
         };
 
         console.log(payload);
+        const url = `${env.apiHost}/api/updateitem/${props.data?.menuitem_id}`;
 
-        alert("Hook this up to an api")
+        const res = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            mode: 'no-cors'
+        });
+
+        // TODO: Add check for success response
+
+        await router.push('/admin/waiter/menu/view');
     }
 
     return (
