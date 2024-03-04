@@ -169,7 +169,7 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
     let data = null;
 
     if (id !== 'undefined') {
-        const res = await fetch(env.apiHost + `/api/menu/item/${id}?test`);
+        const res = await fetch(env.apiHost + `/api/menu/item/${id}`);
 
         // If item fetched successfully...
         if (res.status === 200) {
