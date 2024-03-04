@@ -117,7 +117,7 @@ def add_item():
     newItem = request.get_json(force = True)
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(f"SELECT name FROM menuitem WHERE name = '{(newItem["name"])}';")
+    cursor.execute(f"SELECT name FROM menuitem WHERE name = {newItem['name']};")
     menuitems = cursor.fetchall()
     if (menuitems != None):
         print("true")

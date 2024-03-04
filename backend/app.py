@@ -6,7 +6,7 @@ This module runs the server-side, API routes expect to be called by the frontend
 To run:
     `flask run` 
 """
-from flask import Flask, jsonify, request
+from flask import Flask
 from menu.routes import menu_bp
 from auth.routes import auth_bp
 from order.routes import order_bp
