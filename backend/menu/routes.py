@@ -55,6 +55,37 @@ def get_menuitems(menuitem_id):
         return jsonify(menuitems), 200
 
 @menu_bp.route('/api/updateitem/<menuitem_id>', methods=['PUT'])
+
+@menu_bp.route('/api/menu/item/<int:item_id>', methods=['GET'])
+def get_menu_item_by_id(item_id: int):
+    """
+    An API endpoint to retrieve one menu item from the database.
+
+    Args:
+        item_id: the ID of a single item to retrieve from the database.
+
+    Returns:
+        A Response containing the item's data.
+    """
+
+    try:
+        # Query database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT * FROM MenuItem WHERE menuitem_id = {item_id}")
+        menuitem = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        # Return success response + data
+        return jsonify(menuitem), 200
+
+    # Handle any exceptions
+    except Exception as e:
+        print(e)
+        return jsonify("Something went wrong"), 500
+
+
 def update_item(menuitem_id):
     """
     An API endpoint to update an existing menu item in the database.
