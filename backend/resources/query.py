@@ -35,10 +35,11 @@ def insert_admin_user(conn):
     email = config.MY_EMAIL
     password = "teamproject23"
     hashed_password = generate_password_hash(password)
+    table_number = config.TABLE_NUMBER
     
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Staff(email, password, admin, first_name, last_name) VALUES(%s, %s, %s, %s, %s)",
-                   (email, hashed_password, True, "Super", "User"))
+    cursor.execute("INSERT INTO Staff(email, password, admin, first_name, last_name, table_number) VALUES(%s, %s, %s, %s, %s, %s)",
+                   (email, hashed_password, True, "Super", "User", table_number))
     
     conn.commit()
 
