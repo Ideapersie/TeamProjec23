@@ -42,7 +42,22 @@ export default function Cart() {
                         </tbody>
                     </table>
                 </div>
-                
+                <div>
+                    <div>
+                        <ul>
+                            <li>
+                                <div>
+                                    Subtotal: £
+                                </div>
+                            </li>
+                            <li>
+                                <button>
+                                    Proceed to checkout
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
         </div>
