@@ -84,25 +84,29 @@ export default function ItemPage(props: PageProps) {
                 </div>  
 
                 <hr className = {"border-gray-300"}></hr>
-                
-                <div className = {"grid grid-cols-2 pt-5 flex-grow"}>
-                    <p> 
-                        <h1 className = {"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
-                        Delicious burger with beef patty from local cows fed with organic grass, cows raised in northern
-                        England in perfect conditions for growth. Our sauce is also housemade prepared with daily ingredients for a fresh flavour
-                    </p>
 
-                    <div className = {"border-l border-gray-300 pl-10"}> 
-                        <ol className = {"list-disc"}> 
-                            <h1 className = {"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
-                            <li> Burger Bun </li>
-                            <li> Patty </li>
-                            <li> Lettuce </li>
-                            <li> Tomato </li>
-                            <li> Onions </li>
-                            <li> Pickles </li>
-                            <li> Cheddar Cheese </li>
-                            <li> Burger Sauce </li>
+                <div className={"grid grid-cols-2 pt-5 flex-grow"}>
+                    <div>
+                        <h1 className={"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
+                        <p>
+                            Delicious burger with beef patty from local cows fed with organic grass, cows raised in
+                            northern
+                            England in perfect conditions for growth. Our sauce is also housemade prepared with daily
+                            ingredients for a fresh flavour
+                        </p>
+                    </div>
+
+                    <div className={"border-l border-gray-300 pl-10"}>
+                        <ol className={"list-disc"}>
+                            <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
+                            <li> Burger Bun</li>
+                            <li> Patty</li>
+                            <li> Lettuce</li>
+                            <li> Tomato</li>
+                            <li> Onions</li>
+                            <li> Pickles</li>
+                            <li> Cheddar Cheese</li>
+                            <li> Burger Sauce</li>
                         </ol>
                     </div>
                 </div>
