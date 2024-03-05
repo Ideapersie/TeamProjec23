@@ -26,16 +26,23 @@ def get_menuitems(menuitem_id):
     
     conn = get_db_connection()
     cursor = conn.cursor()
-    
-    if type(item_id) is int:
-        cursor.execute(f"SELECT * FROM MenuItem WHERE menuitem_id = {menuitem_id}")
-        menuitem = cursor.fetchone()
+     
+    if len(menuitem_id) <= 3: 
+        cursor.execute("SELECT * FROM MenuItem WHERE menuitem_id = %s", (menuitem_id,))
+        item = cursor.fetchone()
         
         cursor.close()
         conn.close()
         
-        return jsonify(menuitem), 200
+        menuitem = {'menuitem_id': item[0],
+                       'name': item[1],
+                       'description': item[2],
+                       'type': item[3],
+                       'price': item[4],
+                       'calories': item[5],
+                       'image': item[6]}
         
+        return jsonify(menuitem), 200
     else:   #if no ID is given all items are returned
         cursor.execute('SELECT * FROM MenuItem;')
         menuitem = cursor.fetchall()
