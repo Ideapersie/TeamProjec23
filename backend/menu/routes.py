@@ -117,7 +117,7 @@ def get_menu_item_by_id(item_id: int):
 
             # Get ingredients
             sql_ingredients = f"""
-                SELECT *
+                SELECT menuitem_id, ingredient_name
                 FROM menuingredient
                 WHERE menuitem_id = {item_id};
             """
@@ -125,7 +125,9 @@ def get_menu_item_by_id(item_id: int):
             data_ingredients = cursor.fetchall()
 
             if data_ingredients:
-                print(data_ingredients)
+                for row in data_ingredients:
+                    ingredient_name = row[1]
+                    ingredients.append(ingredient_name)
 
         # Close connection
         cursor.close()
@@ -145,7 +147,8 @@ def get_menu_item_by_id(item_id: int):
                     "price": float(price),
                     "calories": int(calories),
                     "image": image,
-                    "related": related_items
+                    "related": related_items,
+                    "ingredients": ingredients
                 }
             }), 200
 
