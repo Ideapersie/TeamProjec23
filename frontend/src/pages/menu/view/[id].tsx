@@ -8,7 +8,7 @@ import styles from "./[id].module.css";
  * The props to be passed to our ItemPage page component.
  */
 interface PageProps {
-    data: MenuItem | MenuItem;
+    data: MenuItem | null;
 }
 
 /**
