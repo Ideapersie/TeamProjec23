@@ -57,6 +57,9 @@ def delete_order():
         cursor.execute(f'''
                        DELETE FROM Order WHERE order_id = '{order_to_delete['order_id']}';
                        ''')
+        cursor.execute(f'''
+                       DELETE FROM OrderMenu WHERE order_id = '{order_to_delete['order_id']}';
+                       ''')
         message = {
             "message" : "Order has been successfully deleted."
         }
@@ -83,8 +86,27 @@ def modify_order():
                    SELECT order_id FROM Order WHERE order_id = '{orderid}';
                    ''')
     existing_order = cursor.fetchall()
-    if (len(existing_order == 0)):
+    
+    if (len(existing_order > 0)):
+        cursor.execute(f'''
+                       DELETE FROM OrderMenu WHERE order_id = '{order_to_modify['order_id']}';
+                       ''')
+        for key, value in order_to_modify.items():
+            if (key == "customer_id" or key == "time_ordered"):
+                continue
+            for x in range(int(value)):
+                cursor.execute(f'''
+                                INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
+                                ('{order_to_modify['customer_id']}', '{key}');
+                                ''')
         message = {
-            "message" : "Order does not exist."
+            "message" : "Order successfully updated."
         }
     else:
+        message = {
+            "message" : "Order could not be updated, does not exist."
+        }
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify(message)
