@@ -68,10 +68,12 @@ def get_all_menu_items():
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        type_filter = request.args.get("type")
+
         # Get all ingredients
-        sql_ingredients = f"""
+        sql_ingredients = """
             SELECT menuitem_id, ingredient_name
-            FROM menuingredient
+            FROM menuingredient;
         """
         cursor.execute(sql_ingredients)
         data_ingredients = cursor.fetchall()
@@ -96,9 +98,11 @@ def get_all_menu_items():
 
         # Get all menu items from database
         sql_items = f"""
-                    SELECT menuitem.menuitem_id, name, description, type, price, calories, image
-                    FROM MenuItem
-                """
+            SELECT menuitem.menuitem_id, name, description, type, price, calories, image
+            FROM MenuItem
+            {f"WHERE type = '{type_filter}'" if type_filter is not None else ""}
+        """
+
         cursor.execute(sql_items)
         data_items = cursor.fetchall()
 
