@@ -55,6 +55,89 @@ def get_menuitems(menuitem_id):
         return jsonify(menuitems), 200
 
 
+@menu_bp.route('/api/menu', methods=['GET'])
+def get_all_menu_items():
+    """
+    An endpoint that returns all menu items in the database, including their ingredients.
+
+    Returns:
+        A JSON object containing a list of menu items (with their ingredients)
+    """
+    try:
+        # Connect to database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Get all ingredients
+        sql_ingredients = f"""
+            SELECT menuitem_id, ingredient_name
+            FROM menuingredient
+        """
+        cursor.execute(sql_ingredients)
+        data_ingredients = cursor.fetchall()
+
+        # Parse data into ingredients list
+        ingredients = {}
+        if data_ingredients:
+            for item in data_ingredients:
+                [menuitem_id, ingredient_name] = item
+
+                new_item = {
+                    'name': ingredient_name,
+                    'allergen': None
+                }
+
+                if menuitem_id in ingredients:
+                    ingredients[menuitem_id].append(new_item)
+                else:
+                    ingredients[menuitem_id] = [new_item]
+
+        print("Ingredients:", ingredients)
+
+        # Get all menu items from database
+        sql_items = f"""
+                    SELECT menuitem.menuitem_id, name, description, type, price, calories, image
+                    FROM MenuItem
+                """
+        cursor.execute(sql_items)
+        data_items = cursor.fetchall()
+
+        # Parse data into list of menu items
+        menu_items = []
+        if data_items:
+            for item in data_items:
+                [menuitem_id, name, description, type, price, calories, image] = item
+                menu_items.append({
+                    "menuitem_id": menuitem_id,
+                    "name": name,
+                    "description": description,
+                    "type": type,
+                    "price": price,
+                    "calories": calories,
+                    "image": image,
+                    "ingredients": ingredients.get(menuitem_id) or []
+                })
+
+        print("Items:", menu_items)
+
+        # Close database connection
+        cursor.close()
+        conn.close()
+
+        # Success response
+        return jsonify(menu_items), 200
+
+    # Handle any exceptions thrown
+    except Exception as e:
+
+        # Print and return error message
+        print(e)
+        return jsonify({
+            "message": "Something went wrong"
+        }), 500
+
+
+
 @menu_bp.route('/api/menu/item/<int:item_id>', methods=['GET'])
 def get_menu_item_by_id(item_id: int):
     """
