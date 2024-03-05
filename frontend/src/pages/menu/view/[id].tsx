@@ -1,15 +1,22 @@
-import { GetServerSidePropsContext } from "next";
-import { useRouter } from "next/router"
-import {MenuItem} from "@/types";
+import {GetServerSidePropsContext} from "next";
+import {useRouter} from "next/router"
+import {Ingredient, MenuItem} from "@/types";
 import styles from "./[id].module.css";
 import Link from "next/link";
 
+/**
+ * Adds to menu item type to mirror response from api.
+ */
+type MenuItemWithIngredientsAndRelated = MenuItem & {
+    ingredients: Ingredient[],
+    related: MenuItem[]
+}
 
 /**
  * The props to be passed to our ItemPage page component.
  */
 interface PageProps {
-    data: MenuItem | null;
+    data: MenuItemWithIngredientsAndRelated | null;
 }
 
 /**
@@ -26,7 +33,7 @@ export default function ItemPage(props: PageProps) {
         return <>Item does not exist</>
     }
 
-    function handleAddToCart(){
+    function handleAddToCart() {
         if (props.data === null) {
             return;
         }
@@ -39,7 +46,7 @@ export default function ItemPage(props: PageProps) {
 
             sessionStorage.setItem("Cart", JSON.stringify({}))
         }
-        
+
         const cart = JSON.parse(cartString)
         const id = props.data.menuitem_id;
 
@@ -50,7 +57,7 @@ export default function ItemPage(props: PageProps) {
             cart[id] = 1
         }
 
-        sessionStorage.setItem("Cart",JSON.stringify(cart))
+        sessionStorage.setItem("Cart", JSON.stringify(cart))
 
     }
 
@@ -59,25 +66,29 @@ export default function ItemPage(props: PageProps) {
             {/* Needs to be adjusted to same row */}
             {/* <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button> */}
 
-            <div className={"flex justify-between"}> 
+            <div className={"flex justify-between"}>
                 <div>
-                    <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button>
+                    <button className={"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go
+                        back
+                    </button>
                 </div>
-                    <Link href={"/menu/view/cart"}>
-                        <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
-                    </Link>
+                <Link href={"/menu/view/cart"}>
+                    <img className="hover:rounded-lg hover:border-2 border-slate-200" alt="cart"
+                         src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100"
+                         height="100"></img>
+                </Link>
             </div>
 
-            <div className = {"min-h-screen flex-col"}>
-                <div className = {"flex gap-8 pb-8"}>
-                    <div className = {"mt-5 mb-5 p-10 rounded-xl bg-white shadow-lg"} style = {{height:500 ,width:600}}>
+            <div className={"min-h-screen flex-col"}>
+                <div className={"flex gap-8 pb-8"}>
+                    <div className={"mt-5 mb-5 p-10 rounded-xl bg-white shadow-lg"} style={{height: 500, width: 600}}>
                         <div style={{
-                                height: "100%",
-                                width: "100%",
-                                background: `url(${props.data.image})`,
-                                backgroundPosition: "center",
-                                backgroundSize: "contain",
-                                backgroundRepeat: "no-repeat",
+                            height: "100%",
+                            width: "100%",
+                            background: `url(${props.data.image})`,
+                            backgroundPosition: "center",
+                            backgroundSize: "contain",
+                            backgroundRepeat: "no-repeat",
                         }}/>
                     </div>
                     {/* Flex column to contain item info */}
@@ -86,14 +97,15 @@ export default function ItemPage(props: PageProps) {
                         <div className={styles.description}>{props.data.description}</div>
                         <div className={styles.price}>Price: £{props.data.price}</div>
                         <div className={styles.calories}>Calories: {props.data.calories} Cal</div>
-                        <div> 
+                        <div>
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
-                            text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW </button>
+                            text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
+                            </button>
                         </div>
                     </div>
-                </div>  
+                </div>
 
-                <hr className = {"border-gray-300"}></hr>
+                <hr className={"border-gray-300"}></hr>
 
                 <div className={"grid grid-cols-2 pt-5 flex-grow"}>
                     <div>
@@ -107,8 +119,8 @@ export default function ItemPage(props: PageProps) {
                     </div>
 
                     <div className={"border-l border-gray-300 pl-10"}>
+                        <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
                         <ol className={"list-disc"}>
-                            <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
                             <li> Burger Bun</li>
                             <li> Patty</li>
                             <li> Lettuce</li>
@@ -134,7 +146,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
     const id = context.query.id as string;
 
     const response = await fetch(`http://127.0.0.1:5000/api/menu/item/${id}`);
-    let menuItem: MenuItem | null = null;
+    let menuItem: MenuItemWithIngredientsAndRelated | null = null;
 
     if (response.status === 200) {
         const data = await response.json();
