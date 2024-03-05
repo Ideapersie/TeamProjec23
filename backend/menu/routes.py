@@ -72,23 +72,69 @@ def get_menu_item_by_id(item_id: int):
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # TODO: See if possible to combine all sql statements into one query
+
         # Prepare sql query
-        sql = f"""
+        sql_main_item = f"""
             SELECT menuitem_id, name, description, type, price, calories, image
             FROM MenuItem
-            WHERE menuitem_id = {item_id}
+            WHERE menuitem_id = {item_id};
         """
 
         # Execute query + pull data into python
-        cursor.execute(sql)
-        data = cursor.fetchone()
+        cursor.execute(sql_main_item)
+        data_main_item = cursor.fetchone()
+
+        related_items = []
+        ingredients = []
+
+        # If item found...
+        if data_main_item:
+            item_type = data_main_item[3]
+
+            # Get related items
+            sql_related = f"""
+                SELECT menuitem_id, name, description, type, price, calories, image
+                FROM MenuItem
+                WHERE (menuitem_id <> {item_id}) AND (MenuItem.type = '{item_type}');
+            """
+            cursor.execute(sql_related)
+            data_related = cursor.fetchall()
+
+            if data_related:
+                for row in data_related:
+                    [menuitem_id, name, description, type, price, calories, image] = row
+
+                    related_items.append({
+                        'menuitem_id': menuitem_id,
+                        'name': name,
+                        'description': description,
+                        'type': type,
+                        'price': price,
+                        'calories': calories,
+                        'image': image
+                    })
+
+            # Get ingredients
+            sql_ingredients = f"""
+                SELECT menuitem_id, ingredient_name
+                FROM menuingredient
+                WHERE menuitem_id = {item_id};
+            """
+            cursor.execute(sql_ingredients)
+            data_ingredients = cursor.fetchall()
+
+            if data_ingredients:
+                for row in data_ingredients:
+                    ingredient_name = row[1]
+                    ingredients.append(ingredient_name)
 
         # Close connection
         cursor.close()
         conn.close()
 
-        if data:
-            [menuitem_id, name, description, type, price, calories, image] = data
+        if data_main_item:
+            [menuitem_id, name, description, type, price, calories, image] = data_main_item
 
             # Return success response + data
             return jsonify({
@@ -100,7 +146,9 @@ def get_menu_item_by_id(item_id: int):
                     "type": type,
                     "price": float(price),
                     "calories": int(calories),
-                    "image": image
+                    "image": image,
+                    "related": related_items,
+                    "ingredients": ingredients
                 }
             }), 200
 
