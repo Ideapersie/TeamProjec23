@@ -119,12 +119,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const id = context.query.id as string;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}"); //New api route returning specific details for id
-    let allMenuItems = (await response.json()) as MenuItem[];
+    const response = await fetch(`http://127.0.0.1:5000/api/menu/item/${id}`);
+    let menuItem: MenuItem | null = null;
 
-    const menuItem = allMenuItems.find(item => {
-        return item.menuitem_id === parseInt(id);
-    }) || null;
+    if (response.status === 200) {
+        const data = await response.json();
+        menuItem = data.item || null;
+    }
 
     return {
         props: {
