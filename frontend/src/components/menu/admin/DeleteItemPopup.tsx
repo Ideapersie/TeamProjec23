@@ -28,7 +28,7 @@ export function DeleteItemPopup() {
             if (response.status === 200) {
 
                 PageContext?.setItemToDelete(undefined);
-                router.reload();
+                await PageContext?.fetchItems();
 
             } else {
                 console.error(response.status);
