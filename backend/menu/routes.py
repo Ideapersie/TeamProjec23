@@ -73,22 +73,50 @@ def get_menu_item_by_id(item_id: int):
         cursor = conn.cursor()
 
         # Prepare sql query
-        sql = f"""
+        sql1 = f"""
             SELECT menuitem_id, name, description, type, price, calories, image
             FROM MenuItem
-            WHERE menuitem_id = {item_id}
+            WHERE menuitem_id = {item_id};
         """
 
         # Execute query + pull data into python
-        cursor.execute(sql)
-        data = cursor.fetchone()
+        cursor.execute(sql1)
+        data1 = cursor.fetchone()
+
+        # If item found, get related items
+        related_items = []
+        if data1:
+            item_type = data1[3]
+
+            sql2 = f"""
+                SELECT menuitem_id, name, description, type, price, calories, image
+                FROM MenuItem
+                WHERE (menuitem_id <> {item_id}) AND (MenuItem.type = '{item_type}');
+            """
+
+            cursor.execute(sql2)
+            data2 = cursor.fetchall()
+
+            if data2:
+                for row in data2:
+                    [menuitem_id, name, description, type, price, calories, image] = row
+
+                    related_items.append({
+                        'menuitem_id': menuitem_id,
+                        'name': name,
+                        'description': description,
+                        'type': type,
+                        'price': price,
+                        'calories': calories,
+                        'image': image
+                    })
 
         # Close connection
         cursor.close()
         conn.close()
 
-        if data:
-            [menuitem_id, name, description, type, price, calories, image] = data
+        if data1:
+            [menuitem_id, name, description, type, price, calories, image] = data1
 
             # Return success response + data
             return jsonify({
@@ -100,7 +128,8 @@ def get_menu_item_by_id(item_id: int):
                     "type": type,
                     "price": float(price),
                     "calories": int(calories),
-                    "image": image
+                    "image": image,
+                    "related": related_items
                 }
             }), 200
 
