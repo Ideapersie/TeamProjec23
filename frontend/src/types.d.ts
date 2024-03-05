@@ -9,7 +9,7 @@ export type MenuItem = {
     link: string
 }
 
-export type Ingredients = {
+export type Ingredient = {
     name: string
     allergen: string | null
 }
