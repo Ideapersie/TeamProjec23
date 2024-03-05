@@ -39,7 +39,7 @@ export default function AdminMenuList(props: Props) {
 
             {/*Displays each item/dish/drink in the menu*/}
             {
-                props.dishes.map((dish, i) => (
+                props.dishes.slice().reverse().map((dish, i) => (
                     <>
                         {i !== 0 && <hr/>}
                         <AdminMenuItem item={dish} key={dish.menuitem_id}/>
