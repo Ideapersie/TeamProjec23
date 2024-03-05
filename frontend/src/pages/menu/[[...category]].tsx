@@ -3,7 +3,7 @@ import {GetServerSidePropsContext} from "next";
 import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
 import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
-import {useState} from "react";
+import {env} from "../../../env.config";
 
 // Declaring expected prop types
 interface Props {
@@ -61,12 +61,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const category = context.query?.category?.[0] as string | undefined;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
-    let menuItems = (await response.json()) as MenuItem[];
+    let endpoint = env.apiHost + "/api/menu";
 
     if (category) {
-        menuItems = menuItems.filter(item => item.type === category);
+        endpoint += `?type=${category}`;
     }
+
+    const response = await fetch(endpoint);
+    let menuItems = (await response.json()) as MenuItem[];
 
     return {
         props: {
