@@ -346,31 +346,47 @@ def add_item():
     conn.close()
     return jsonify(message)
 
-@menu_bp.route('/api/deleteitem', methods=['POST'])
-def delete_item():
+
+@menu_bp.route('/api/menu/delete/item/<int:item_id>', methods=['DELETE'])
+def delete_item(item_id: int):
     """
     API endpoint to remove a menu item from the database.
 
     Returns:
         A message to inform the user if the item has been deleted.
     """
-    item_to_delete = request.get_json()
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('SELECT name FROM menuitem WHERE name = %s;' % (item_to_delete["name"]))
-    item_in_database = cursor.fetchall()
-    if (item_in_database == None):
-        message = {
-            "message" : "Item does not exist in the menu."
-        }
-    else:
-        cursor.execute('DELETE FROM menuitem WHERE name = %s;' % (item_to_delete["name"]))
-        message = {
-            "message" : "Item has been successfully deleted."
-        }
-    cursor.close()
-    conn.close()
-    return jsonify(message)
+
+    try:
+        # TODO: Add auth check. Only admin roles should be able to delete items
+
+        # Connect to the database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Delete related menu ingredients
+        cursor.execute(f'DELETE FROM menuingredient WHERE menuitem_id = {item_id};')
+
+        # Delete item from the database
+        cursor.execute(f'DELETE FROM menuitem WHERE menuitem_id = {item_id};')
+
+        # Close connection
+        cursor.close()
+        conn.commit()
+        conn.close()
+
+        # Success response
+        return jsonify({
+            "message": "Menu item successfully deleted."
+        }), 200
+
+    # Any unhandled exceptions...
+    except Exception as e:
+
+        # Print and return error message
+        print(e)
+        return jsonify({
+            "message": "Something went wrong"
+        }), 500
 
 
 @menu_bp.route('/api/menu/types', methods=['GET'])
