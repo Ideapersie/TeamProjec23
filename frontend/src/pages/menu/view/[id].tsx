@@ -50,11 +50,13 @@ export default function ItemPage(props: PageProps) {
     return (
         <section>
             {/* Needs to be adjusted to same row */}
-            <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button>
+            {/* <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button> */}
 
             <div className ={"flex justify-end"}> 
+
+            <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button>
                 <Link href={"/menu/view/cart"}>
-                    <img className = "hover:translate-y-1" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
+                    <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
                 </Link>
             </div>
 

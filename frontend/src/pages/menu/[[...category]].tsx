@@ -16,9 +16,9 @@ export default function ViewMenu(props: Props) {
     return <>
         <section>
             <div className={"mb-4"}>
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <div className ={"flex justify-end"}> 
                     <Link href={"/menu/view/cart"}>
-                        <img className = "hover:translate-y-1" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
+                        <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
                     </Link>
                 </div>
                 {props.category &&
