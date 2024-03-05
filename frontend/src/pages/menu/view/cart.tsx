@@ -25,12 +25,18 @@ export default function Cart() {
                         <tbody>
                             <tr>
                                 <td>
+                                    insert item_id
                                 </td>
                                 <td>
+                                    item_quantity
                                 </td>
                                 <td>
+                                    item_price
                                 </td>
                                 <td>
+                                    <button>
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
