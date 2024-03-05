@@ -72,33 +72,37 @@ def get_menu_item_by_id(item_id: int):
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # TODO: See if possible to combine all sql statements into one query
+
         # Prepare sql query
-        sql1 = f"""
+        sql_main_item = f"""
             SELECT menuitem_id, name, description, type, price, calories, image
             FROM MenuItem
             WHERE menuitem_id = {item_id};
         """
 
         # Execute query + pull data into python
-        cursor.execute(sql1)
-        data1 = cursor.fetchone()
+        cursor.execute(sql_main_item)
+        data_main_item = cursor.fetchone()
 
-        # If item found, get related items
         related_items = []
-        if data1:
-            item_type = data1[3]
+        ingredients = []
 
-            sql2 = f"""
+        # If item found...
+        if data_main_item:
+            item_type = data_main_item[3]
+
+            # Get related items
+            sql_related = f"""
                 SELECT menuitem_id, name, description, type, price, calories, image
                 FROM MenuItem
                 WHERE (menuitem_id <> {item_id}) AND (MenuItem.type = '{item_type}');
             """
+            cursor.execute(sql_related)
+            data_related = cursor.fetchall()
 
-            cursor.execute(sql2)
-            data2 = cursor.fetchall()
-
-            if data2:
-                for row in data2:
+            if data_related:
+                for row in data_related:
                     [menuitem_id, name, description, type, price, calories, image] = row
 
                     related_items.append({
@@ -111,12 +115,24 @@ def get_menu_item_by_id(item_id: int):
                         'image': image
                     })
 
+            # Get ingredients
+            sql_ingredients = f"""
+                SELECT *
+                FROM menuingredient
+                WHERE menuitem_id = {item_id};
+            """
+            cursor.execute(sql_ingredients)
+            data_ingredients = cursor.fetchall()
+
+            if data_ingredients:
+                print(data_ingredients)
+
         # Close connection
         cursor.close()
         conn.close()
 
-        if data1:
-            [menuitem_id, name, description, type, price, calories, image] = data1
+        if data_main_item:
+            [menuitem_id, name, description, type, price, calories, image] = data_main_item
 
             # Return success response + data
             return jsonify({
