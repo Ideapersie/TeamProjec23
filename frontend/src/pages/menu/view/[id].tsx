@@ -15,13 +15,20 @@ interface PageProps {
  * Renders page for viewing a single menu item.
  *
  * @constructor
- * @author Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
+ * @author Idea Khan (zlac177@live.rhul.ac.uk), Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
  */
 export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
 
+    if (props.data === null) {
+        return <>Item does not exist</>
+    }
+
     function handleAddToCart(){
+        if (props.data === null) {
+            return;
+        }
 
         let cartString = sessionStorage.getItem("Cart")
 
@@ -33,7 +40,7 @@ export default function ItemPage(props: PageProps) {
         }
         
         const cart = JSON.parse(cartString)
-        const id = props.data.menuitem_id
+        const id = props.data.menuitem_id;
 
         if (id in cart) {
             cart[id] += 1
@@ -81,8 +88,8 @@ export default function ItemPage(props: PageProps) {
                 <div className = {"grid grid-cols-2 pt-5 flex-grow"}>
                     <p> 
                         <h1 className = {"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
-                        "Delicious burger with beef patty from local cows fed with organic grass, cows raised in northern 
-                        England in perfect conditions for growth. Our sauce is also housemade prepared with daily ingredients for a fresh flavour" 
+                        Delicious burger with beef patty from local cows fed with organic grass, cows raised in northern
+                        England in perfect conditions for growth. Our sauce is also housemade prepared with daily ingredients for a fresh flavour
                     </p>
 
                     <div className = {"border-l border-gray-300 pl-10"}> 
