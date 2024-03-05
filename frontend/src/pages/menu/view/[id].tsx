@@ -52,15 +52,16 @@ export default function ItemPage(props: PageProps) {
             {/* Needs to be adjusted to same row */}
             {/* <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button> */}
 
-            <div className ={"flex justify-end"}> 
-
-            <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button>
-                <Link href={"/menu/view/cart"}>
-                    <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
-                </Link>
+            <div className={"flex justify-between"}> 
+                <div>
+                    <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button>
+                </div>
+                    <Link href={"/menu/view/cart"}>
+                        <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
+                    </Link>
             </div>
 
-            <div className = {"min-h-screen flex flex-col"}>
+            <div className = {"min-h-screen flex-col"}>
                 <div className = {"flex gap-8 pb-8"}>
                     <div className = {"mt-5 mb-5 p-10 rounded-xl bg-white shadow-lg"} style = {{height:500 ,width:600}}>
                         <div style={{
