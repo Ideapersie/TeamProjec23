@@ -214,7 +214,11 @@ def get_menu_item_by_id(item_id: int):
             if data_ingredients:
                 for row in data_ingredients:
                     ingredient_name = row[1]
-                    ingredients.append(ingredient_name)
+                    new_item = {
+                        'name': ingredient_name,
+                        'allergen': None
+                    }
+                    ingredients.append(new_item)
 
         # Close connection
         cursor.close()
