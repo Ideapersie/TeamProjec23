@@ -55,7 +55,7 @@ export default function AdminViewMenuPage(props: Props): JSX.Element {
 // Loads data on the server (instead of on the browser) -> more secure + data available on page load
 export async function getServerSideProps(): Promise<{props: Props}> {
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
+    const response = await fetch("http://127.0.0.1:5000/api/menu");
     const data = await response.json() as MenuItem[];
 
     // ...and passes it to the ViewMenuPage component via props
