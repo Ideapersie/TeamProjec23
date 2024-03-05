@@ -3,12 +3,15 @@ import {MenuItem} from "@/types";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent, useState} from "react";
+import {useRouter} from "next/router";
+import {env} from "../../../../../../env.config";
 
 /**
  * Defining component props
  */
 interface Props {
-    data: MenuItem | null
+    data: MenuItem | null,
+    types: string[]
 }
 
 /**
@@ -18,6 +21,8 @@ interface Props {
  */
 export default function EditMenuItemPage(props: Props) {
 
+    const router = useRouter();
+
     const [itemName, setItemName] = useState(props.data?.name);
     const [itemDescription, setItemDescription] = useState(props.data?.description);
     const [itemType, setItemType] = useState(props.data?.type);
@@ -26,24 +31,35 @@ export default function EditMenuItemPage(props: Props) {
     const [itemImage, setItemImage] = useState(props.data?.image);
 
     // If no item found for given id, display error message
-    if (props.data === null) return <>Item not found</>;
+    if (props.data === null) {
+        return <>Item not found</>;
+    }
 
     // Saves changes for the current item
-    function handleSaveChanges(e: FormEvent<HTMLFormElement>) {
+    async function handleSaveChanges(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         const payload = {
-            itemName,
-            itemDescription,
-            itemType,
-            itemPrice,
-            itemCalories,
-            itemImage
+            name: itemName,
+            description: itemDescription,
+            price: itemPrice,
+            type: itemType,
+            calories: itemCalories,
+            image: itemImage
         };
 
         console.log(payload);
+        const url = `${env.apiHost}/api/updateitem/${props.data?.menuitem_id}`;
 
-        alert("Hook this up to an api")
+        const res = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            mode: 'no-cors'
+        });
+
+        // TODO: Add check for success response
+
+        await router.push('/admin/waiter/menu/view');
     }
 
     return (
@@ -76,20 +92,23 @@ export default function EditMenuItemPage(props: Props) {
 
                     <label>
                         Item type
-                        <select
+                        <input
+                            type="text"
                             value={itemType}
                             onChange={e => setItemType(e.currentTarget.value)}
-                        >
-                            {/*TODO: Come up with a better solution here*/}
-                            <option value="Burgers">Burgers</option>
-                            <option value="Sides">Sides</option>
-                            <option value="Drinks">Drinks</option>
-                            <option value="Desserts">Desserts</option>
-                        </select>
+                            list={"datalist-types"}
+                        />
+
+                        <datalist id={"datalist-types"}>
+                            {props.types.map(type => <option key={type}>
+                                {type}
+                            </option>)
+                            }
+                        </datalist>
                     </label>
 
                     <label>
-                        Item price
+                        Item price (£)
                         <input
                             type="number"
                             min={0}
@@ -147,14 +166,27 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
 
     const id = ctx.query.id as string;
 
-    const res = await fetch(`http://127.0.0.1:5000/api/menuitems`);
-    const allItems = await res.json() as MenuItem[];
+    let data = null;
 
-    const data = allItems.find(item => item.menuitem_id === parseInt(id)) || null;
+    if (id !== 'undefined') {
+        const res = await fetch(env.apiHost + `/api/menu/item/${id}`);
+
+        // If item fetched successfully...
+        if (res.status === 200) {
+            data = (await res.json())["item"] as MenuItem;
+            console.log(data);
+        }
+    }
+
+    const res = await fetch(env.apiHost + "/api/menu/types");
+    const typesData = await res.json();
+
+    let types: string[] = typesData.types || [];
 
     return {
         props: {
-            data
+            data,
+            types
         }
     }
 }

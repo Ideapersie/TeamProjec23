@@ -3,7 +3,7 @@ import {GetServerSidePropsContext} from "next";
 import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
 import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
-import {useState} from "react";
+import {env} from "../../../env.config";
 
 // Declaring expected prop types
 interface Props {
@@ -36,7 +36,9 @@ export default function ViewMenu(props: Props) {
             </div>
 
             {/*Filters*/}
-            <CustomerMenuFilters />
+            <div className='mb-4 pt-10'>
+                <CustomerMenuFilters/>
+            </div>
 
             {/*Displaying menu items*/}
             <div className={"grid grid-cols-3 gap-5"}>
@@ -44,13 +46,13 @@ export default function ViewMenu(props: Props) {
                     props.data.map(item => (
                         <CustomerMenuItem
                             key={item.menuitem_id}
-                            link={item.link}
                             name={item.name}
                             description={item.description}
                             price={item.price}
                             calories={item.calories}
                             image={item.image}
                             menuitem_id={item.menuitem_id}
+                            type={item.type}
                         />
                     ))
                     :
@@ -67,12 +69,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const category = context.query?.category?.[0] as string | undefined;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
-    let menuItems = (await response.json()) as MenuItem[];
+    let endpoint = env.apiHost + "/api/menu";
 
     if (category) {
-        menuItems = menuItems.filter(item => item.type === category);
+        endpoint += `?type=${category}`;
     }
+
+    const response = await fetch(endpoint);
+    let menuItems = (await response.json()) as MenuItem[];
 
     return {
         props: {

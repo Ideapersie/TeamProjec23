@@ -27,31 +27,15 @@ export default function NavLinks(): JSX.Element {
     const router = useRouter(); // Allows us to access the current path/url
     const [categories, setCategories] = useState<string[]>([]);
 
-    // Gets menuitems when NavLinks is first mounted
+    // Gets menu items when NavLinks is first mounted
     useEffect(() => {
-        fetch("/api/menuitems")
+        fetch("/api/menu/types")
             .then(res => res.json())
             .then(data => {
-                getCategories(data.data.menuItems)
-                    .then(categories => setCategories(categories));
-            });
+                setCategories(data.types)
+            })
+            .catch(e => console.error(e));
     }, []);
-
-    // Gets all categories
-    async function getCategories(menuItems: MenuItem[]) {
-        const categories = new Set<string>();
-
-        try {
-            for (const menuItem of menuItems) {
-                categories.add(menuItem.type);
-            }
-
-        } catch (e) {
-            console.error(e);
-        }
-
-        return Array.from(categories);
-    }
 
     // An object mapping out the structure of our side menu links
     const LINKS: { [group: string]: NavGroup } = {

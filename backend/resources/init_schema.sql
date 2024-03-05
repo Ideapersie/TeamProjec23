@@ -35,12 +35,8 @@ CREATE TABLE MenuItem (
     type VARCHAR(20) NOT NULL, -- Not nullable as items must be filterable
     price DECIMAL(5, 2) NOT NULL,
     calories INTEGER,
+    spice INTEGER CHECK(spice<=3) CHECK(0<=spice) NOT NULL,
     image VARCHAR(140) NOT NULL
-);
-
-DROP TABLE IF EXISTS Allergen CASCADE;
-CREATE TABLE Allergen (
-    allergen_name VARCHAR(50) PRIMARY KEY
 );
 
 /* Junction Tables */
@@ -59,9 +55,16 @@ CREATE TABLE StaffOrder (
     PRIMARY KEY (staff_id, order_id)
 );
 
-DROP TABLE IF EXISTS MenuAllergen CASCADE;
-CREATE TABLE MenuAllergen (
+DROP TABLE IF EXISTS Ingredient CASCADE;
+CREATE TABLE Ingredient (
+    ingredient_name VARCHAR(50) NOT NULL,
+    allergen_name VARCHAR(50),
+    PRIMARY KEY (ingredient_name)
+);
+
+DROP TABLE IF EXISTS MenuIngredient CASCADE;
+CREATE TABLE MenuIngredient (
     menuitem_id INTEGER REFERENCES MenuItem(menuitem_id) NOT NULL,
-    allergen_name VARCHAR(50) REFERENCES Allergen(allergen_name) NOT NULL,
-    PRIMARY KEY (menuitem_id, allergen_name)
+    ingredient_name VARCHAR(50) REFERENCES Ingredient(ingredient_name) NOT NULL,
+    PRIMARY KEY (menuitem_id, ingredient_name)
 );

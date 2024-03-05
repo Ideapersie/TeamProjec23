@@ -9,20 +9,27 @@ import Link from "next/link";
  * The props to be passed to our ItemPage page component.
  */
 interface PageProps {
-    data: MenuItem | MenuItem;
+    data: MenuItem | null;
 }
 
 /**
  * Renders page for viewing a single menu item.
  *
  * @constructor
- * @author Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
+ * @author Idea Khan (zlac177@live.rhul.ac.uk), Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
  */
 export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
 
+    if (props.data === null) {
+        return <>Item does not exist</>
+    }
+
     function handleAddToCart(){
+        if (props.data === null) {
+            return;
+        }
 
         let cartString = sessionStorage.getItem("Cart")
 
@@ -34,7 +41,7 @@ export default function ItemPage(props: PageProps) {
         }
         
         const cart = JSON.parse(cartString)
-        const id = props.data.menuitem_id
+        const id = props.data.menuitem_id;
 
         if (id in cart) {
             cart[id] += 1
@@ -87,25 +94,29 @@ export default function ItemPage(props: PageProps) {
                 </div>  
 
                 <hr className = {"border-gray-300"}></hr>
-                
-                <div className = {"grid grid-cols-2 pt-5 flex-grow"}>
-                    <p> 
-                        <h1 className = {"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
-                        "Delicious burger with beef patty from local cows fed with organic grass, cows raised in northern 
-                        England in perfect conditions for growth. Our sauce is also housemade prepared with daily ingredients for a fresh flavour" 
-                    </p>
 
-                    <div className = {"border-l border-gray-300 pl-10"}> 
-                        <ol className = {"list-disc"}> 
-                            <h1 className = {"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
-                            <li> Burger Bun </li>
-                            <li> Patty </li>
-                            <li> Lettuce </li>
-                            <li> Tomato </li>
-                            <li> Onions </li>
-                            <li> Pickles </li>
-                            <li> Cheddar Cheese </li>
-                            <li> Burger Sauce </li>
+                <div className={"grid grid-cols-2 pt-5 flex-grow"}>
+                    <div>
+                        <h1 className={"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
+                        <p>
+                            Delicious burger with beef patty from local cows fed with organic grass, cows raised in
+                            northern
+                            England in perfect conditions for growth. Our sauce is also housemade prepared with daily
+                            ingredients for a fresh flavour
+                        </p>
+                    </div>
+
+                    <div className={"border-l border-gray-300 pl-10"}>
+                        <ol className={"list-disc"}>
+                            <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
+                            <li> Burger Bun</li>
+                            <li> Patty</li>
+                            <li> Lettuce</li>
+                            <li> Tomato</li>
+                            <li> Onions</li>
+                            <li> Pickles</li>
+                            <li> Cheddar Cheese</li>
+                            <li> Burger Sauce</li>
                         </ol>
                     </div>
                 </div>
@@ -122,12 +133,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext): Pr
 
     const id = context.query.id as string;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}"); //New api route returning specific details for id
-    let allMenuItems = (await response.json()) as MenuItem[];
+    const response = await fetch(`http://127.0.0.1:5000/api/menu/item/${id}`);
+    let menuItem: MenuItem | null = null;
 
-    const menuItem = allMenuItems.find(item => {
-        return item.menuitem_id === parseInt(id);
-    }) || null;
+    if (response.status === 200) {
+        const data = await response.json();
+        menuItem = data.item || null;
+    }
 
     return {
         props: {

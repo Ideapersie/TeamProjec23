@@ -2,14 +2,16 @@ import styles from "./CustomerMenuItem.module.css";
 import Link from "next/link";
 
 interface Props {
-    link: string
     name: string
     description: string
     price: string
     calories: number
     image: string
     menuitem_id: number
+    type: string
 }
+
+
 
 export function CustomerMenuItem(props: Props) {
     return (

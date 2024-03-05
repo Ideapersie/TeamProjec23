@@ -14,7 +14,8 @@ interface Props {
 // Context object to allow itemToDelete state to be accessed by child components (without prop drilling)
 export const AdminViewMenuPageContext = createContext<{
     itemToDelete: MenuItem | undefined,
-    setItemToDelete: Dispatch<SetStateAction<MenuItem | undefined>>
+    setItemToDelete: Dispatch<SetStateAction<MenuItem | undefined>>,
+    fetchItems: Function
 } | undefined>(undefined);
 
 /**
@@ -28,9 +29,18 @@ export default function AdminViewMenuPage(props: Props): JSX.Element {
 
     // The id (number) of menu item staged for deletion. If NOT undefined, displays delete confirmation popup window
     const [itemToDelete, setItemToDelete] = useState<MenuItem | undefined>();
+    const [items, setItems] = useState<MenuItem[]>(props.data);
+    async function fetchItems() {
+        try {
+            const response = await fetch("/api/menu");
+            setItems(await response.json());
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     return (
-        <AdminViewMenuPageContext.Provider value={{itemToDelete, setItemToDelete}}>
+        <AdminViewMenuPageContext.Provider value={{itemToDelete, setItemToDelete, fetchItems}}>
             <PageHeader>
                 <PageTitle>
                     View Items
@@ -42,7 +52,7 @@ export default function AdminViewMenuPage(props: Props): JSX.Element {
             </PageHeader>
 
             {/*Displays a list of menu items*/}
-            <AdminMenuList dishes={props.data}/>
+            <AdminMenuList dishes={items}/>
 
             {/*I.e. if an item is staged for deletion, then display popup*/}
             {itemToDelete !== undefined &&
@@ -55,7 +65,7 @@ export default function AdminViewMenuPage(props: Props): JSX.Element {
 // Loads data on the server (instead of on the browser) -> more secure + data available on page load
 export async function getServerSideProps(): Promise<{props: Props}> {
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems/${menuitem_id}");
+    const response = await fetch("http://127.0.0.1:5000/api/menu");
     const data = await response.json() as MenuItem[];
 
     // ...and passes it to the ViewMenuPage component via props
