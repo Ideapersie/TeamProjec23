@@ -108,7 +108,26 @@ def store_payment_info(customer_id, card_number, holder_name, expiration_date):
                    INSERT INTO PaymentInfo (customer_id, card_number, holder_name, expiration_date)
                    VALUES (%s, %s, %s, %s)
                    """, (customer_id, card_number, holder_name, expiration_date))
-    
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+def update_is_paid(order_id):
+    """
+    Updates the 'is_paid' attribute for an order once payment is received.
+
+    Args:
+        order_id: The order to update.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+                   UPDATE "Order"
+                   SET is_paid = True
+                   WHERE order_id = %s
+                   """, (order_id))
     conn.commit()
 
     cursor.close()
