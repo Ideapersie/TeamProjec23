@@ -1,15 +1,12 @@
 """
 Auxiliary methods used in the payment routes.
-
-This modules defines credit card authentication methods as well as fetch/insert methods for the database.
 """
 import psycopg2
-from flask import jsonify
 from resources import config
 
 def get_db_connection():
     """
-    Establishes a connection to Postgres.
+    Establishes a connection to the Postgres database.
     
     Returns:
         A psycopg2 connection object.
@@ -22,11 +19,10 @@ def get_db_connection():
 
 def luhn_check(card_number):
     """
-    Validates whether a card number has the possibility of being correct.
+    Validates a card number.
 
-    This method uses the Luhn algorithm to check validity.
-    In real life, if a card number passes the Luhn check, it's not a guarantee on validity.
-    Since we're not concerned with real accounts, we can assume a Luhn check is a guarentee on validity.
+    Validation is done through a Luhn check.
+    If a card number passes the Luhn check it's typically not a guarantee on validity, but for the sake of simplicity this method assumes it is.
 
     Args:
         card_number: The card number to validate.
@@ -38,7 +34,6 @@ def luhn_check(card_number):
 
     for i in range(len(card_number)):
         card_number_list.append(int(card_number[i]))
-
 
     for i in range(len(card_number_list) - 1, -1, -1):
         if (len(card_number_list) - i) % 2 != 0:
@@ -58,17 +53,15 @@ def luhn_check(card_number):
     else:
         return False
     
-def get_payment_info(customer_id):
+def fetch_payment_info(customer_id):
     """
-    Returns the payment information associated with a user.
-
-    This method either returns the payment information on success, or an error message if such information does not exist.
+    Fetches the payment information associated with a user.
 
     Args:
-        customer_id: The id of the customer to which the data is fetched for.
+        customer_id: The customer which the data is fetched for.
 
     Returns:
-        A JSON payload on success or a JSON error message.
+        A JSON payload containing the payment information if it exists, None otherwise.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -80,19 +73,21 @@ def get_payment_info(customer_id):
     conn.close()
 
     if data:
-        payment_info = [{'card_number': data['card_number'],
-                        'holder_name': data['holder_name'],
-                        'expiration_date': data['expiration_date']}]
+        payment_info = [{'paymentinfo_id': data[0],
+                         'customer_id': data[1],
+                         'card_number': data[2],
+                         'holder_name': data[3],
+                         'expiration_date': data[4]}]
         return payment_info
     else:
-        return jsonify({'message': 'Payment information not found.'}), 400
+        return None
     
 def store_payment_info(customer_id, card_number, holder_name, expiration_date):
     """
-    Stores payment data associated to a customer in the database.
+    Stores the payment information associated to a customer in the database.
 
     Args:
-        customer_id: The ID of the customer which the data is being stored for.
+        customer_id: The customer which the data is being stored for.
         card_number: The card number to store.
         holder_name: The full name of the card holder.
         expiration_date: The expiry date of the card.
@@ -115,7 +110,7 @@ def store_payment_info(customer_id, card_number, holder_name, expiration_date):
 
 def update_is_paid(order_id):
     """
-    Updates the 'is_paid' attribute for an order once payment is received.
+    Updates the 'is_paid' attribute to 'True' for an order.
 
     Args:
         order_id: The order to update.
@@ -132,3 +127,32 @@ def update_is_paid(order_id):
 
     cursor.close()
     conn.close()
+
+def fetch_unpaid_delivered():
+    """
+    Fetches all orders which have attributes 'status' as 'Delivered' and 'is_paid' as 'False'.
+
+    Returns:
+        A tuple containing all orders which adhere to the description, None otherwise.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+                   SELECT * FROM "Order"
+                   WHERE status = 'Delivered' AND is_paid = False
+                   """)
+    data = cursor.fetchall()
+    
+    cursor.close()
+    conn.close()
+
+    if data:
+        orders = [{'order_id': order[0],
+                   'customer_id': order[1],
+                   'status': order[2],
+                   'time_ordered': order[3],
+                   'is_paid': order[4]} for order in data]
+        return orders
+    else:
+        return None
