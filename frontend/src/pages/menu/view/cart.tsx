@@ -2,9 +2,26 @@ import React from "react";
 import Link from "next/link";
 
 /**
- * A component that displays the user currently logged in
+ * A Cart page containing all the items added to the basket and their respective details
+ * 
+ *  @author Idea Khan (zlac177@live.rhul.ac.uk), Alvis Wang (zkac380@live.rhul.ac.uk)
  */
 export default function Cart() {
+
+
+    function handleRetrieveFromCart() {
+
+        
+        const cart = sessionStorage.getItem("Cart");
+        
+        if (cart === null){
+            return {};
+        }
+        return JSON.parse(cart)
+    }
+
+    const orderedItems = handleRetrieveFromCart();
+
     return (
         <div className={""}>
 			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
@@ -19,47 +36,38 @@ export default function Cart() {
                                 <th className="p-5 text-left">Product</th>
                                 <th className="p-5 text-right">Quantity</th>
                                 <th className="p-5 text-right">Price</th>
-                                <th className="p-5">Action</th> 
+                                <th className="p-5">Action</th>   
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr className="border-b">
-                                <td>
-                                    insert item_id
-                                </td>
-                                <td className="p-5 text-right">
-                                    item_quantity
-                                </td>
-                                <td className="p-5 text-right">
-                                    item_price
-                                </td>
-                                <td className="p-5 text-center">
-                                    <button className="default-button">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
+                            <tbody>
+                                {Object.entries(orderedItems).map(([id, quantity]) => (
+                                    <tr key={id} className="border-b">
+                                        <td className="p-5 text-center">{id}</td>
+                                        <td className="p-10 text-right">{quantity}</td>
+                                        <td className="p-5 text-right">{/* Calculate item price based on id and quantity */}</td>
+                                        <td className="p-5 text-center">
+                                            <button className="default-button">Delete</button>
+                                        </td>
+                                    </tr>
+                                ))} 
+                            </tbody>
                     </table>
-                </div>
-                <div>
-                    <div className="card p-5">
-                        <ul>
-                            <li>
-                                <div className="pb-3 text-xl">
-                                    Subtotal: £
-                                </div>
-                            </li>
-                            <li>
-                                <button className="primary-button w-full">
-                                    Proceed to checkout
-                                </button>
-                            </li>
-                        </ul>
+                        <div className="card p-5">
+                            <ul>
+                                <li>
+                                    <div className="pb-3 text-xl">
+                                        Subtotal: £
+                                    </div>
+                                </li>
+                                <li>
+                                    <button className="primary-button w-full">
+                                        Proceed to checkout
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-        </div>
+            </div>  
     );
 }
