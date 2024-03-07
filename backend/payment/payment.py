@@ -152,7 +152,8 @@ def fetch_unpaid_delivered():
                    'customer_id': order[1],
                    'status': order[2],
                    'time_ordered': order[3],
-                   'is_paid': order[4]} for order in data]
+                   'table_number': order[4],
+                   'is_paid': order[5]} for order in data]
         return orders
     else:
         return None
