@@ -64,6 +64,10 @@ export default function NavLinks(): JSX.Element {
                     display: "Add new item",
                     path: "/admin/waiter/menu/add"
                 },
+                {
+                    display: "Customer orders",
+                    path: "/admin/waiter/orders"
+                },
             ]
         },
         "Orders": {
@@ -72,10 +76,6 @@ export default function NavLinks(): JSX.Element {
                 {
                     display: "Add links here",
                     path: "/order/addlinkshere"
-                },
-                {
-                    display: "Customer orders (Waiter)",
-                    path: "/admin/waiter/orders"
                 },
             ]
         }
