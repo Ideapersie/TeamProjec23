@@ -88,26 +88,25 @@ def modify_order():
     An API endpoint to modify existing orders in the database.
     """
     order_to_modify = request.json(force = True)
-    orderid = order_to_modify['order_id'] 
+    order_id = order_to_modify['order_id'] 
 
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{orderid}';
-                   ''')#NEEDS CHANGING FOR CUSTOMERID
+                   SELECT order_id FROM Order WHERE order_id = '{order_id}';
+                   ''')
     existing_order = cursor.fetchall()
     
     if (existing_order != None):
         cursor.execute(f'''
-                       DELETE FROM OrderMenu WHERE order_id = '{order_to_modify['order_id']}';
-                       ''')#NEEDS CHANGING FOR CUSTOMERID
-        for element in order_to_modify:
-            if 'item_id' in element:
-                for x in range (int(order_to_modify[element]['quantity'])):
-                    cursor.execute(f'''
-                                    INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
-                                    ('{order_to_modify['customer_id']}', '{order_to_modify[element]['item_id']}');
-                                    ''')#NEEDS CHANGING FOR CUSTOMERID
+                       DELETE FROM OrderMenu WHERE order_id = '{order_id}';
+                       ''')
+        for item in order_to_modify['items']:
+            for x in range (int(item['quantity'])):
+                 cursor.execute(f'''
+                                INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
+                                ('{order_id}', '{item['menuitem_id']}');
+                                ''')
         message = {
             "message" : "Order successfully updated."
         }
