@@ -20,18 +20,28 @@ def add_order():
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    customer_id = newOrder['customer_id']
+    time_ordered = newOrder['time_ordered']
+    table_number = newOrder['table_number']
+
     cursor.execute(f'''
-                    INSERT INTO Order (customer_id, time_ordered) VALUES 
-                    ('{newOrder['customer_id']}', '{newOrder['time_ordered']}');
+                    INSERT INTO Order (customer_id, time_ordered, table_number) VALUES 
+                    ('{customer_id}', '{time_ordered}', '{table_number}');
+                    ''') #insert order into Order table to create the unique order_id 
+    cursor.execute(f'''
+                    SELECT order_id FROM Order WHERE customer_id = '{customer_id}'
+                    AND time_ordered = '{time_ordered}'
+                    AND table_number = '{table_number}';
                     ''')
-    for key, value in newOrder.items():
-        if (key == "customer_id" or key == "time_ordered"):
-            continue
-        for x in range(int(value)):
-            cursor.execute(f'''
-                            INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
-                            ('{newOrder['customer_id']}', '{key}');
-                            ''')
+    find_orderid = cursor.fetchone()
+    order_id = find_orderid[0] #fetch order_id that has just been created
+
+    for item in newOrder['items']: #iterate through the list of dicts of items in items
+                for x in range(int(item['quantity'])): #adds the menuitems to the database depending on quantity
+                    cursor.execute(f'''
+                                    INSERT INTO OrderMenu (order_id, menuitem_id) VALUES
+                                    ('{order_id}', '{item['menuitem_id']}');
+                                    ''') #inserts orders into OrderMenu
     message = {
         "message" : "Order successfully added."
     }
@@ -53,7 +63,7 @@ def delete_order():
                    ''')
     existing_order = cursor.fetchall()
 
-    if(len(existing_order) > 0):
+    if(existing_order != None):
         cursor.execute(f'''
                        DELETE FROM Order WHERE order_id = '{order_to_delete['order_id']}';
                        ''')
@@ -78,27 +88,26 @@ def modify_order():
     An API endpoint to modify existing orders in the database.
     """
     order_to_modify = request.json(force = True)
-    orderid = order_to_modify['order_id']
+    orderid = order_to_modify['order_id'] 
 
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
                    SELECT order_id FROM Order WHERE order_id = '{orderid}';
-                   ''')
+                   ''')#NEEDS CHANGING FOR CUSTOMERID
     existing_order = cursor.fetchall()
     
-    if (len(existing_order > 0)):
+    if (existing_order != None):
         cursor.execute(f'''
                        DELETE FROM OrderMenu WHERE order_id = '{order_to_modify['order_id']}';
-                       ''')
-        for key, value in order_to_modify.items():
-            if (key == "customer_id" or key == "time_ordered"):
-                continue
-            for x in range(int(value)):
-                cursor.execute(f'''
-                                INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
-                                ('{order_to_modify['customer_id']}', '{key}');
-                                ''')
+                       ''')#NEEDS CHANGING FOR CUSTOMERID
+        for element in order_to_modify:
+            if 'item_id' in element:
+                for x in range (int(order_to_modify[element]['quantity'])):
+                    cursor.execute(f'''
+                                    INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
+                                    ('{order_to_modify['customer_id']}', '{order_to_modify[element]['item_id']}');
+                                    ''')#NEEDS CHANGING FOR CUSTOMERID
         message = {
             "message" : "Order successfully updated."
         }
