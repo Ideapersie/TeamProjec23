@@ -44,12 +44,14 @@ export default function Cart(props: Props) {
     const handleSubmit = async (e:any) => {
         e.preventDefault();
 
+        // Using function to obtain data
         const cart = handleRetrieveFromCart();
         if (Object.keys(cart).length ===0) {
             console.log("Cart is Empty, please add items in the Order page")
             return;
         }
 
+        // Format the data as how backend wants
         const orderData = {
             customer_id: 1234,
             time_ordered: new Date().toUTCString(), // Add current time
@@ -59,15 +61,8 @@ export default function Cart(props: Props) {
                 quantity: quantity
             }))
         };
-        // const orderedItems = Object.entries(cart).map(([id,quantity]) => ({
-        //     menuitem_id: id,
-        //     quantity: quantity,
-        //     customer_id: 1,
-        //     time_ordered: "9:30",
-        //     table_number: 1
-        // }));
-
-        // Sending ordered items to the API
+    
+        // Sending the data to the Api route
         try {
             const response = await fetch("http://127.0.0.1:5000/api/addorder", {
                 method: 'POST',
