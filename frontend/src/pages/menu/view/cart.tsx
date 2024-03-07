@@ -1,12 +1,20 @@
 import React from "react";
 import Link from "next/link";
+import styles from "./cart.module.css";
+
+interface Props {
+    name: string
+    price: string
+    menuitem_id: number
+}
 
 /**
  * A Cart page containing all the items added to the basket and their respective details
  * 
  *  @author Idea Khan (zlac177@live.rhul.ac.uk), Alvis Wang (zkac380@live.rhul.ac.uk)
  */
-export default function Cart() {
+
+export default function Cart(props:Props) {
 
 
     function handleRetrieveFromCart() {
@@ -33,18 +41,18 @@ export default function Cart() {
                     <table className="min-w-full">
                         <thead className="border-b">
                             <tr className="border-b">
-                                <th className="p-5 text-left">Product</th>
-                                <th className="p-5 text-right">Quantity</th>
-                                <th className="p-5 text-right">Price</th>
-                                <th className="p-5">Action</th>   
+                                <th className={styles.t_left}>Product</th>
+                                <th className={styles.t_right}>Quantity</th>
+                                <th className={styles.t_right}>Price</th>
+                                <th className="p-5">Action</th> 
                             </tr>
                         </thead>
                             <tbody>
                                 {Object.entries(orderedItems).map(([id, quantity]) => (
                                     <tr key={id} className="border-b">
-                                        <td className="p-5 text-center">{id}</td>
-                                        <td className="p-10 text-right">{quantity}</td>
-                                        <td className="p-5 text-right">{/* Calculate item price based on id and quantity */}</td>
+                                        <td className={styles.t_left}>name={id.name} </td>
+                                        <td className={styles.t_right}>quantity = {quantity} </td>
+                                        <td className={styles.t_right}>price={id.price} </td>
                                         <td className="p-5 text-center">
                                             <button className="default-button">Delete</button>
                                         </td>
@@ -52,22 +60,22 @@ export default function Cart() {
                                 ))} 
                             </tbody>
                     </table>
-                        <div className="card p-5">
-                            <ul>
-                                <li>
-                                    <div className="pb-3 text-xl">
-                                        Subtotal: £
-                                    </div>
-                                </li>
-                                <li>
-                                    <button className="primary-button w-full">
-                                        Proceed to checkout
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                <div className="card p-5">
+                    <ul>
+                        <li>
+                            <div className="pb-3 text-xl">
+                                Subtotal: £
+                            </div>
+                        </li>
+                        <li>
+                            <button className="primary-button w-full">
+                                Proceed to checkout
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-            </div>  
+            </div>
+        </div>
+    </div>  
     );
 }
