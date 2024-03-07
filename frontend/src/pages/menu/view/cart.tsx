@@ -41,6 +41,59 @@ export default function Cart(props: Props) {
         return JSON.parse(cart);
     }
 
+    const handleSubmit = async (e:any) => {
+        e.preventDefault();
+
+        const cart = handleRetrieveFromCart();
+        if (Object.keys(cart).length ===0) {
+            console.log("Cart is Empty, please add items in the Order page")
+            return;
+        }
+
+        const orderData = {
+            customer_id: 1234,
+            time_ordered: new Date().toUTCString(), // Add current time
+            table_number: 1,
+            items: Object.entries(cart).map(([menuitem_id, quantity]) => ({
+                menuitem_id: menuitem_id,
+                quantity: quantity
+            }))
+        };
+        // const orderedItems = Object.entries(cart).map(([id,quantity]) => ({
+        //     menuitem_id: id,
+        //     quantity: quantity,
+        //     customer_id: 1,
+        //     time_ordered: "9:30",
+        //     table_number: 1
+        // }));
+
+        // Sending ordered items to the API
+        try {
+            const response = await fetch("http://127.0.0.1:5000/api/addorder", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData),
+                mode: 'no-cors'
+            });
+        
+        
+            if (!response.ok) {
+                throw new Error('Failed to add order');
+            }
+
+            //clear orderedMenus after the submission has been sent
+            sessionStorage.removeItem("Cart");
+
+        } catch (error) {
+            console.error('Error adding order');
+            alert('Order failed to send');
+        }
+
+    }
+
+
     return (
         <div className={""}>
 			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
@@ -85,7 +138,7 @@ export default function Cart(props: Props) {
                                 </div>
                             </li>
                             <li>
-                                <button className="primary-button w-full">
+                                <button onClick={handleSubmit} className="primary-button w-full" >
                                     Proceed to checkout
                                 </button>
                             </li>
