@@ -14,8 +14,7 @@ CREATE TABLE Staff (
     password VARCHAR(255) NOT NULL,
     admin BOOLEAN NOT NULL,
     first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    table_number INTEGER NOT NULL
+    last_name VARCHAR(50) NOT NULL
 );
 
 DROP TABLE IF EXISTS "Order" CASCADE; -- 'Order' is a reserved keyword, "" required
