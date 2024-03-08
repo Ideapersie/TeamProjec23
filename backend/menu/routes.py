@@ -322,7 +322,7 @@ def update_item(menuitem_id):
         return jsonify("Something went wrong"), 500
 
 
-@menu_bp.route('/api/additem', methods=['POST'])
+@menu_bp.route('/api/menu/item/add', methods=['POST'])
 def add_item():
     """
     An API endpoint to add a menu item to the database.
@@ -330,25 +330,73 @@ def add_item():
     Returns:
         A message to inform the user if the item has been successfully added.
     """
-    newItem = request.get_json(force = True)
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(f"SELECT name FROM menuitem WHERE name = {newItem['name']};")
-    menuitems = cursor.fetchall()
-    if (menuitems != None):
-        print("true")
-        cursor.execute('INSERT INTO menuitem (name, description, type, price, calories,image) VALUES (%s, %s, %s, %s, %s, %s)', (newItem['name'], newItem['description'], newItem['type'], newItem['price'], newItem['calories'], newItem['image'] ))
-        message = {
-            "message" : "Menu item successfully added."
-        } 
-    else:
-        message = {
-        "message" : "Adding menu item unsuccessful."
-        }
-    cursor.close()
-    conn.commit()
-    conn.close()
-    return jsonify(message)
+
+    try:
+        new_item = request.get_json(force=True)
+
+        print("Add item:", new_item)
+
+        # Connect to database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Fetch items with same name
+        cursor.execute("SELECT name FROM menuitem WHERE name = %s;", (new_item['name'],))
+        menu_items = cursor.fetchone()
+
+        # If item already exists...
+        if menu_items is not None:
+
+            print("Item already exists")
+
+            # Close connections
+            cursor.close()
+            conn.close()
+
+            # Return error response
+            return jsonify({
+                "message": "An item with this name already exists",
+                "success": False
+            }), 400
+
+        # Else, if item does not exist...
+        else:
+
+            print("Create new item")
+
+            # Create new item
+            cursor.execute("""
+                    INSERT INTO menuitem (name, description, type, price, calories, image, spice)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """, (
+                new_item['name'],
+                new_item['description'],
+                new_item['type'],
+                float(new_item['price']),
+                int(new_item['calories']),
+                new_item['image'],
+                int(new_item.get('spice', 0))
+            ))
+
+            # Save database changes.
+            conn.commit()
+
+            # Close connections
+            cursor.close()
+            conn.close()
+
+            # Return success response
+            return jsonify({
+                "message": "Menu item successfully added.",
+                "success": True
+            }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "message": "Something went wrong",
+            "success": False
+        }), 500
 
 
 @menu_bp.route('/api/menu/delete/item/<int:item_id>', methods=['DELETE'])
