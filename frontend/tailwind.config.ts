@@ -14,7 +14,9 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        'custom-blue': '#0099ff',
+        'wahaca-blue': '#5049df',
+        'wahaca-teal': '#06a5ae',
+        'wahaca-yellow': '#fff47c'
       },
     },
   },
