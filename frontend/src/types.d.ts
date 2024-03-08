@@ -13,3 +13,8 @@ export type Ingredient = {
     name: string
     allergen: string | null
 }
+
+/**
+ * Represents a CartItem in the browser, where the key is the menuitem_id, and the value is its quantity.
+ */
+export type BrowserCartObject = {[menuitem_id: string]: number}
