@@ -5,13 +5,6 @@ import {Order} from "@/types";
 import { useEffect, useState } from "react";
 
 /**
- * View Customer orders.
- * 
- * @returns A list of customer orders
- * @author Madeleine Huebner (Madeleine.Huebner.2022@live.rhul.ac.uk)
- */
-
-/**
  * Data to be passed in as props.
  */
 interface Props {
