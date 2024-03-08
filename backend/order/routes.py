@@ -111,7 +111,7 @@ def modify_order():
     conn.close()
     return jsonify(message)
 
-@order_bp.route('/api/fetchorders', methods=['POST'])
+@order_bp.route('/api/fetchorders', methods=['GET'])
 def fetch_orders():
      """
      An API endpoint to fetch and return all current orders.
