@@ -24,24 +24,16 @@ def add_order():
     time_ordered = newOrder['time_ordered']
     table_number = newOrder['table_number']
 
-    cursor.execute(f'''
-                    INSERT INTO Order (customer_id, time_ordered, table_number) VALUES 
-                    ('{customer_id}', '{time_ordered}', '{table_number}');
-                    ''') #insert order into Order table to create the unique order_id 
-    cursor.execute(f'''
-                    SELECT order_id FROM Order WHERE customer_id = '{customer_id}'
-                    AND time_ordered = '{time_ordered}'
-                    AND table_number = '{table_number}';
-                    ''')
+    #insert order into Order table to create the unique order_id 
+    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, table_number) VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', '{table_number}');''')
+    
+    cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}' AND table_number = '{table_number}';''')
     find_orderid = cursor.fetchone()
     order_id = find_orderid[0] #fetch order_id that has just been created
 
     for item in newOrder['items']: #iterate through the list of dicts of items in items
                 for x in range(int(item['quantity'])): #adds the menuitems to the database depending on quantity
-                    cursor.execute(f'''
-                                    INSERT INTO OrderMenu (order_id, menuitem_id) VALUES
-                                    ('{order_id}', '{item['menuitem_id']}');
-                                    ''') #inserts orders into OrderMenu
+                    cursor.execute(f'''INSERT INTO OrderMenu (order_id, menuitem_id) VALUES ('{order_id}', '{item['menuitem_id']}');''') #inserts orders into OrderMenu
     message = {
         "message" : "Order successfully added."
     }
