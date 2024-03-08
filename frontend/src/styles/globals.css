@@ -13,6 +13,10 @@
   --dark-blue-1: rgb(0, 14, 68);
   --blue: #004383;
   --accent-1: #3d7eb4;
+  --wahaca-blue: #5049df;
+  --wahaca-teal: #06a5ae;
+  --wahaca-yellow: #fff47c;
+  --wahaca-navy : #243349;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -60,14 +64,17 @@ select, input, textarea {
 /*Styles added by Vince (feel free to modify): */
 
 h1 {
+  font-family: 'Supersonic-Rocketship';
   font-size: 36px;
   margin-bottom: 20px;
+  color: var(--wahaca-teal);
 }
 
 h3 {
   font-size: 20px;
   font-weight: 500;
   margin-bottom: 20px;
+  
 }
 
 button {
@@ -94,15 +101,14 @@ button {
 .page-title {
   font-size: 34px;
   margin-bottom: 5px;
-  color: var(--dark-blue-1);
+  color: var(--wahaca-teal);
   font-weight: 550;
 }
 
 .page-subtitle {
   font-size: 16px;
-  font-weight: 500;
-  color: var(--dark-blue-1);
-  opacity: 50%;
+  font-weight: 600;
+  opacity: 80%;
   margin-bottom: 10px;
   max-width: 700px;
 }
@@ -115,4 +121,9 @@ h4 {
 
 .props-header {
   margin-bottom: 30px;
+}
+
+@font-face {
+  font-family: 'Supersonic-Rocketship';
+  src: url('/fonts/Supersonic-Rocketship.ttf') format('truetype');
 }

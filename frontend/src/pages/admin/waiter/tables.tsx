@@ -45,22 +45,22 @@ export default function ViewTablesPage() {
             </PageHeader>
         
             <div className="grid grid-cols-3 gap-4">
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(1)}>Table 1</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(2)}>Table 2</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(3)}>Table 3</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(4)}>Table 4</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(5)}>Table 5</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(6)}>Table 6</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(7)}>Table 7</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(8)}>Table 8</div>
-                <div className="bg-wahaca-blue p-4 h-32 text-white font-semibold text-lg cursor-pointer" onClick={() => handleClick(9)}>Table 9</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(1)}>Table 1</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(2)}>Table 2</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(3)}>Table 3</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(4)}>Table 4</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(5)}>Table 5</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(6)}>Table 6</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(7)}>Table 7</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(8)}>Table 8</div>
+                <div className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-wahaca text-xl cursor-pointer" onClick={() => handleClick(9)}>Table 9</div>
             </div>
             {isSidebarOpen && (
-                <div className="absolute top-0 right-0 h-full bg-wahaca-yellow w-1/3 shadow-md">
+                <div className="absolute top-0 right-0 h-full w-1/3">
                     <button className="absolute top-4 right-4" onClick={handleCloseSidebar}>Close</button>
                     <div className="w-3/4 mx-auto mt-20 bg-white h-3/4 flex justify-center">
                         <div className="mt-4">
-                            <p className="text-wahaca-teal font-semibold text-lg">Table {selectedItemId}</p>
+                            <p className="text-wahaca-teal font-wahaca text-lg">Table {selectedItemId}</p>
                         </div>
                     </div>
                 </div>

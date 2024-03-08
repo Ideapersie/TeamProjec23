@@ -16,7 +16,12 @@ const config: Config = {
       colors: {
         'wahaca-blue': '#5049df',
         'wahaca-teal': '#06a5ae',
-        'wahaca-yellow': '#fff47c'
+        'wahaca-yellow': '#fff47c',
+        'wahaca-navy' : '#243349',
+        'wahaca-light-blue': '#bee2e9'
+      },
+      fontFamily: {
+        wahaca: ['Supersonic-Rocketship', 'sans'],
       },
     },
   },
