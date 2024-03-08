@@ -110,3 +110,23 @@ def modify_order():
     cursor.close()
     conn.close()
     return jsonify(message)
+
+@order_bp.route('/api/fetchorders', methods=['POST'])
+def fetch_orders():
+     """
+     An API endpoint to fetch and return all current orders.
+     """
+     conn = get_db_connection()
+     cursor = conn.cursor()
+     cursor.execute(f'''SELECT * FROM "Order" ORDER BY time_ordered asc;''')
+     order = cursor.fetchall()
+
+     orders = [{'order_id': item[0],
+                'customer_id': item[1],
+                'status': item[2],
+                'time_ordered': item[3],
+                'table_number': item[4]} for item in order]
+     
+     cursor.close()
+     conn.close()
+     return jsonify(orders)
