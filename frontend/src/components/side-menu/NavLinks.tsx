@@ -65,8 +65,8 @@ export default function NavLinks(): JSX.Element {
                     path: "/admin/waiter/menu/add"
                 },
                 {
-                    display: "Customer orders",
-                    path: "/admin/waiter/orders"
+                    display: "Tables",
+                    path: "/admin/waiter/tables"
                 },
             ]
         },

@@ -118,3 +118,24 @@ def modify_order():
     cursor.close()
     conn.close()
     return jsonify(message)
+@order_bp.route('/api/getTableOrder', methods=['Get'])
+def get_order_by_table():
+    try:
+        #connect to database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        #execute sql query
+        cursor.execute("SELECT * FROM 'ORDER';")
+        orders = cursor.fetchall()
+        
+        #close connection
+        cursor.close()
+        conn.close()
+        
+        #sort data into json package
+        return jsonify(orders)
+        
+    except Exception as e:  #database couldn't be reached
+        return jsonify("Something went wrong"), 500
+

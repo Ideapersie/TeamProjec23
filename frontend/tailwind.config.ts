@@ -13,6 +13,11 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        'wahaca-blue': '#5049df',
+        'wahaca-teal': '#06a5ae',
+        'wahaca-yellow': '#fff47c'
+      },
     },
   },
   plugins: [],
