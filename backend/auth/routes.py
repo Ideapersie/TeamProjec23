@@ -14,7 +14,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from resources import config
 from auth.authentication import (
     generate_signup_token, validate_signup_token, generate_customer_token,
-    generate_staff_token, generate_admin_token, send_invite, secret_key
+    generate_staff_token, generate_admin_token, send_invite, secret_key,
+    customer_waiters
 )
 
 auth_bp = Blueprint('auth', __name__)
@@ -74,8 +75,8 @@ def signup():
 
     if not token:
         cursor.execute("""
-                       INSERT INTO Customer(email, password, first_name, last_name)
-                       VALUES(%s, %s, %s, %s)
+                       INSERT INTO Customer(email, password, first_name, last_name, table_number)
+                       VALUES(%s, %s, %s, %s, '-1')
                        """, (email, hashed_password, first_name, last_name))
     else:
         if not validate_signup_token(token, secret_key):
@@ -83,7 +84,7 @@ def signup():
         cursor.execute("""
                        INSERT INTO Staff(email, password, admin, first_name, last_name)
                        VALUES(%s, %s, %s, %s, %s)
-                       """, (email, hashed_password, 'false', first_name, last_name))
+                       """, (email, hashed_password, 'False', first_name, last_name))
     
     conn.commit()
     cursor.close()
@@ -115,6 +116,7 @@ def login():
     try:
         cursor.execute('SELECT * FROM Staff WHERE email = %s', (email,))
         data = cursor.fetchall()
+        staff_id = data[0][0]
         password_hash = data[0][2]
         admin = data[0][3]
         if admin:
@@ -127,6 +129,7 @@ def login():
         cursor.execute('SELECT * FROM Customer WHERE email = %s', (email,))
         data = cursor.fetchall()
         if data:
+            customer_id = data[0][0]
             password_hash = data[0][2]
             type = 'customer'
             token = generate_customer_token(email, secret_key)
@@ -140,6 +143,13 @@ def login():
         if check_password_hash(password_hash, password):
             response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
             response.set_cookie('token', token, httponly=True, secure=True)
+
+            if type == 'staff':
+                customer_waiters.update({f'{staff_id}': 'initial_entry'})
+                print(customer_waiters)
+            else:
+                response.set_cookie('customer_id', f'{customer_id}', httponly=True, secure=True)
+            
             return response
         else:
             return jsonify({'message': 'Email or password is invalid.'}), 401
@@ -157,6 +167,25 @@ def logout():
     Returns:
         A JSON response and a HTTP code.
     """
+    try:
+        conn = psycopg2.connect(dbname=config.DATABASE_NAME,
+                            user=config.DATABASE_USER,
+                            password=config.DATABASE_PASSWORD,
+                            host=config.DATABASE_HOST)
+        cursor = conn.cursor()
+
+        customer_id = request.cookies.get('customer_id')
+        
+        cursor.execute("""
+                       UPDATE Customer
+                       SET table_number = '-1'
+                       WHERE customer_id = %s
+                       """, (customer_id))
+        conn.commit()
+    except Exception:
+        print("User is not a customer.")
+
     response = make_response(jsonify({'message': 'Logged out successfully.'}), 200)
     response.set_cookie('token', '', expires=0, httponly=True, secure=True)
+    response.set_cookie('customer_id', '', expires=0, httponly=True, secure=True)
     return response
