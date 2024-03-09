@@ -161,6 +161,9 @@ def login():
                             host=config.DATABASE_HOST)
                     cursor = conn.cursor()
 
+                    if len(occupied_tables) >= 25:
+                        return jsonify({'message': 'There are currently no free tables.'}), 401
+                    
                     unoccupied_table = random.randint(1, 25)
                     while unoccupied_table in occupied_tables:
                         unoccupied_table = random.randint(1, 25)
@@ -178,7 +181,7 @@ def login():
                     conn.close()
 
                 except:
-                    return jsonify({'message': 'There are currently no waiters that are logged in.'})
+                    return jsonify({'message': 'There are currently no waiters that are logged in.'}), 400
                 response.set_cookie('customer_id', f'{customer_id}', httponly=True, secure=True)
             
             return response
