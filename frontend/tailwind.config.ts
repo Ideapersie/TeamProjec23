@@ -18,7 +18,8 @@ const config: Config = {
         'wahaca-teal': '#06a5ae',
         'wahaca-yellow': '#fff47c',
         'wahaca-navy' : '#243349',
-        'wahaca-light-blue': '#bee2e9'
+        'wahaca-light-blue': '#bee2e9',
+        'wahaca-pink': '#e60065'
       },
       fontFamily: {
         wahaca: ['Supersonic-Rocketship', 'sans'],
