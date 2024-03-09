@@ -10,6 +10,10 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from flask import request
 
+customer_waiters = { # Dictionary to track which waiters can be assigned to customers
+}
+occupied_tables = set() # Set to track all occupied tables
+
 secret_key = token_hex(24) # Secret key used for signing tokens
 
 def generate_signup_token(email, secret_key, salt='signup-salt', expiration=1800):

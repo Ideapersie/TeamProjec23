@@ -10,12 +10,13 @@ The app defines the following endpoints:
 """
 from flask import Blueprint, request, jsonify, abort, make_response
 import psycopg2
+import random
 from werkzeug.security import check_password_hash, generate_password_hash
 from resources import config
 from auth.authentication import (
     generate_signup_token, validate_signup_token, generate_customer_token,
     generate_staff_token, generate_admin_token, send_invite, secret_key,
-    customer_waiters
+    customer_waiters, occupied_tables
 )
 
 auth_bp = Blueprint('auth', __name__)
@@ -96,8 +97,8 @@ def login():
     """
     API endpoint to confirm whether email/password are authentic.
 
-    If email/password are authentic, a cookie is set, and a JSON response is returned.
-    This cookie is used to authenticate future requests.
+    If email/password are authentic, cookies are set, and a JSON response is returned.
+    These cookies are used to authenticate future requests.
     The user type can be either customer, staff or admin.
 
     Returns:
@@ -145,9 +146,39 @@ def login():
             response.set_cookie('token', token, httponly=True, secure=True)
 
             if type == 'staff':
-                customer_waiters.update({f'{staff_id}': 'initial_entry'})
-                print(customer_waiters)
-            else:
+                customer_waiters.update({f'{staff_id}': []})
+                print(customer_waiters) # Debug
+                response.set_cookie('staff_id', f'{staff_id}', httponly=True, secure=True)
+            elif type == 'customer':
+                try:
+                    least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
+                    customer_waiters[least_occupied_waiter].append(customer_id)
+                    print(customer_waiters) # Debug
+
+                    conn = psycopg2.connect(dbname=config.DATABASE_NAME,
+                            user=config.DATABASE_USER,
+                            password=config.DATABASE_PASSWORD,
+                            host=config.DATABASE_HOST)
+                    cursor = conn.cursor()
+
+                    unoccupied_table = random.randint(1, 25)
+                    while unoccupied_table in occupied_tables:
+                        unoccupied_table = random.randint(1, 25)
+                    occupied_tables.add(unoccupied_table)
+                    print(occupied_tables) # Debug
+
+                    cursor.execute("""
+                                   UPDATE Customer
+                                   SET table_number = %s
+                                   WHERE customer_id = %s
+                                   """, (unoccupied_table, customer_id))
+                    conn.commit()
+
+                    cursor.close()
+                    conn.close()
+
+                except:
+                    return jsonify({'message': 'There are currently no waiters that are logged in.'})
                 response.set_cookie('customer_id', f'{customer_id}', httponly=True, secure=True)
             
             return response
@@ -159,33 +190,53 @@ def login():
 @auth_bp.route('/api/logout', methods=['POST'])
 def logout():
     """
-    Logs the user out by deleting the token cookie.
+    Logs the user out by deleting any cookies associated to the user.
 
-    The cookie is deleted by setting the expiration time to 0.
-    The browser detects this and automatically deletes the cookie.
+    These cookies are deleted by setting the expiration time to 0.
 
     Returns:
         A JSON response and a HTTP code.
     """
-    try:
+    customer_id = request.cookies.get('customer_id', 'None')
+    staff_id = request.cookies.get('staff_id', 'None')
+
+    if customer_id != 'None':
         conn = psycopg2.connect(dbname=config.DATABASE_NAME,
                             user=config.DATABASE_USER,
                             password=config.DATABASE_PASSWORD,
                             host=config.DATABASE_HOST)
         cursor = conn.cursor()
 
-        customer_id = request.cookies.get('customer_id')
-        
+        cursor.execute("""
+                       SELECT table_number
+                       FROM Customer
+                       WHERE customer_id = %s
+                       """, (customer_id))
+        table_record = cursor.fetchone()
+        table_to_free = int(table_record[0])
+        occupied_tables.remove(table_to_free)
+        print(occupied_tables) # Debug
+
+        for key in customer_waiters:
+            if int(customer_id) in customer_waiters[key]:
+                customer_waiters[key].remove(int(customer_id))
+        print(customer_waiters) # Debug
+
         cursor.execute("""
                        UPDATE Customer
                        SET table_number = '-1'
                        WHERE customer_id = %s
                        """, (customer_id))
         conn.commit()
-    except Exception:
-        print("User is not a customer.")
+
+        cursor.close()
+        conn.close()
+    elif staff_id != 'None':
+        del customer_waiters[f'{staff_id}']
+        print(customer_waiters) # Debug
 
     response = make_response(jsonify({'message': 'Logged out successfully.'}), 200)
     response.set_cookie('token', '', expires=0, httponly=True, secure=True)
     response.set_cookie('customer_id', '', expires=0, httponly=True, secure=True)
+    response.set_cookie('staff_id', '', expires=0, httponly=True, secure=True)
     return response
