@@ -5,6 +5,7 @@ The blueprint defines the following endpoints:
 - /api/addorder (POST): Adds an order to the database.
 - /api/deleteorder (POST): Deletes an order from the database.
 - /api/modifyorder (POST): Modifies an existing order.
+- /api/getTableOrders (GET): Returns each order_id and its table number.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
@@ -110,24 +111,33 @@ def modify_order():
     cursor.close()
     conn.close()
     return jsonify(message)
-@order_bp.route('/api/getTableOrder', methods=['Get'])
+
+@order_bp.route('/api/getTableOrders', methods=['Get'])
 def get_order_by_table():
+    """
+    An api endpoint to get each order_id and its corrosponding table number
+        
+    Returns:
+        A repsponse containing data in the format {table_number, order_id}
+    """
     try:
         #connect to database
         conn = get_db_connection()
         cursor = conn.cursor()
         
         #execute sql query
-        cursor.execute("SELECT * FROM 'ORDER';")
+        cursor.execute('''SELECT table_number, order_id FROM 'Order' 
+                        GROUP BY table_number, order_id 
+                        ORDER BY table_number ASC;''')
         orders = cursor.fetchall()
         
         #close connection
         cursor.close()
         conn.close()
         
-        #sort data into json package
+        #return data
         return jsonify(orders)
         
     except Exception as e:  #database couldn't be reached
-        return jsonify("Something went wrong"), 500
+        return jsonify("Something went wrong."), 500
 
