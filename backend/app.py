@@ -6,14 +6,16 @@ This module runs the server-side, API routes expect to be called by the frontend
 To run:
     `flask run` 
 """
-from flask import Flask, jsonify, request
+from flask import Flask
 from menu.routes import menu_bp
 from auth.routes import auth_bp
 from order.routes import order_bp
+from payment.routes import payment_bp
 
 app = Flask(__name__)
 app.register_blueprint(menu_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(order_bp)
+app.register_blueprint(payment_bp)
 
 app.run(debug=True)

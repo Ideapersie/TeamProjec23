@@ -14,8 +14,7 @@ CREATE TABLE Staff (
     password VARCHAR(255) NOT NULL,
     admin BOOLEAN NOT NULL,
     first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    table_number INTEGER NOT NULL
+    last_name VARCHAR(50) NOT NULL
 );
 
 DROP TABLE IF EXISTS "Order" CASCADE; -- 'Order' is a reserved keyword, "" required
@@ -24,7 +23,8 @@ CREATE TABLE "Order" (
     customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,
     status VARCHAR(15) NOT NULL,
     time_ordered TIMESTAMP NOT NULL,
-    table_number INTEGER NOT NULL
+    table_number INTEGER NOT NULL,
+    is_paid BOOLEAN NOT NULL
 );
 
 DROP TABLE IF EXISTS MenuItem CASCADE;
@@ -37,6 +37,20 @@ CREATE TABLE MenuItem (
     calories INTEGER,
     spice INTEGER CHECK(spice<=3) CHECK(0<=spice) NOT NULL,
     image VARCHAR(140) NOT NULL
+);
+
+DROP TABLE IF EXISTS Allergen CASCADE;
+CREATE TABLE Allergen (
+    allergen_name VARCHAR(50) PRIMARY KEY
+);
+
+DROP TABLE IF EXISTS PaymentInfo CASCADE;
+CREATE TABLE PaymentInfo (
+    paymentinfo_id SERIAL PRIMARY KEY,
+    customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,
+    card_number VARCHAR(19) NOT NULL,
+    holder_name VARCHAR(100) NOT NULL,
+    expiration_date DATE NOT NULL
 );
 
 /* Junction Tables */

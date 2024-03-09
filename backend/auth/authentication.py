@@ -8,6 +8,7 @@ from secrets import token_hex
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from flask import request
 
 secret_key = token_hex(24) # Secret key used for signing tokens
 
@@ -205,3 +206,39 @@ def validate_admin_token(token, secret_key, salt='admin-salt'):
         return True
     except (BadSignature, SignatureExpired):
         return False
+    
+# Protection methods
+    
+def protect_customer():
+    """
+    Integrated in routes to check whether the user has permission to access the route.
+
+    The user accessing this route must have a cookie associated with them.
+    The user is authorised if they are either an admin or a staff.
+
+    Returns:
+        True if user is authorised, False otherwise.
+    """
+    if not request.cookies.get('token'):
+        return False
+    elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
+        return False
+    else:
+        return True
+    
+def protect_customer_staff():
+    """
+    Integrated in routes to check whether the user has permission to access the route.
+
+    The user accessing this route must have a cookie associated with them.
+    The user is authorised if they are an admin.
+
+    Returns:
+        True if user is authorised, False otherwise.
+    """
+    if not request.cookies.get('token'):
+        return False
+    elif not validate_admin_token(request.cookies.get('token'), secret_key):
+        return False
+    else:
+        return True
