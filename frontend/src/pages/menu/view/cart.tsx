@@ -85,15 +85,15 @@ export default function Cart(props: Props) {
             console.error('Error adding order');
             alert('Order failed to send');
         }
-
     }
-
 
     return (
         <div className={""}>
 			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
-                    Go back to all items
+                Go back to all items
             </Link>
+            <br></br>            
+            <br></br>
 			<h1>CART</h1>
             <div className="grid md:grid-cols-4 md:gap-5">
                 <div className="overflow-x-auto md:col-span-3">
@@ -114,9 +114,9 @@ export default function Cart(props: Props) {
                                 <tbody>
                                 {Object.entries(orderedItems).map(([id, quantity]) => (
                                     <tr key={id} className="border-b">
-                                        <td className={styles.t_left}>name={id} </td>
-                                        <td className={styles.t_right}>quantity = {quantity} </td>
-                                        <td className={styles.t_right}>price={id.price} </td>
+                                        <td className={styles.t_left}>Item_id = {id} </td>
+                                        <td className={styles.t_right}>Quantity = {quantity} </td>
+                                        <td className={styles.t_right}>Price = {id.price} </td>
                                         <td className="p-5 text-center">
                                             <button className="default-button">Delete</button>
                                         </td>
@@ -129,7 +129,7 @@ export default function Cart(props: Props) {
                         <ul>
                             <li>
                                 <div className="pb-3 text-xl">
-                                    Subtotal: £
+                                    Subtotal: £ 
                                 </div>
                             </li>
                             <li>

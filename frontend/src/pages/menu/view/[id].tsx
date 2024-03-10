@@ -63,9 +63,6 @@ export default function ItemPage(props: PageProps) {
 
     return (
         <section>
-            {/* Needs to be adjusted to same row */}
-            {/* <button className = {"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go back</button> */}
-
             <div className={"flex justify-between"}>
                 <div>
                     <button className={"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go
