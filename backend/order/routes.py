@@ -25,7 +25,8 @@ def add_order():
     table_number = newOrder['table_number']
 
     #insert order into Order table to create the unique order_id 
-    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, table_number) VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', '{table_number}');''')
+    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, table_number, is_paid) 
+                   VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', '{table_number}', 'false');''')
     
     cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}' AND table_number = '{table_number}';''')
     find_orderid = cursor.fetchone()
