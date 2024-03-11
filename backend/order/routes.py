@@ -125,7 +125,8 @@ def fetch_orders():
                 'customer_id': item[1],
                 'status': item[2],
                 'time_ordered': item[3],
-                'table_number': item[4]} for item in order]
+                'table_number': item[4],
+                'is_paid': item[5]} for item in order]
      
      cursor.close()
      conn.close()
