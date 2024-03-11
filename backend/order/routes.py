@@ -51,13 +51,13 @@ def delete_order():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{order_to_delete['order_id']}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
                    ''')
     existing_order = cursor.fetchall()
 
     if(existing_order != None):
         cursor.execute(f'''
-                       DELETE FROM Order WHERE order_id = '{order_to_delete['order_id']}';
+                       DELETE FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
                        ''')
         cursor.execute(f'''
                        DELETE FROM OrderMenu WHERE order_id = '{order_to_delete['order_id']}';
@@ -85,7 +85,7 @@ def modify_order():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{order_id}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
                    ''')
     existing_order = cursor.fetchall()
     
