@@ -65,8 +65,8 @@ export default function ItemPage(props: PageProps) {
         <section>
             <div className={"flex justify-between"}>
                 <div>
-                    <button className={"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>Go
-                        back
+                    <button className={"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>
+                        Go back
                     </button>
                 </div>
                 <Link href={"/menu/view/cart"}>
