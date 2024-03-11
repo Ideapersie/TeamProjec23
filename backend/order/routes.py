@@ -25,7 +25,8 @@ def add_order():
     table_number = newOrder['table_number']
 
     #insert order into Order table to create the unique order_id 
-    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, table_number) VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', '{table_number}');''')
+    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, table_number, is_paid) 
+                   VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', '{table_number}', 'false');''')
     
     cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}' AND table_number = '{table_number}';''')
     find_orderid = cursor.fetchone()
@@ -51,13 +52,13 @@ def delete_order():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{order_to_delete['order_id']}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
                    ''')
     existing_order = cursor.fetchall()
 
     if(existing_order != None):
         cursor.execute(f'''
-                       DELETE FROM Order WHERE order_id = '{order_to_delete['order_id']}';
+                       DELETE FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
                        ''')
         cursor.execute(f'''
                        DELETE FROM OrderMenu WHERE order_id = '{order_to_delete['order_id']}';
@@ -85,7 +86,7 @@ def modify_order():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{order_id}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
                    ''')
     existing_order = cursor.fetchall()
     
@@ -125,7 +126,8 @@ def fetch_orders():
                 'customer_id': item[1],
                 'status': item[2],
                 'time_ordered': item[3],
-                'table_number': item[4]} for item in order]
+                'table_number': item[4],
+                'is_paid': item[5]} for item in order]
      
      cursor.close()
      conn.close()
