@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import styles from "./cart.module.css";
 import {BrowserCartObject} from "@/types";
+import PageSubtitle from "@/components/common/text/PageSubtitle";
+import PageTitle from "@/components/common/text/PageTitle";
 
 interface Props {
     name: string
@@ -94,13 +96,13 @@ export default function Cart(props: Props) {
 			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
                     Go back to all items
             </Link>
-			<h1>CART</h1>
+			<PageTitle>Cart</PageTitle>
             <div className="grid md:grid-cols-4 md:gap-5">
                 <div className="overflow-x-auto md:col-span-3">
                     {orderedItems === undefined ?
                         <p>Loading...</p>
                         : orderedItems === null ?
-                            <p>No items in cart</p>
+                            <PageSubtitle>No items in cart</PageSubtitle>
                             :
                             <table className="min-w-full">
                                 <thead className="border-b">

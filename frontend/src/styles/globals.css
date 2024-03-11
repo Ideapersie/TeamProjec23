@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * @author Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
+ * @author Madeleine Huebner (Madeleine.Huebner.2022@live.rhul.ac.uk)
+ */
+
 :root {
   --text-colour-primary: rgb(0, 0, 0);
   --background-start: rgb(241, 241, 245);
@@ -16,7 +21,10 @@
   --wahaca-blue: #5049df;
   --wahaca-teal: #06a5ae;
   --wahaca-yellow: #fff47c;
-  --wahaca-navy : #243349;
+  --wahaca-navy: #243349;
+  --wahaca-pink: #e80464;
+  --wahaca-white: #fff4f4;
+  --wahaca-light-blue: #bee2e9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -60,9 +68,6 @@ select, input, textarea {
   color: #073357;
 }
 
-
-/*Styles added by Vince (feel free to modify): */
-
 h1 {
   font-family: 'Supersonic-Rocketship';
   font-size: 36px;
@@ -77,8 +82,13 @@ h3 {
   
 }
 
+h4 {
+  color: var(--wahaca-navy);
+  margin-bottom: 3px;
+}
+
 button {
-  background-color: #0099ff;
+  background-color: var(--wahaca-pink);
   color: white;
   border-radius: 5px;
   padding: 5px 10px;
@@ -86,11 +96,12 @@ button {
   transition: background-color 0.3s ease,translate 0.3s;
   border: none;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  font-family: 'Coco-Sharp';
 
   &:hover {
     /* background-color: #0284c7; */
-    translate: 5px;
+    opacity: 60%;
   }
 
   &:focus {
@@ -113,11 +124,6 @@ button {
   max-width: 700px;
 }
 
-h4 {
-  color: var(--wahaca-navy);
-  margin-bottom: 3px;
-}
-
 .props-header {
   margin-bottom: 30px;
 }
@@ -125,4 +131,9 @@ h4 {
 @font-face {
   font-family: 'Supersonic-Rocketship';
   src: url('/fonts/Supersonic-Rocketship.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Coco-Sharp';
+  src: url('/fonts/Coco-Sharp.ttf') format('truetype');
 }

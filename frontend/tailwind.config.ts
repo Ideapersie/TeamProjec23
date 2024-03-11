@@ -19,10 +19,12 @@ const config: Config = {
         'wahaca-yellow': '#fff47c',
         'wahaca-navy' : '#243349',
         'wahaca-light-blue': '#bee2e9',
-        'wahaca-pink': '#e60065'
+        'wahaca-pink': '#e80464',
+        'wahaca-white': '#fff4f4',
       },
       fontFamily: {
-        wahaca: ['Supersonic-Rocketship', 'sans'],
+        wahaca: ['Supersonic-Rocketship', 'sans-serif'],
+        basic: ['Coco-Sharp', 'sans-serif'],
       },
     },
   },

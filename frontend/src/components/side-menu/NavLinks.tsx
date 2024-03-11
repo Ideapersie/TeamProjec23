@@ -102,7 +102,7 @@ export default function NavLinks(): JSX.Element {
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
                 <div className="bg-wahaca-light-blue p-4 mb-4" key={groupName}>
                     <div className="bg-white p-4">
-                        <h4 className="font-wahaca text-xl text-wahaca-navy">
+                        <h4 className="font-basic text-xl text-wahaca-navy">
                             {groupName}
                         </h4>
                         <ul className="text-sm font-semibold text-wahaca-navy">
@@ -122,12 +122,10 @@ export default function NavLinks(): JSX.Element {
                     opacity: 80%;
                     // Hover
                     &:not(.active):hover {
-                        margin-left: 6px;
                     }
 
                     // Active
                     &.active {
-                        margin-left: 7px;
                         opacity: 100%
                     }
                 }
