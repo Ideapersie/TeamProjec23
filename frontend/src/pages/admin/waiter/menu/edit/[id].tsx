@@ -51,10 +51,14 @@ export default function EditMenuItemPage(props: Props) {
             price: itemPrice,
             type: itemType,
             calories: itemCalories,
-            image: itemImage
+            image: itemImage,
+            ingredients: Object.values(itemIngredients)
         };
 
-        console.log(payload);
+        if (process.env.NODE_ENV === "development") {
+            console.log(payload);
+        }
+
         const url = `${env.apiHost}/api/updateitem/${props.data?.menuitem_id}`;
 
         const res = await fetch(url, {
