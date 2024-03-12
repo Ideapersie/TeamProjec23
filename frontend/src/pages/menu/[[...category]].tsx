@@ -4,6 +4,7 @@ import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
 import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
 import {env} from "../../../env.config";
+import PageTitle from "@/components/common/text/PageTitle";
 
 // Declaring expected prop types
 interface Props {
@@ -23,20 +24,21 @@ export default function ViewMenu(props: Props) {
                             Go back to all items
                         </Link>
                     }
-                    <h1 className={"mb-0 font-semibold"}>{props.category || "All items"}</h1>
+                    <PageTitle>MENU</PageTitle>
+                    {/* <h1 className={"mb-0 font-semibold"}>{props.category}</h1> */}
                     <Link href={"/menu/view/cart"}>
                         <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" 
                         src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
                     </Link>
                 </div>
-                <p className={"text-stone-400"}>
+                {/* <p className={"text-stone-400"}>
                     All our food is prepared with only the highest-quality ingredients,
                     provided by local independent farms.
-                </p>
+                </p> */}
             </div>
 
             {/*Filters*/}
-            <div className='mb-4 pt-10'>
+            <div className=''>
                 <CustomerMenuFilters/>
             </div>
 

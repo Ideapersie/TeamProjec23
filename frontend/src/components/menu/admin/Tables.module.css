@@ -1,0 +1,9 @@
+.tableItem {
+    background-color: var(--wahaca-yellow);
+    padding: 1rem;
+    height: 8rem;
+    color: var(--wahaca-navy);
+    font-family: 'title';
+    cursor: pointer;
+    font-size: 30px;
+}

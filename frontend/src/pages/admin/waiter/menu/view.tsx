@@ -1,10 +1,9 @@
 import PageTitle from "@/components/common/text/PageTitle";
-import PageSubtitle from "@/components/common/text/PageSubtitle";
-import PageHeader from "@/components/common/text/PageHeader";
 import AdminMenuList from "@/components/menu/admin/AdminMenuList";
 import {MenuItem} from "@/types";
 import {DeleteItemPopup} from "@/components/menu/admin/DeleteItemPopup";
 import {createContext, Dispatch, JSX, SetStateAction, useState} from "react";
+import PageHeader from "@/components/common/text/PageHeader";
 
 // The data to be passed in as props
 interface Props {
@@ -41,15 +40,10 @@ export default function AdminViewMenuPage(props: Props): JSX.Element {
 
     return (
         <AdminViewMenuPageContext.Provider value={{itemToDelete, setItemToDelete, fetchItems}}>
-            <PageHeader>
-                <PageTitle>
-                    View Items
-                </PageTitle>
-                <PageSubtitle>
-                    Use this page to view which items are being displayed on the menu. You can add new items, delete items,
-                    and edit items all from this page.
-                </PageSubtitle>
-            </PageHeader>
+            
+            <PageTitle>
+                VIEW ITEMS
+            </PageTitle>
 
             {/*Displays a list of menu items*/}
             <AdminMenuList dishes={items}/>

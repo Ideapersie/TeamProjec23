@@ -64,8 +64,7 @@ export default function EditMenuItemPage(props: Props) {
 
     return (
         <>
-            <PageTitle>Edit item {"->"} <span className={"text-sky-700"}>{props.data.name}</span></PageTitle>
-            <PageSubtitle>Use this page to make any changes you wish to item {props.data.menuitem_id} ({props.data.name}).</PageSubtitle>
+            <PageTitle>Edit item {"➡"} <span className={"text-wahaca-blue"}>{props.data.name}</span></PageTitle>
 
             <hr/>
 
@@ -130,7 +129,7 @@ export default function EditMenuItemPage(props: Props) {
                     </label>
 
                     <div>
-                        <button className={"bg-emerald-500 hover:bg-emerald-700"}>Save changes</button>
+                        <button >Save changes</button>
                     </div>
                 </div>
 

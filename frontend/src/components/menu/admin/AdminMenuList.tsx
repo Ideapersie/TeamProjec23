@@ -19,21 +19,18 @@ export default function AdminMenuList(props: Props) {
 
                 {/*Filters*/}
                 <div className={styles.menuItemFilters}>
-                    <select name="" id="">
-                        <option value="">Type</option>
+                    <select name="" id="" className={styles.select}>
+                        <option value="" className="font-subtitle font-bold">Type</option>
                     </select>
 
-                    <select name="" id="">
-                        <option value="">Price</option>
+                    <select name="" id="" className={styles.select}>
+                        <option value="" className="font-subtitle font-bold">Price</option>
                     </select>
 
-                    <select name="" id="">
-                        <option value="">Sort</option>
+                    <select name="" id="" className={styles.select}>
+                        <option value="" className="font-subtitle font-bold">Sort</option>
                     </select>
 
-                    <button>
-                        <Link href="/admin/waiter/menu/add">Add item</Link>
-                    </button>
                 </div>
             </div>
 

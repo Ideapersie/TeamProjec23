@@ -66,7 +66,7 @@ export default function NavLinks(): JSX.Element {
                 },
                 {
                     display: "Tables",
-                    path: "/admin/waiter/tables"
+                    path: "/admin/waiter/menu/tables"
                 },
             ]
         },
@@ -83,9 +83,9 @@ export default function NavLinks(): JSX.Element {
 
     return (
         <>
-            {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
-                <div className={"nav-link-group rounded"} key={groupName}>
-                    <h4 className={"nav-link-group-heading flex items-center gap-1 fill-blue-500"}>
+            {/* {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
+                <div className={"nav-link-group bg-white p-4 mb-4"} key={groupName}>
+                    <h4 className={"nav-link-group-heading flex items-center gap-1 fill-wahaca-navy font-sans font-bold text-lg text-gray-800 mb-4 pb-2 border-b"}>
                         {navGroup.icon}
                         {groupName}
                     </h4>
@@ -97,46 +97,42 @@ export default function NavLinks(): JSX.Element {
                         ))}
                     </ul>
                 </div>
+                        ))}*/}
+        
+            {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
+                <div className="bg-wahaca-light-blue p-4 mb-4" key={groupName}>
+                    <div className="bg-white p-4">
+                        <h4 className="text-xl text-wahaca-navy">
+                            {groupName}
+                        </h4>
+                        <ul className="text-sm text-wahaca-light-navy">
+                            {navGroup.links.map(link => (
+                                <li key={link.path} className={`nav-link ${router.asPath === link.path ? "active" : ""}`}>
+                                    <Link href={link.path}>{link.display}</Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             ))}
-
+        
             <style jsx>{`
                 .nav-link {
-                    color: #91b4ef;
-                    font-weight: 500;
-                    font-size: 0.8rem;
-                    margin-left: 5px;
                     transition: color 50ms ease, margin-left 50ms ease;
+                    opacity: 80%;
 
                     // Hover
                     &:not(.active):hover {
-                        margin-left: 6px;
-                        color: #5890ee;
+                        text-wahaca-teal;
                     }
 
                     // Active
                     &.active {
-                        color: #001f9a;
-                        //margin-left: 7px;
+                        opacity: 100%
                     }
                 }
-
-                .nav-link-group {
-                    margin-bottom: 10px;
-                    background: var(--grey-1);
-                    padding: 10px;
-                    border: 1px outset rgba(219, 213, 245, 0.16);
-                }
-
-                .nav-link-group-heading {
-                    font-weight: 500;
-                    font-size: 0.9rem;
-                    color: #004383;
-                    padding-bottom: 5px;
-                    margin-bottom: 10px;
-                    margin-left: 5px;
-                    border-bottom: solid #dfdcff 1px;
-                }
             `}</style>
+
         </>
     );
 }
