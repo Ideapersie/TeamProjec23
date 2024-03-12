@@ -1,5 +1,5 @@
 import {GetServerSidePropsContext} from "next";
-import {MenuItem} from "@/types";
+import {MenuItemRelatedIngredients} from "@/types";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent, useState} from "react";
@@ -10,7 +10,7 @@ import {env} from "../../../../../../env.config";
  * Defining component props
  */
 interface Props {
-    data: MenuItem | null,
+    data: MenuItemRelatedIngredients | null,
     types: string[]
 }
 
@@ -168,16 +168,18 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext): Promis
 
     let data = null;
 
+    // Fetching item data
     if (id !== 'undefined') {
         const res = await fetch(env.apiHost + `/api/menu/item/${id}`);
 
         // If item fetched successfully...
         if (res.status === 200) {
-            data = (await res.json())["item"] as MenuItem;
+            data = (await res.json())["item"] as MenuItemRelatedIngredients;
             console.log(data);
         }
     }
 
+    // Fetching a list of all item types currently in database
     const res = await fetch(env.apiHost + "/api/menu/types");
     const typesData = await res.json();
 
