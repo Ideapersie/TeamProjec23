@@ -59,7 +59,8 @@ DROP TABLE IF EXISTS OrderMenu CASCADE;
 CREATE TABLE OrderMenu (
     order_id INTEGER REFERENCES "Order"(order_id) NOT NULL,
     menuitem_id INTEGER REFERENCES MenuItem(menuitem_id) NOT NULL,
-    PRIMARY KEY (order_id, menuitem_id)
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, menuitem_id, quantity)
 );
 
 DROP TABLE IF EXISTS StaffOrder CASCADE;
