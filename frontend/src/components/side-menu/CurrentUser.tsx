@@ -28,13 +28,9 @@ export default function CurrentUser() {
     }
 
     return (
-        <div className={"border-t border-t-sky-700 px-5 py-3 h-16 text-sm mt-auto fill-sky-50 text-sky-100 flex gap-2 items-center current-user-bg relative"}
+        <div className={"bg-wahaca-teal px-5 py-3 h-16 text-sm mt-auto fill-white text-sky-100 flex gap-2 items-center current-user-bg relative"}
              role={"button"}
-             onClick={handleLogout}
-        >
-            <div className={"absolute left-0 w-full bottom-10 -z-10"}>
-                <WavesWebShape/>
-            </div>
+             onClick={handleLogout}>
             <UserProfileIcon />
 
             {session === undefined ?
@@ -43,18 +39,12 @@ export default function CurrentUser() {
                     <span>No session</span>
                     :
                     <span>
-                        <strong className={"font-medium"}>{session.firstName} {session.lastName}</strong>
-                        <div className={"text-xs text-sky-300"}>
+                        <strong className={"text-white font-l"}>{session.firstName} {session.lastName}</strong>
+                        <div className={"text-xs text-white"}>
                             {session.email}
                         </div>
                     </span>
             }
-
-            <style jsx>{`
-                .current-user-bg {
-                    background-color: var(--grey-2);
-                }
-            `}</style>
         </div>
     );
 }

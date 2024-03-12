@@ -61,9 +61,9 @@ export default function LoginPage() {
     }
 
     return (
-        <div className={"bg-gradient-to-tr from-cyan-200 to-indigo-500 min-h-screen flex"}>
+        <div className={"bg-wahaca-yellow min-h-screen flex"}>
             <div className={"bg-white rounded-xl shadow p-10 m-auto"}>
-                <PageTitle>Login</PageTitle>
+                <PageTitle>LOGIN</PageTitle>
                 <PageSubtitle>Enter your email and password below to login</PageSubtitle>
                 <hr/>
 

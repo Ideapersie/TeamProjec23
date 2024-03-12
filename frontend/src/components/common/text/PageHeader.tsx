@@ -9,7 +9,6 @@ export default function PageHeader(props: Props) {
     return (
         <div className={`mb-5 ${props.className || ''}`}>
             {props.children}
-            <hr style={{marginTop: 15}}/>
         </div>
     );
 }

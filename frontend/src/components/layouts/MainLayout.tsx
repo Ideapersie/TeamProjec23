@@ -22,11 +22,11 @@ export default function MainLayout({ children }: any): React.ReactNode {
         <div className={`min-h-screen ${inter.className}`}>
 
             {/*Left panel / side menu*/}
-            <nav className={"fixed bg-gray-50 border-r border-r-sky-900 border-opacity-10 h-screen left-panel flex flex-col"} style={{width: SIDE_MENU_WIDTH}}>
+            <nav className={"fixed bg-white border-r border-r-sky-900 border-opacity-10 h-screen left-panel flex flex-col"} style={{width: SIDE_MENU_WIDTH}}>
                 <div className={"p-5"}>
                     {/*Logo*/}
                     <Link href={"/"}>
-                        <div className={"relative h-16 mb-3 rounded-lg"}>
+                        <div className={"relative h-16 mb-3  bg-white"}>
                             <Image src={"/logo.png"} alt={"Wahaca logo"} fill={true} objectFit={"contain"}/>
                         </div>
                     </Link>

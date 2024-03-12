@@ -74,7 +74,7 @@ export default function EditMenuItemPage(props: Props) {
 
     return (
         <>
-            <PageTitle>Edit item {"->"} <span className={"text-sky-700"}>{props.data.name}</span></PageTitle>
+            <PageTitle>Edit item {"->"} <span className={"text-wahaca-blue"}>{props.data.name}</span></PageTitle>
             <PageSubtitle>Use this page to make any changes you wish to item {props.data.menuitem_id} ({props.data.name}).</PageSubtitle>
 
             <hr/>
@@ -138,17 +138,21 @@ export default function EditMenuItemPage(props: Props) {
                                 />
                             </label>
 
-                            <label>
-                                Item calories
-                                <input
-                                    type="number"
-                                    value={itemCalories}
-                                    min={0}
-                                    step={1}
-                                    onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
-                                />
-                            </label>
-                        </div>
+                    <label>
+                        Item calories
+                        <input
+                            type="number"
+                            value={itemCalories}
+                            min={0}
+                            step={1}
+                            onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
+                        />
+                    </label>
+
+                    <div>
+                        <button>Save changes</button>
+                    </div>
+                </div>
 
                         {/*Right column*/}
                         <div className={"flex flex-col gap-3 flex-grow max-w-80"}>
