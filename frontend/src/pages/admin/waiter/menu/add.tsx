@@ -1,5 +1,18 @@
 import { useState } from "react";
 import PageTitle from "@/components/common/text/PageTitle";
+import PageSubtitle from "@/components/common/text/PageSubtitle";
+import styles from "./add.module.css";
+import {useRouter} from "next/router";
+
+type Payload = {
+    name: string,
+    description: string,
+    type: string,
+    price: string,
+    calories: string,
+    spice: string,
+    image: string
+}
 
 /**
  * A form to add a new food item to the menu.
@@ -9,21 +22,24 @@ import PageTitle from "@/components/common/text/PageTitle";
  */
 export default function AddItemPage() {
 
+    const router = useRouter();
+
     /**
      * Manage the state of the elements.
      * Update value of variable when form is submitted.
      */
-    const [newItem, setNewItem] = useState({
+    const [newItem, setNewItem] = useState<Payload>({
         name: '',
         description: '',
         type: '',
-        price: '',
-        calories: '',
-        image: ''
+        price: '0',
+        calories: '0',
+        image: '',
+        spice: '0'
     });
 
-    const handleChange = (e:any) => {
-        const { name, value } = e.target;
+    const handleChange = (e: any) => {
+        let { name, value } = e.target;
         setNewItem({ ...newItem, [name]: value });
     };
 
@@ -35,29 +51,30 @@ export default function AddItemPage() {
     const handleSubmit = async (e: any) => {
 
         e.preventDefault();
-        console.log(JSON.stringify(newItem));
-        
-        const response = await fetch("http://127.0.0.1:5000/api/additem", {
+
+        try {
+            const response = await fetch('/api/menu/item/add', {
                 method: 'POST',
+                body: JSON.stringify(newItem),
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newItem),
                 mode: 'no-cors'
-        })
-        .then(response => {
-            if (response) {
-                console.log('Request sent successfully');
-                alert("Menu item successfully added.")
-                
+            });
+
+            if (response.status === 200) {
+                await router.push('/admin/waiter/menu/view');
+
+            } else if (response.status === 400) {
+                alert("Item with this name already exists");
+
             } else {
-                console.error('Request failed');
-                alert("Adding menu item unsuccessful.")
+                alert("Something went wrong");
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     /**
@@ -101,6 +118,15 @@ export default function AddItemPage() {
                         <input type="number" name="calories"  value={newItem.calories} onChange={handleChange} required/>
                     </label>
 
+                    <label className={styles.label}>Spice level
+                        <select name="spice" className={styles.select} value={newItem.spice} onChange={handleChange}>
+                            <option value={"0"}>None</option>
+                            <option value={"1"}>Mild</option>
+                            <option value={"2"}>Medium</option>
+                            <option value={"3"}>Hot</option>
+                        </select>
+                    </label>
+
                     <button>Submit</button>
 
                 </div>
@@ -120,9 +146,7 @@ export default function AddItemPage() {
                     <label>Image URL
                         <input type="text" name="image"  value={newItem.image} onChange={handleChange} required/>
                     </label>
-
                 </div>
-                
             </form>
         </>
     )
