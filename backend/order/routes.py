@@ -32,8 +32,8 @@ def add_order():
     order_id = find_orderid[0] #fetch order_id that has just been created
 
     for item in newOrder['items']: #iterate through the list of dicts of items in items
-                for x in range(int(item['quantity'])): #adds the menuitems to the database depending on quantity
-                    cursor.execute(f'''INSERT INTO OrderMenu (order_id, menuitem_id) VALUES ('{order_id}', '{item['menuitem_id']}');''') #inserts orders into OrderMenu
+            cursor.execute(f'''INSERT INTO OrderMenu (order_id, menuitem_id, quantity) 
+                           VALUES ('{order_id}', '{item['menuitem_id']}', '{item['quantity']}');''') #inserts orders into OrderMenu
     message = {
         "message" : "Order successfully added."
     }
@@ -131,6 +131,7 @@ def fetch_orders():
      cursor.close()
      conn.close()
      return jsonify(orders)
+
 @order_bp.route('/api/getTableOrder', methods=['Get'])
 def get_order_by_table():
     try:
