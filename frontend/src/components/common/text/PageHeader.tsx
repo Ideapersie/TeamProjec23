@@ -7,7 +7,7 @@ interface Props {
 
 export default function PageHeader(props: Props) {
     return (
-        <div className={`mb-5 ${props.className || ''}`}>
+        <div className={`mb-4 ${props.className || ''}`}>
             {props.children}
         </div>
     );
