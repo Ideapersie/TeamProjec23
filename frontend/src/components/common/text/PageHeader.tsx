@@ -1,8 +1,15 @@
-export default function PageHeader(props: any) {
+import {JSX} from "react";
+
+interface Props {
+    children: JSX.Element | JSX.Element[]
+    className?: string
+}
+
+export default function PageHeader(props: Props) {
     return (
-        <div className={"props-header"}>
+        <div className={`mb-5 ${props.className || ''}`}>
             {props.children}
-            <hr style={{marginTop: 20}}/>
+            <hr style={{marginTop: 15}}/>
         </div>
     );
 }
