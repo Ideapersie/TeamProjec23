@@ -5,7 +5,7 @@
  */
 export const allergens = [
     "Celery",
-    "Cereals containing gluten (e.g. wheat, rye, barley)",
+    "Gluten",
     "Crustaceans",
     "Eggs",
     "Fish",
@@ -13,8 +13,8 @@ export const allergens = [
     "Milk",
     "Molluscs",
     "Mustard",
-    "Nuts (trees)",
-    "Peanuts (ground)",
+    "Nuts",
+    "Peanuts",
     "Sesame seeds",
     "Soya",
     "Sulphur dioxide"
