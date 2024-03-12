@@ -22,13 +22,12 @@ def add_order():
 
     customer_id = newOrder['customer_id']
     time_ordered = newOrder['time_ordered']
-    table_number = newOrder['table_number']
 
     #insert order into Order table to create the unique order_id 
-    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, table_number, is_paid) 
-                   VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', '{table_number}', 'false');''')
+    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, is_paid) 
+                   VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', 'false');''')
     
-    cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}' AND table_number = '{table_number}';''')
+    cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}';''')
     find_orderid = cursor.fetchone()
     order_id = find_orderid[0] #fetch order_id that has just been created
 
