@@ -5,6 +5,11 @@ import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent, useState} from "react";
 import {useRouter} from "next/router";
 import {env} from "../../../../../../env.config";
+import SectionHeading from "@/components/common/text/SectionHeading";
+import SectionSubheading from "@/components/common/text/SectionSubheading";
+import PageHeader from "@/components/common/text/PageHeader";
+import IngredientList, {IngredientState} from "@/components/menu/ingredients/IngredientList";
+import AllergenSummary from "@/components/allergens/AllergenSummary";
 
 /**
  * Defining component props
@@ -29,6 +34,7 @@ export default function EditMenuItemPage(props: Props) {
     const [itemPrice, setItemPrice] = useState(parseFloat(props.data?.price || "0"));
     const [itemCalories, setItemCalories] = useState(props.data?.calories);
     const [itemImage, setItemImage] = useState(props.data?.image);
+    const [itemIngredients, setItemIngredients] = useState<IngredientState>(Object.assign({}, props.data?.ingredients));
 
     // If no item found for given id, display error message
     if (props.data === null) {
@@ -69,90 +75,136 @@ export default function EditMenuItemPage(props: Props) {
 
             <hr/>
 
-            <form onSubmit={handleSaveChanges} className={"bg-white shadow p-10 rounded-xl mt-5 flex gap-7"}>
-                {/*Left column*/}
-                <div className={"flex flex-col gap-5 flex-grow"}>
-                    <label>
-                        Item name
-                        <input
-                            type="text"
-                            value={itemName}
-                            onInput={e => setItemName(e.currentTarget.value)}
-                        />
-                    </label>
+            <form onSubmit={handleSaveChanges} className={"bg-white shadow p-10 rounded-xl mt-5"}>
 
-                    <label>
-                        Item description
-                        <textarea
-                            value={itemDescription}
-                            onInput={e => setItemDescription(e.currentTarget.value)}
-                            rows={3}
-                        />
-                    </label>
+                {/*Menu item details*/}
+                <div>
+                    <PageHeader>
+                        <SectionHeading>Item details</SectionHeading>
+                        <SectionSubheading>
+                            Provide basic details about the item to be displayed in the menu.
+                        </SectionSubheading>
+                    </PageHeader>
+                    <div className={"flex gap-7"}>
+                        {/*Left column*/}
+                        <div className={"flex flex-col gap-3 flex-grow"}>
+                            <label>
+                                Item name
+                                <input
+                                    type="text"
+                                    value={itemName}
+                                    onInput={e => setItemName(e.currentTarget.value)}
+                                />
+                            </label>
 
-                    <label>
-                        Item type
-                        <input
-                            type="text"
-                            value={itemType}
-                            onChange={e => setItemType(e.currentTarget.value)}
-                            list={"datalist-types"}
-                        />
+                            <label>
+                                Item description
+                                <textarea
+                                    value={itemDescription}
+                                    onInput={e => setItemDescription(e.currentTarget.value)}
+                                    rows={1}
+                                />
+                            </label>
 
-                        <datalist id={"datalist-types"}>
-                            {props.types.map(type => <option key={type}>
-                                {type}
-                            </option>)
-                            }
-                        </datalist>
-                    </label>
+                            <label>
+                                Item type
+                                <input
+                                    type="text"
+                                    value={itemType}
+                                    onChange={e => setItemType(e.currentTarget.value)}
+                                    list={"datalist-types"}
+                                />
 
-                    <label>
-                        Item price (£)
-                        <input
-                            type="number"
-                            min={0}
-                            step={0.01}
-                            value={itemPrice}
-                            onInput={e => e.currentTarget.value ? setItemPrice(parseFloat(e.currentTarget.value)) : undefined}
-                        />
-                    </label>
+                                <datalist id={"datalist-types"}>
+                                    {props.types.map(type => <option key={type}>
+                                        {type}
+                                    </option>)
+                                    }
+                                </datalist>
+                            </label>
 
-                    <label>
-                        Item calories
-                        <input
-                            type="number"
-                            value={itemCalories}
-                            min={0}
-                            step={1}
-                            onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
-                        />
-                    </label>
+                            <label>
+                                Item price (£)
+                                <input
+                                    type="number"
+                                    min={0}
+                                    step={0.01}
+                                    value={itemPrice}
+                                    onInput={e => e.currentTarget.value ? setItemPrice(parseFloat(e.currentTarget.value)) : undefined}
+                                />
+                            </label>
 
-                    <div>
-                        <button className={"bg-emerald-500 hover:bg-emerald-700"}>Save changes</button>
+                            <label>
+                                Item calories
+                                <input
+                                    type="number"
+                                    value={itemCalories}
+                                    min={0}
+                                    step={1}
+                                    onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
+                                />
+                            </label>
+                        </div>
+
+                        {/*Right column*/}
+                        <div className={"flex flex-col gap-3 flex-grow max-w-80"}>
+                            <label className={"flex-grow"}>
+                                Image preview
+                                <div className={"bg-white shadow min-h-48 flex-grow rounded-xl overflow-hidden p-5"}>
+                                    <div
+                                        className={"h-full w-full bg-red-200 !bg-center !bg-contain !bg-no-repeat"}
+                                        style={{background: `url(${itemImage})`}}
+                                    />
+                                </div>
+                            </label>
+
+                            <label>
+                                Image URL
+                                <input type="url"
+                                       value={itemImage}
+                                       onChange={e => setItemImage(e.currentTarget.value)}
+                                />
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                {/*Right column*/}
-                <div className={"flex flex-col gap-5 flex-grow max-w-80"}>
-                    <label>
-                        Image preview
-                        <div className={"bg-white shadow h-48 rounded-xl overflow-hidden p-5"}>
-                            <div
-                                className={"h-full w-full bg-red-200 !bg-center !bg-contain !bg-no-repeat"}
-                                style={{background: `url(${itemImage})`}}
+                {/*Ingredient editor*/}
+                <div>
+                    <PageHeader className={"mt-10"}>
+                        <SectionHeading>Ingredients</SectionHeading>
+                        <SectionSubheading>Manage ingredients and allergens for this item below</SectionSubheading>
+                    </PageHeader>
+                    <div className={"flex gap-7"}>
+                        <div className={"flex-grow"} style={{maxWidth: 800}}>
+                            <IngredientList
+                                ingredients={itemIngredients}
+                                setIngredients={setItemIngredients}
                             />
                         </div>
-                    </label>
 
-                    <label>
-                        Image URL
-                        <input type="url"
-                               value={itemImage}
-                               onChange={e => setItemImage(e.currentTarget.value)}
-                        />
-                    </label>
+                        <div className={"border-l pl-7"}>
+                            <h4 className={"mb-3 text-sm"}>Allergen summary</h4>
+                            <AllergenSummary
+                                ingredients={Object.values(itemIngredients)}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <hr className={"mt-10 mb-5"}/>
+                <div className={"flex gap-2 justify-start"}>
+                    <button
+                        className={"bg-pink-700 hover:bg-pink-900 m-0 text-sm"}
+                        type={"button"}
+                        onClick={() => router.back()}
+                    >
+                        {"<-"} Cancel
+                    </button>
+
+                    <button className={"bg-emerald-500 hover:bg-emerald-700 m-0 text-sm"}>
+                        Save changes {"->"}
+                    </button>
                 </div>
             </form>
         </>
