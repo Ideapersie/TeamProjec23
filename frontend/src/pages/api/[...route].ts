@@ -26,7 +26,7 @@ export default async function handler(
 
         const response = await fetch(env.apiHost + "/api/" + path, {
             method: req.method,
-            body: req.body ? JSON.stringify(req.body) : undefined
+            body: req.body || undefined
         });
 
         // Mapping response status code
