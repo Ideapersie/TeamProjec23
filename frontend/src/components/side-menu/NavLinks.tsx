@@ -66,7 +66,7 @@ export default function NavLinks(): JSX.Element {
                 },
                 {
                     display: "Tables",
-                    path: "/admin/waiter/tables"
+                    path: "/admin/waiter/menu/tables"
                 },
             ]
         },
@@ -102,10 +102,10 @@ export default function NavLinks(): JSX.Element {
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
                 <div className="bg-wahaca-light-blue p-4 mb-4" key={groupName}>
                     <div className="bg-white p-4">
-                        <h4 className="font-basic text-xl text-wahaca-navy">
+                        <h4 className="text-xl text-wahaca-navy">
                             {groupName}
                         </h4>
-                        <ul className="text-sm font-semibold text-wahaca-navy">
+                        <ul className="text-sm text-wahaca-light-navy">
                             {navGroup.links.map(link => (
                                 <li key={link.path} className={`nav-link ${router.asPath === link.path ? "active" : ""}`}>
                                     <Link href={link.path}>{link.display}</Link>
@@ -116,12 +116,14 @@ export default function NavLinks(): JSX.Element {
                 </div>
             ))}
         
-        <style jsx>{`
+            <style jsx>{`
                 .nav-link {
                     transition: color 50ms ease, margin-left 50ms ease;
                     opacity: 80%;
+
                     // Hover
                     &:not(.active):hover {
+                        text-wahaca-teal;
                     }
 
                     // Active

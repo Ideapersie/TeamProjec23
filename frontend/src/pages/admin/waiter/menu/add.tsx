@@ -1,9 +1,6 @@
 import { useState } from "react";
-import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
-import PageSubtitle from "@/components/common/text/PageSubtitle";
-import styles from "./add.module.css";
-import { error } from "console";
+import styles from "@/components/menu/admin/Add.module.css";
 
 /**
  * A form to add a new food item to the menu.
@@ -69,14 +66,9 @@ export default function AddItemPage() {
      */
     return (
         <>
-            <PageHeader>
-                <PageTitle>
-                    Add an item
-                </PageTitle>
-                <PageSubtitle>
-                    Add a new item to the menu.
-                </PageSubtitle>
-            </PageHeader>
+            <PageTitle>
+                ADD NEW ITEM
+            </PageTitle>
         
             <form onSubmit={handleSubmit} className={styles.form}>
 
