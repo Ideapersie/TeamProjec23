@@ -14,6 +14,11 @@ export type Ingredient = {
     allergen: string | null
 }
 
+export type MenuItemRelatedIngredients = MenuItem & {
+    ingredients: Ingredient[],
+    related: MenuItem[]
+}
+
 /**
  * Represents a CartItem in the browser, where the key is the menuitem_id, and the value is its quantity.
  */
