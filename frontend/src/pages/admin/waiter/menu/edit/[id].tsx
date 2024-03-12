@@ -74,7 +74,7 @@ export default function EditMenuItemPage(props: Props) {
 
     return (
         <>
-            <PageTitle>Edit item {"->"} <span className={"text-wahaca-blue"}>{props.data.name}</span></PageTitle>
+            <PageTitle>Edit item {"—"} <span className={"text-wahaca-blue"}>{props.data.name}</span></PageTitle>
             <PageSubtitle>Use this page to make any changes you wish to item {props.data.menuitem_id} ({props.data.name}).</PageSubtitle>
 
             <hr/>
@@ -89,6 +89,9 @@ export default function EditMenuItemPage(props: Props) {
                             Provide basic details about the item to be displayed in the menu.
                         </SectionSubheading>
                     </PageHeader>
+
+                    <hr className={"mb-5"}/>
+
                     <div className={"flex gap-7"}>
                         {/*Left column*/}
                         <div className={"flex flex-col gap-3 flex-grow"}>
@@ -138,21 +141,17 @@ export default function EditMenuItemPage(props: Props) {
                                 />
                             </label>
 
-                    <label>
-                        Item calories
-                        <input
-                            type="number"
-                            value={itemCalories}
-                            min={0}
-                            step={1}
-                            onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
-                        />
-                    </label>
-
-                    <div>
-                        <button>Save changes</button>
-                    </div>
-                </div>
+                            <label>
+                                Item calories
+                                <input
+                                    type="number"
+                                    value={itemCalories}
+                                    min={0}
+                                    step={1}
+                                    onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
+                                />
+                            </label>
+                        </div>
 
                         {/*Right column*/}
                         <div className={"flex flex-col gap-3 flex-grow max-w-80"}>
@@ -183,6 +182,9 @@ export default function EditMenuItemPage(props: Props) {
                         <SectionHeading>Ingredients</SectionHeading>
                         <SectionSubheading>Manage ingredients and allergens for this item below</SectionSubheading>
                     </PageHeader>
+
+                    <hr className={"mb-5"}/>
+
                     <div className={"flex gap-7"}>
                         <div className={"flex-grow"} style={{maxWidth: 800}}>
                             <IngredientList
@@ -203,15 +205,15 @@ export default function EditMenuItemPage(props: Props) {
                 <hr className={"mt-10 mb-5"}/>
                 <div className={"flex gap-2 justify-start"}>
                     <button
-                        className={"bg-pink-700 hover:bg-pink-900 m-0 text-sm"}
+                        className={"bg-wahaca-pink m-0 text-sm"}
                         type={"button"}
                         onClick={() => router.back()}
                     >
-                        {"<-"} Cancel
+                        Cancel
                     </button>
 
-                    <button className={"bg-emerald-500 hover:bg-emerald-700 m-0 text-sm"}>
-                        Save changes {"->"}
+                    <button className={"text-wahaca-white bg-wahaca-teal m-0 text-sm"}>
+                        Save changes
                     </button>
                 </div>
             </form>
