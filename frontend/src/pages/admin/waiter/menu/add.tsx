@@ -1,7 +1,5 @@
 import { useState } from "react";
 import PageTitle from "@/components/common/text/PageTitle";
-import PageSubtitle from "@/components/common/text/PageSubtitle";
-import styles from "./add.module.css";
 import {useRouter} from "next/router";
 
 type Payload = {
@@ -118,8 +116,8 @@ export default function AddItemPage() {
                         <input type="number" name="calories"  value={newItem.calories} onChange={handleChange} required/>
                     </label>
 
-                    <label className={styles.label}>Spice level
-                        <select name="spice" className={styles.select} value={newItem.spice} onChange={handleChange}>
+                    <label>Spice level
+                        <select name="spice" value={newItem.spice} onChange={handleChange}>
                             <option value={"0"}>None</option>
                             <option value={"1"}>Mild</option>
                             <option value={"2"}>Medium</option>
