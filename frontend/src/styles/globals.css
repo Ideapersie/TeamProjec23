@@ -59,6 +59,9 @@ label {
   font-size: 0.7rem;
   font-weight: 400;
   color: #9a9a9a;
+  color: var(--wahaca-navy);
+  font-size: 14px;
+  font-family: 'subtitle' ;
 }
 
 select, input, textarea {
@@ -66,7 +69,11 @@ select, input, textarea {
   border-radius: 5px;
   padding: 4px 7px;
   font-size: 0.8rem;
-  color: #073357;
+  font-family: 'calibri';
+  font-size: 14px;
+  font-weight: 500;
+  background-color: white;
+  color: #4a5b75;
 }
 
 h1 {

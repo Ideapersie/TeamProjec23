@@ -1,7 +1,7 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
+import styles from "@/components/menu/admin/Tables.module.css";
 import { useState } from "react";
-
 /**
  * View table numbers and the corresponding waiters assigned to them.
  * 
@@ -45,10 +45,10 @@ export default function ViewTablesPage() {
                 {[...Array(9)].map((_, index) => (
                     <div
                         key={index}
-                        className="bg-wahaca-yellow p-4 h-32 text-wahaca-navy font-title cursor-pointer"
+                        className={styles.tableItem}
                         onClick={() => handleClick(index + 1)}
                     >
-                        Table {index + 1}
+                        {index + 1}
                 </div>
                 ))}
             </div>
