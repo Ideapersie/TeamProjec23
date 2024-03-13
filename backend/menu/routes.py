@@ -291,6 +291,7 @@ def update_item(menuitem_id):
         type = data['type']
         calories = data['calories']
         image = data['image']
+        ingredients = data['ingredients']
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -306,6 +307,30 @@ def update_item(menuitem_id):
                 image = %s
             WHERE menuitem_id=%s
         """, (name, description, price, 2, type, calories, image, menuitem_id))
+
+        # Delete previous links
+        cursor.execute("""
+            DELETE FROM MenuIngredient
+            WHERE menuitem_id=%s
+        """, (menuitem_id,))
+
+        # Add each ingredient one by one
+        for ingredient in ingredients:
+            cursor.execute("""
+                INSERT INTO Ingredient(ingredient_name, allergen_name)
+                VALUES (%(name)s, %(allergen)s)
+                ON CONFLICT (ingredient_name)
+                DO UPDATE
+                SET ingredient_name = %(name)s,
+                    allergen_name = %(allergen)s;
+                    
+                INSERT INTO MenuIngredient(menuitem_id, ingredient_name)
+                VALUES (%(id)s, %(name)s)
+            """, {
+                'name': ingredient['name'],
+                'allergen': ingredient['allergen'],
+                'id': menuitem_id
+            })
 
         conn.commit()
 
