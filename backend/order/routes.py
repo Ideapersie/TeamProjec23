@@ -147,9 +147,13 @@ def get_order_by_table():
         cursor = conn.cursor()
         
         #execute sql query
-        cursor.execute('''SELECT table_number, order_id FROM 'Order' 
-                        GROUP BY table_number, order_id 
-                        ORDER BY table_number ASC;''')
+        cursor.execute("""
+                       SELECT C.table_number, O.order_id
+                       FROM Customer C
+                       JOIN "Order" O ON C.customer_id = O.customer_id
+                       GROUP BY C.table_number, O.order_id
+                       ORDER BY C.table_number ASC
+                       """) 
         orders = cursor.fetchall()
         
         #close connection
