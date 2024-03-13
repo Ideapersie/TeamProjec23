@@ -210,9 +210,10 @@ def get_menu_item_by_id(item_id: int):
             if data_ingredients:
                 for row in data_ingredients:
                     ingredient_name = row[1]
+                    allergen_name = row[2]
                     new_item = {
                         'name': ingredient_name,
-                        'allergen': None
+                        'allergen': allergen_name
                     }
                     ingredients.append(new_item)
 
