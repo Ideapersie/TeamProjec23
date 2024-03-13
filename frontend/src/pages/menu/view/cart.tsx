@@ -80,7 +80,7 @@ export default function Cart(props: Props) {
             sessionStorage.removeItem("Cart");
 
         } catch (error) {
-            console.error('Error adding order');
+            //console.error('Error adding order');
             alert('Order failed to send');
         }
     }
@@ -101,7 +101,6 @@ export default function Cart(props: Props) {
         }
     }
     
-
     return (
         <div className={""}>
 			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-2 hover:ease-in"}>

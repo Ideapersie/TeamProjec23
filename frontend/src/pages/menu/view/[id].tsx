@@ -118,14 +118,17 @@ export default function ItemPage(props: PageProps) {
                     <div className={"border-l border-gray-300 pl-10"}>
                         <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
                         <ol className={"list-disc"}>
-                            <li> Burger Bun</li>
+                        <pre>
+                            {JSON.stringify(props.data.ingredients, undefined, 2)}
+                        </pre>
+                            {/* <li> Burger Bun</li>
                             <li> Patty</li>
                             <li> Lettuce</li>
                             <li> Tomato</li>
                             <li> Onions</li>
                             <li> Pickles</li>
                             <li> Cheddar Cheese</li>
-                            <li> Burger Sauce</li>
+                            <li> Burger Sauce</li> */}
                         </ol>
                     </div>
                 </div>
