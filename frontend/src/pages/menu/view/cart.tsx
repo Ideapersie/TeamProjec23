@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import styles from "./cart.module.css";
 import {BrowserCartObject} from "@/types";
+import router from "next/router";
 
 interface Props {
     name: string
@@ -70,20 +71,27 @@ export default function Cart(props: Props) {
                 body: JSON.stringify(orderData),
                 mode: 'no-cors'
             });
-        
-        
-            if (!response.ok) {
-                throw new Error('Failed to add order');
-            }
 
-            //clear orderedMenus after the submission has been sent
+            //Removes the order in browser storage after checkout. 
             sessionStorage.removeItem("Cart");
 
-        } catch (error) {
-            //console.error('Error adding order');
+            // Requires more testing, since it is not working as intended 
+            // if (response.status === 200) {
+            //     sessionStorage.removeItem("Cart");
+
+            // } else if (response.status === 400) {
+            //     alert("Item with this name already exists");
+
+            // } else {
+            //     alert("Something went wrong");
+            // }
+
+        } catch (e) {
+            console.error(e);
             alert('Order failed to send');
         }
     }
+    
 
     const handleDeleteItem = (menuitemId: number) => {
 
