@@ -1,13 +1,18 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import styles from "@/components/menu/admin/Tables.module.css";
-import { useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
+import {Order} from "@/types";
 /**
  * View table numbers and the corresponding waiters assigned to them.
  * 
  * @returns 
  * @author Madeleine Huebner (Madeleine.Huebner.2022@live.rhul.ac.uk)
  */
+
+interface Props {
+    data: Order[]
+}
 
 export default function ViewTablesPage() {
 
@@ -23,9 +28,26 @@ export default function ViewTablesPage() {
         setIsSidebarOpen(false);
     };
 
-    /**
-     * TODO: Fetch data from API route
-     */
+    const [items, setItems] = useState<Order[]>([]);
+
+    useEffect(() => {
+        fetchItems().then((data) => {
+            setItems(data);
+        }).catch((error) => {
+            console.error(error);
+        });
+    }, []);
+
+    async function fetchItems(): Promise<Order[]> {
+        try {
+            const response = await fetch("/api/fetchorders");
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
 
     /**
      * Present the list of tables.
@@ -35,7 +57,8 @@ export default function ViewTablesPage() {
 
         <>
             <PageHeader>
-                <PageTitle>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
+            <PageTitle>
                     TABLES
                 </PageTitle>
             </PageHeader>
@@ -53,12 +76,53 @@ export default function ViewTablesPage() {
                 ))}
             </div>
 
+            <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
+                Fetch Orders
+            </button>
+
             {isSidebarOpen && (
-                <div className="absolute top-0 right-0 h-full w-1/3">
-                    <button className="absolute top-4 right-4" onClick={handleCloseSidebar}>Close</button>
-                    <div className="w-3/4 mx-auto mt-20 bg-white h-3/4 flex justify-center">
+                <div className={styles.sidebar}>
+                    <button className={styles.close} onClick={handleCloseSidebar}>&#10006;</button>
+                    <div className={styles.sidebarContent}>
                         <div className="mt-4">
-                            <p className="text-wahaca-teal font-title text-lg">Table {selectedItemId}</p>
+                            <p className={styles.tableNumber}>Table {selectedItemId}</p>
+                            <table className={styles.table}>
+                                <thead>
+                                    <tr>
+                                        <th>ORDER</th>
+                                        <th>STATUS</th>
+                                        <th>TIME</th>
+                                        <th>WAITER</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {items && items
+                                        .filter(order => order.customer_id === 1)
+                                        .map(order => (
+                                            <tr key={order.customer_id}>
+                                                <td>{order.order_id}</td>
+                                                <td>
+                                                    {order.status === 'unconfirmed' && (
+                                                        <i className="fas fa-clock"></i>
+                                                    )}
+                                                    {order.status !== 'unconfirmed' && order.status}
+                                                </td>
+                                                <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
+                                                <td>name</td>
+                                                <td>
+                                                    <button>
+                                                        <i className="fas fa-edit"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button className={styles.confirm}>Confirm</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

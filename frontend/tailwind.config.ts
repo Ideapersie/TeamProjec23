@@ -26,6 +26,7 @@ const config: Config = {
       fontFamily: {
         subtitle: ['subtitle', 'sans-serif'],
         title: ['title', 'sans-serif'],
+        paragraph: ['paragraph', 'sans-serif']
       },
     },
   },
