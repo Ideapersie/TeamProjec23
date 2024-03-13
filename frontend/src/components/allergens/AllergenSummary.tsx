@@ -46,15 +46,15 @@ export default function AllergenSummary(props: Props) {
                     {knownAllergens.map(allergen => (
                         <div key={allergen}
                              className={`flex items-center gap-1.5
-                                ${containedAllergens.has(allergen) ? "text-green-600" : "text-sky-800 opacity-50"}
+                                ${containedAllergens.has(allergen) ? "text-wahaca-blue" : "text-wahaca-light-blue"}
                              `}
                         >
                             <span className={`
                                 transition-all
                                 ${
                                 containedAllergens.has(allergen) ?
-                                    "fill-green-400"
-                                    : "fill-sky-400 saturate-50 scale-75"
+                                    "fill-wahaca-blue"
+                                    : "fill-wahaca-light-blue scale-75"
                                 }
                             `}>
                                 {containedAllergens.has(allergen) ?
