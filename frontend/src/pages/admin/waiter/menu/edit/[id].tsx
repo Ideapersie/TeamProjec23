@@ -33,6 +33,7 @@ export default function EditMenuItemPage(props: Props) {
     const [itemType, setItemType] = useState(props.data?.type);
     const [itemPrice, setItemPrice] = useState(parseFloat(props.data?.price || "0"));
     const [itemCalories, setItemCalories] = useState(props.data?.calories);
+    const [itemSpice, setItemSpice] = useState(props.data?.spice);
     const [itemImage, setItemImage] = useState(props.data?.image);
     const [itemIngredients, setItemIngredients] = useState<IngredientState>(Object.assign({}, props.data?.ingredients));
 
@@ -52,7 +53,8 @@ export default function EditMenuItemPage(props: Props) {
             type: itemType,
             calories: itemCalories,
             image: itemImage,
-            ingredients: Object.values(itemIngredients)
+            ingredients: Object.values(itemIngredients),
+            spice: itemSpice
         };
 
         if (process.env.NODE_ENV === "development") {
@@ -151,6 +153,19 @@ export default function EditMenuItemPage(props: Props) {
                                     onInput={e => setItemCalories(parseInt(e.currentTarget.value))}
                                 />
                             </label>
+
+                            <label>
+                                Item spice level
+                                <select
+                                    value={itemSpice}
+                                    onChange={e => setItemSpice(parseInt(e.currentTarget.value))}
+                                >
+                                    <option value={0}>None</option>
+                                    <option value={1}>Mild</option>
+                                    <option value={2}>Medium</option>
+                                    <option value={3}>Hot</option>
+                                </select>
+                            </label>
                         </div>
 
                         {/*Right column*/}
@@ -207,7 +222,7 @@ export default function EditMenuItemPage(props: Props) {
                     <button
                         className={"bg-wahaca-pink m-0 text-sm"}
                         type={"button"}
-                        onClick={() => router.back()}
+                        onClick={async () => await router.push("/admin/waiter/menu/view")}
                     >
                         Cancel
                     </button>
