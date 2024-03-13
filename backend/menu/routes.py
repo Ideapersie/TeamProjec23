@@ -163,7 +163,7 @@ def get_menu_item_by_id(item_id: int):
 
         # Execute query + pull data into python
         cursor.execute("""
-            SELECT menuitem_id, name, description, type, price, calories, image
+            SELECT menuitem_id, name, description, type, price, calories, image, spice
             FROM MenuItem
             WHERE menuitem_id = %s;
         """, (item_id,))
@@ -178,7 +178,7 @@ def get_menu_item_by_id(item_id: int):
 
             # Get related items
             cursor.execute("""
-                SELECT menuitem_id, name, description, type, price, calories, image
+                SELECT menuitem_id, name, description, type, price, calories, image, spice
                 FROM MenuItem
                 WHERE (menuitem_id <> %s) AND (MenuItem.type = %s);
             """, (item_id, item_type))
@@ -186,7 +186,7 @@ def get_menu_item_by_id(item_id: int):
 
             if data_related:
                 for row in data_related:
-                    [menuitem_id, name, description, type, price, calories, image] = row
+                    [menuitem_id, name, description, type, price, calories, image, spice] = row
 
                     related_items.append({
                         'menuitem_id': menuitem_id,
@@ -195,7 +195,8 @@ def get_menu_item_by_id(item_id: int):
                         'type': type,
                         'price': price,
                         'calories': calories,
-                        'image': image
+                        'image': image,
+                        'spice': int(spice)
                     })
 
             # Get ingredients
@@ -222,7 +223,7 @@ def get_menu_item_by_id(item_id: int):
         conn.close()
 
         if data_main_item:
-            [menuitem_id, name, description, type, price, calories, image] = data_main_item
+            [menuitem_id, name, description, type, price, calories, image, spice] = data_main_item
 
             # Return success response + data
             return jsonify({
@@ -234,6 +235,7 @@ def get_menu_item_by_id(item_id: int):
                     "type": type,
                     "price": float(price),
                     "calories": int(calories),
+                    "spice": int(spice),
                     "image": image,
                     "related": related_items,
                     "ingredients": ingredients
@@ -292,6 +294,7 @@ def update_item(menuitem_id):
         calories = data['calories']
         image = data['image']
         ingredients = data['ingredients']
+        spice = data['spice']
 
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -305,8 +308,8 @@ def update_item(menuitem_id):
                 type = %s,
                 calories = %s,
                 image = %s
-            WHERE menuitem_id=%s
-        """, (name, description, price, 2, type, calories, image, menuitem_id))
+            WHERE menuitem_id = %s
+        """, (name, description, price, spice, type, calories, image, menuitem_id))
 
         # Delete previous links
         cursor.execute("""
