@@ -161,15 +161,12 @@ def get_menu_item_by_id(item_id: int):
 
         # TODO: See if possible to combine all sql statements into one query
 
-        # Prepare sql query
-        sql_main_item = f"""
+        # Execute query + pull data into python
+        cursor.execute("""
             SELECT menuitem_id, name, description, type, price, calories, image
             FROM MenuItem
-            WHERE menuitem_id = {item_id};
-        """
-
-        # Execute query + pull data into python
-        cursor.execute(sql_main_item)
+            WHERE menuitem_id = %s;
+        """, (item_id,))
         data_main_item = cursor.fetchone()
 
         related_items = []
@@ -180,12 +177,11 @@ def get_menu_item_by_id(item_id: int):
             item_type = data_main_item[3]
 
             # Get related items
-            sql_related = f"""
+            cursor.execute("""
                 SELECT menuitem_id, name, description, type, price, calories, image
                 FROM MenuItem
-                WHERE (menuitem_id <> {item_id}) AND (MenuItem.type = '{item_type}');
-            """
-            cursor.execute(sql_related)
+                WHERE (menuitem_id <> %s) AND (MenuItem.type = %s);
+            """, (item_id, item_type))
             data_related = cursor.fetchall()
 
             if data_related:
@@ -203,12 +199,12 @@ def get_menu_item_by_id(item_id: int):
                     })
 
             # Get ingredients
-            sql_ingredients = f"""
-                SELECT menuitem_id, ingredient_name
-                FROM menuingredient
-                WHERE menuitem_id = {item_id};
-            """
-            cursor.execute(sql_ingredients)
+            cursor.execute("""
+                SELECT menuitem_id, MenuIngredient.ingredient_name, Ingredient.allergen_name
+                FROM MenuIngredient
+                INNER JOIN Ingredient on MenuIngredient.ingredient_name = Ingredient.ingredient_name
+                WHERE menuitem_id = %s;
+            """, (item_id,))
             data_ingredients = cursor.fetchall()
 
             if data_ingredients:
