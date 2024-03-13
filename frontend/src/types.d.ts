@@ -19,6 +19,14 @@ export type MenuItemRelatedIngredients = MenuItem & {
     related: MenuItem[]
 }
 
+export type Order = {
+    order_id: number,
+    customer_id: number,
+    status: string,
+    time_ordered: number,
+    table_number: number
+}
+
 /**
  * Represents a CartItem in the browser, where the key is the menuitem_id, and the value is its quantity.
  */

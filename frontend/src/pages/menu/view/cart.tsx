@@ -32,9 +32,7 @@ export default function Cart(props: Props) {
         }
     }, []);
 
-    /**
-     * Gets cart items saved in browser session storage.
-     */
+    //Gets cart items saved in browser session storage.
     function handleRetrieveFromCart(): BrowserCartObject {
         const cart = sessionStorage.getItem("Cart");
         if (cart === null) {
@@ -84,19 +82,36 @@ export default function Cart(props: Props) {
             sessionStorage.removeItem("Cart");
 
         } catch (error) {
-            console.error('Error adding order');
+            //console.error('Error adding order');
             alert('Order failed to send');
         }
-
     }
 
+    const handleDeleteItem = (menuitemId: number) => {
 
+        const cart = handleRetrieveFromCart();
+
+        if(menuitemId in cart){
+
+            // Makes sure to delete the item once there's 0 quantity
+            cart[menuitemId] > 1 ? cart[menuitemId] -= 1 : delete cart[menuitemId];
+
+            sessionStorage.setItem("Cart", JSON.stringify(cart));
+
+            // Update the state to reflect the changes
+            setOrderedItems(cart);
+        }
+    }
+    
     return (
         <div className={""}>
-			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
-                    Go back to all items
+			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-2 hover:ease-in"}>
+                Go back to all items
             </Link>
-			<PageTitle>Cart</PageTitle>
+
+            <br></br>            
+            <br></br>
+			<h1> CART </h1>
             <div className="grid md:grid-cols-4 md:gap-5">
                 <div className="overflow-x-auto md:col-span-3">
                     {orderedItems === undefined ?
@@ -116,11 +131,11 @@ export default function Cart(props: Props) {
                                 <tbody>
                                 {Object.entries(orderedItems).map(([id, quantity]) => (
                                     <tr key={id} className="border-b">
-                                        <td className={styles.t_left}>name={id} </td>
-                                        <td className={styles.t_right}>quantity = {quantity} </td>
-                                        <td className={styles.t_right}>price={id.price} </td>
+                                        <td className={styles.t_left}>Item_id = {id} </td>
+                                        <td className={styles.t_right}>Quantity = {quantity} </td>
+                                        <td className={styles.t_right}>Price = {id.price} </td>
                                         <td className="p-5 text-center">
-                                            <button className="default-button">Delete</button>
+                                            <button className="default-button" onClick={() => handleDeleteItem(JSON.parse(id))}>Delete</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -131,7 +146,7 @@ export default function Cart(props: Props) {
                         <ul>
                             <li>
                                 <div className="pb-3 text-xl">
-                                    Subtotal: £
+                                    Subtotal: £ 
                                 </div>
                             </li>
                             <li>
