@@ -54,7 +54,7 @@ export default function IngredientItemField(props: Props) {
 
     function handleChangeAllergenGroup(e: ChangeEvent<HTMLSelectElement>) {
         const temp = cloneIngredientState();
-        temp[props.fieldKey].allergen = e.currentTarget.value;
+        temp[props.fieldKey].allergen = e.currentTarget.value || null;
         updateIngredientState(temp);
     }
 
@@ -79,14 +79,21 @@ export default function IngredientItemField(props: Props) {
 
                 {/*Allergen groups (if applicable)*/}
                 <select
-                    value={context.ingredients[props.fieldKey].allergen || ""}
+                    value={context.ingredients[props.fieldKey].allergen || undefined}
                     onChange={handleChangeAllergenGroup}
                     required
                 >
-                    <option value={""}>No allergens</option>
+                    <option value={undefined}>
+                        No allergens
+                    </option>
 
                     {allergens.map(allergenName => (
-                        <option key={allergenName}>{allergenName}</option>
+                        <option
+                            key={allergenName}
+                            value={allergenName}
+                        >
+                            {allergenName}
+                        </option>
                     ))}
                 </select>
 
