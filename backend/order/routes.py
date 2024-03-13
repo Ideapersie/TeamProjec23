@@ -5,6 +5,8 @@ The blueprint defines the following endpoints:
 - /api/addorder (POST): Adds an order to the database.
 - /api/deleteorder (POST): Deletes an order from the database.
 - /api/modifyorder (POST): Modifies an existing order.
+- /api/fetchorders (GET): Fetches all current orders.
+- /api/getTableOrder (GET): Fetches orders by table number.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
