@@ -298,18 +298,18 @@ def update_item(menuitem_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        statement = f"""
-                UPDATE MenuItem
-                SET name='{name}',
-                    description='{description}',
-                    price='{price}',
-                    type='{type}',
-                    calories='{calories}',
-                    image='{image}'
-                WHERE menuitem_id={menuitem_id}
-            """
+        cursor.execute("""
+            UPDATE MenuItem
+            SET name = %s,
+                description = %s,
+                price = %s,
+                spice = %s,
+                type = %s,
+                calories = %s,
+                image = %s
+            WHERE menuitem_id=%s
+        """, (name, description, price, 2, type, calories, image, menuitem_id))
 
-        cursor.execute(statement)
         conn.commit()
 
         cursor.close()
