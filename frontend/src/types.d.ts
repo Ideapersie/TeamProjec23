@@ -6,7 +6,8 @@ export type MenuItem = {
     price: string,
     type: string,
     image: string,
-    link: string
+    link: string,
+    spice: number
 }
 
 export type Ingredient = {
