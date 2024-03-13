@@ -1,0 +1,11 @@
+/* Styles for the cart page */ 
+.t_right {
+	padding: 1.25rem;
+	text-align: right;
+}
+
+.t_left {
+	padding: 1.25rem;
+	text-align: left;
+}
+

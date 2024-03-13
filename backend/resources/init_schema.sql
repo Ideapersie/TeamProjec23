@@ -4,7 +4,8 @@ CREATE TABLE Customer (
     email VARCHAR(320) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL
+    last_name VARCHAR(50) NOT NULL,
+    table_number INTEGER NOT NULL
 );
 
 DROP TABLE IF EXISTS Staff CASCADE;
@@ -23,7 +24,6 @@ CREATE TABLE "Order" (
     customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,
     status VARCHAR(15) NOT NULL,
     time_ordered TIMESTAMP NOT NULL,
-    table_number INTEGER NOT NULL,
     is_paid BOOLEAN NOT NULL
 );
 
@@ -59,7 +59,8 @@ DROP TABLE IF EXISTS OrderMenu CASCADE;
 CREATE TABLE OrderMenu (
     order_id INTEGER REFERENCES "Order"(order_id) NOT NULL,
     menuitem_id INTEGER REFERENCES MenuItem(menuitem_id) NOT NULL,
-    PRIMARY KEY (order_id, menuitem_id)
+    quantity INTEGER NOT NULL,
+    PRIMARY KEY (order_id, menuitem_id, quantity)
 );
 
 DROP TABLE IF EXISTS StaffOrder CASCADE;
@@ -72,7 +73,7 @@ CREATE TABLE StaffOrder (
 DROP TABLE IF EXISTS Ingredient CASCADE;
 CREATE TABLE Ingredient (
     ingredient_name VARCHAR(50) NOT NULL,
-    allergen_name VARCHAR(50),
+    allergen_name VARCHAR(50) REFERENCES Allergen(allergen_name),
     PRIMARY KEY (ingredient_name)
 );
 

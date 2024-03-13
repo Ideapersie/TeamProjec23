@@ -5,7 +5,8 @@ The blueprint defines the following endpoints:
 - /api/addorder (POST): Adds an order to the database.
 - /api/deleteorder (POST): Deletes an order from the database.
 - /api/modifyorder (POST): Modifies an existing order.
-- /api/getTableOrders (GET): Returns each order_id and its table number.
+- /api/fetchorders (GET): Fetches all current orders.
+- /api/getTableOrder (GET): Fetches orders by table number.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
@@ -21,18 +22,20 @@ def add_order():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute(f'''
-                    INSERT INTO Order (customer_id, time_ordered) VALUES 
-                    ('{newOrder['customer_id']}', '{newOrder['time_ordered']}');
-                    ''')
-    for key, value in newOrder.items():
-        if (key == "customer_id" or key == "time_ordered"):
-            continue
-        for x in range(int(value)):
-            cursor.execute(f'''
-                            INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
-                            ('{newOrder['customer_id']}', '{key}');
-                            ''')
+    customer_id = newOrder['customer_id']
+    time_ordered = newOrder['time_ordered']
+
+    #insert order into Order table to create the unique order_id 
+    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, is_paid) 
+                   VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', 'false');''')
+    
+    cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}';''')
+    find_orderid = cursor.fetchone()
+    order_id = find_orderid[0] #fetch order_id that has just been created
+
+    for item in newOrder['items']: #iterate through the list of dicts of items in items
+            cursor.execute(f'''INSERT INTO OrderMenu (order_id, menuitem_id, quantity) 
+                           VALUES ('{order_id}', '{item['menuitem_id']}', '{item['quantity']}');''') #inserts orders into OrderMenu
     message = {
         "message" : "Order successfully added."
     }
@@ -50,13 +53,13 @@ def delete_order():
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{order_to_delete['order_id']}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
                    ''')
     existing_order = cursor.fetchall()
 
-    if(len(existing_order) > 0):
+    if(existing_order != None):
         cursor.execute(f'''
-                       DELETE FROM Order WHERE order_id = '{order_to_delete['order_id']}';
+                       DELETE FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
                        ''')
         cursor.execute(f'''
                        DELETE FROM OrderMenu WHERE order_id = '{order_to_delete['order_id']}';
@@ -79,26 +82,24 @@ def modify_order():
     An API endpoint to modify existing orders in the database.
     """
     order_to_modify = request.json(force = True)
-    orderid = order_to_modify['order_id']
+    order_id = order_to_modify['order_id'] 
 
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM Order WHERE order_id = '{orderid}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
                    ''')
     existing_order = cursor.fetchall()
     
-    if (len(existing_order > 0)):
+    if (existing_order != None):
         cursor.execute(f'''
-                       DELETE FROM OrderMenu WHERE order_id = '{order_to_modify['order_id']}';
+                       DELETE FROM OrderMenu WHERE order_id = '{order_id}';
                        ''')
-        for key, value in order_to_modify.items():
-            if (key == "customer_id" or key == "time_ordered"):
-                continue
-            for x in range(int(value)):
-                cursor.execute(f'''
+        for item in order_to_modify['items']:
+            for x in range (int(item['quantity'])):
+                 cursor.execute(f'''
                                 INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
-                                ('{order_to_modify['customer_id']}', '{key}');
+                                ('{order_id}', '{item['menuitem_id']}');
                                 ''')
         message = {
             "message" : "Order successfully updated."
@@ -112,7 +113,27 @@ def modify_order():
     conn.close()
     return jsonify(message)
 
-@order_bp.route('/api/getTableOrders', methods=['Get'])
+@order_bp.route('/api/fetchorders', methods=['GET'])
+def fetch_orders():
+     """
+     An API endpoint to fetch and return all current orders.
+     """
+     conn = get_db_connection()
+     cursor = conn.cursor()
+     cursor.execute(f'''SELECT * FROM "Order" ORDER BY time_ordered asc;''')
+     order = cursor.fetchall()
+
+     orders = [{'order_id': item[0],
+                'customer_id': item[1],
+                'status': item[2],
+                'time_ordered': item[3],
+                'is_paid': item[4]} for item in order]
+     
+     cursor.close()
+     conn.close()
+     return jsonify(orders)
+
+@order_bp.route('/api/getTableOrder', methods=['Get'])
 def get_order_by_table():
     """
     An api endpoint to get each order_id and its corrosponding table number
