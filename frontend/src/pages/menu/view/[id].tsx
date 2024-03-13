@@ -118,18 +118,22 @@ export default function ItemPage(props: PageProps) {
                     <div className={"border-l border-gray-300 pl-10"}>
                         <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
                         <ol className={"list-disc"}>
-                        <pre>
-                            {JSON.stringify(props.data.ingredients, undefined, 2)}
-                        </pre>
-                            {/* <li> Burger Bun</li>
-                            <li> Patty</li>
-                            <li> Lettuce</li>
-                            <li> Tomato</li>
-                            <li> Onions</li>
-                            <li> Pickles</li>
-                            <li> Cheddar Cheese</li>
-                            <li> Burger Sauce</li> */}
+                            {props.data.ingredients.map((ingredient, index) => (
+                                <li key={index}>{ingredient.name}</li>
+                            ))}
+
                         </ol>
+                        <br></br>
+                        <h1 className={"text-lg text-bold font-bold italic"}>ALLERGENS</h1>
+                            <ol className={"list-disc"}>
+                                {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
+                                    props.data.ingredients.map((ingredient, index) => (
+                                        <li key={index}>{ingredient.allergen && <span>, {ingredient.allergen}</span>}</li>
+                                    ))
+                                ) : (
+                                    <li>No allergens</li>
+                                )}
+                            </ol>
                     </div>
                 </div>
                 {/* Need to add more like this section, like alike food type */}
