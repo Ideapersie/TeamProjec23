@@ -66,13 +66,15 @@ export default function IngredientList({ingredients, setIngredients}: Props) {
                 }
             </div>
 
-            <button
-                type={"button"}
-                onClick={handleAddIngredient}
-                className={"bg-sky-600 text-xs"}
-            >
-                + Add ingredient
-            </button>
+            <div className={"text-right"}>
+                <button
+                    type={"button"}
+                    onClick={handleAddIngredient}
+                    className={"bg-wahaca-blue text-xs"}
+                >
+                    + Add ingredient
+                </button>
+            </div>
 
         </IngredientListContext.Provider>
     )

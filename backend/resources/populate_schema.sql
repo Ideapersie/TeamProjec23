@@ -9,6 +9,22 @@ INSERT INTO MenuItem(menuitem_id, name, description, type, price, calories, spic
 (DEFAULT, 'Water', 'Still natural mineral water.', 'Drinks', 2.50, 50, 0, 'https://i.postimg.cc/509rJ3jR/c-HJpdm-F0-ZS9sci9pb-WFn-ZXMvd2-Vic2l0-ZS8y-MDIy-LTA1-L3-B4-ODAx-MTE5-LWlt-YWdl-LWt3dnhme-HQ3-Lmpw-Z.png'),
 (DEFAULT, 'Coke Original', 'Coca Cola''s original recipe.', 'Drinks', 2.50, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg');
 
+INSERT INTO Allergen(allergen_name) VALUES
+('Celery'),
+('Gluten'),
+('Crustaceans'),
+('Eggs'),
+('Fish'),
+('Lupin'),
+('Milk'),
+('Molluscs'),
+('Mustard'),
+('Nuts'),
+('Peanuts'),
+('Sesame seeds'),
+('Soya'),
+('Sulphur dioxide');
+
 INSERT INTO Ingredient(ingredient_name) VALUES
 ('Beef'),
 ('Potato'),
@@ -17,8 +33,8 @@ INSERT INTO Ingredient(ingredient_name) VALUES
 
 INSERT INTO Ingredient(ingredient_name, allergen_name) VALUES
 ('Cheese', 'Milk'),
-('Eggs', 'Egg'),
-('Burger bun', 'Wheat');
+('Eggs', 'Eggs'),
+('Burger bun', 'Gluten');
 
 INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
 (1, 'Cheese'),
