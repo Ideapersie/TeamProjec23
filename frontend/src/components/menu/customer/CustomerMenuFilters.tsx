@@ -1,12 +1,13 @@
 import { allergens } from "@/components/allergens/helper";
 import { useState } from "react"
-
+import { useRouter } from 'next/router';
 
 // Array of filter options
 const FILTERS = allergens;
 
 // filter component
 export function CustomerMenuFilters(){
+  const router = useRouter();
   // State for managing dropdown
   const [open, setOpen] = useState(true)
 
@@ -22,11 +23,25 @@ export function CustomerMenuFilters(){
 
   // Function to handle click events on filters
   const clickFilter = (name: string) => {
-    setFilters(filters.map((item) => {
-      if (item.name == name) return {...item, enabled: !item.enabled}
-      else return {...item}
-  }))
-  }
+    const updatedFilters = filters.map((item) => {
+        if (item.name === name) {
+            return { ...item, enabled: !item.enabled }; // Toggle the enabled state
+        }
+        return item;
+    });
+
+    setFilters(updatedFilters);
+
+    // Filter out only the enabled filters
+    const enabledFilters = updatedFilters.filter(item => item.enabled).map(item => item.name);
+
+    // Check if there are any enabled filters and construct the URL accordingly
+    const url = enabledFilters.length > 0 
+        ? `http://localhost:3000/menu/Sides?allergies=${enabledFilters.join(',')}` 
+        : 'http://localhost:3000/menu/';
+
+    router.push(url);
+  };
 
 
   return (
