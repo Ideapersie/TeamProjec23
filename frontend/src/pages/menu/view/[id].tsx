@@ -96,7 +96,7 @@ export default function ItemPage(props: PageProps) {
                         <div className={styles.calories}>Calories: {props.data.calories} Cal</div>
                         <div>
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
-                            text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
+                                text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
                             </button>
                         </div>
                     </div>
@@ -121,8 +121,8 @@ export default function ItemPage(props: PageProps) {
                             {props.data.ingredients.map((ingredient, index) => (
                                 <li key={index}>{ingredient.name}</li>
                             ))}
-
                         </ol>
+                        
                         <br></br>
                         <h1 className={"text-lg text-bold font-bold italic"}>ALLERGENS</h1>
                             <ol className={"list-disc"}>
@@ -146,9 +146,9 @@ export default function ItemPage(props: PageProps) {
                             <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
                                 {/* Makes the image centered */}
                                 <div className="flex justify-center"> 
-                                {/* Need to imrpove: Click goes to that item */}
-                                    <Link href = {"/menu/"}>
-                                        <img src={related.image} width="400" height="400" />
+                                {/* Clicking on the image, sends user to that item */}
+                                    <Link href={`/menu/view/${related.menuitem_id}`}>
+                                        <img src={related.image} width="400" height="400"/>
                                     </Link>
                                 </div>
                                 <div >
