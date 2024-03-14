@@ -135,22 +135,34 @@ def fetch_orders():
 
 @order_bp.route('/api/getTableOrder', methods=['Get'])
 def get_order_by_table():
+    """
+    An api endpoint to get each order_id and its corrosponding table number
+        
+    Returns:
+        A repsponse containing data in the format {table_number, order_id}
+    """
     try:
         #connect to database
         conn = get_db_connection()
         cursor = conn.cursor()
         
         #execute sql query
-        cursor.execute("SELECT * FROM 'ORDER';")
+        cursor.execute("""
+                       SELECT C.table_number, O.order_id
+                       FROM Customer C
+                       JOIN "Order" O ON C.customer_id = O.customer_id
+                       GROUP BY C.table_number, O.order_id
+                       ORDER BY C.table_number ASC
+                       """) 
         orders = cursor.fetchall()
         
         #close connection
         cursor.close()
         conn.close()
         
-        #sort data into json package
+        #return data
         return jsonify(orders)
         
     except Exception as e:  #database couldn't be reached
-        return jsonify("Something went wrong"), 500
+        return jsonify("Something went wrong."), 500
 
