@@ -137,6 +137,24 @@ export default function ItemPage(props: PageProps) {
                     </div>
                 </div>
                 {/* Need to add more like this section, like alike food type */}
+                <br></br>
+                <br></br>
+                <div>
+                    <h1 className = {"text-center font-semibold"}> Related Food Items: {props.data.type}</h1>
+
+                    <div className= "grid grid-cols-2 gap-4 ">
+                        {props.data.related.map((related,index) => (
+                            <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
+                                <img src = {related.image} width = "400" height ="400"/>
+                                <div >
+                                    <h2 className = "text-xl font-semibold">{related.name}</h2>
+                                        <p>{"£"+ related.price}</p>
+                                        <p>{related.calories+" Cal"}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </section>
     )

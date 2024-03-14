@@ -24,3 +24,33 @@
 	width:200px;
 	height:70px;
 }
+
+.related-food-items {
+	margin: 20px 0;
+  }
+  
+  .grid-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 20px;
+  }
+  
+  .food-item {
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: center;
+  }
+  
+  .food-item img {
+	max-width: 100%;
+	height: auto;
+  }
+  
+  .food-item h3 {
+	margin: 10px 0;
+  }
+  
+  .food-item p {
+	margin: 5px 0;
+  }
+  

@@ -139,7 +139,8 @@ export default function Cart(props: Props) {
                                     <tr key={id} className="border-b">
                                         <td className={styles.t_left}>Item_id = {id} </td>
                                         <td className={styles.t_right}>Quantity = {quantity} </td>
-                                        <td className={styles.t_right}>Price = {id.price} </td>
+                                        {/* Need to use the price from item ordered */}
+                                        <td className={styles.t_right}>Price = {"price"} </td> 
                                         <td className="p-5 text-center">
                                             <button className="default-button" onClick={() => handleDeleteItem(JSON.parse(id))}>Delete</button>
                                         </td>
