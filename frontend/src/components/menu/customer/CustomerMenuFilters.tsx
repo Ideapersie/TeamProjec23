@@ -31,22 +31,26 @@ export function CustomerMenuFilters(){
 
   return (
     <div>
-      <div 
+      <div
         className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-inset hover:bg-gray-100"
         onClick={() => setOpen(!open)}>
         ALLERGENS FILTER
       </div>
-      <div className={`w-56 rounded-md bg-white shadow-lg py-1 ${open ? '' : 'hidden'}`}>
-          Does not contain:
-          {filters.map((item) => 
-            <div 
-              key={item.name} 
-              className={`w-56 rounded-md text-gray-700 block px-3 py-2 text-sm ${item.enabled ? 'bg-violet-400 hover:bg-violet-300': 'hover:bg-gray-100'}`}
-              onClick={() => clickFilter(item.name)}>
+      {open && (
+        <div className="rounded-md bg-white shadow-lg">
+          <div className="px-3 py-2">Does not contain:</div>
+          <div className="grid grid-cols-9 gap-1 p-3">
+            {filters.map((item) => (
+              <div
+                key={item.name}
+                className={`w-40 rounded-md text-gray-700 block px-3 py-2 text-sm ${item.enabled ? 'bg-violet-400 hover:bg-violet-300' : 'hover:bg-gray-100'}`}
+                onClick={() => clickFilter(item.name)}>
                 {item.name}
-            </div>
-          )}
-      </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
