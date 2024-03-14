@@ -40,7 +40,6 @@ export default function NavLinks(): JSX.Element {
     // An object mapping out the structure of our side menu links
     const LINKS: { [group: string]: NavGroup } = {
         "Menu Items": {
-            icon: <BurgerIcon/>,
             links: [
                 {
                     display: "View menu",
@@ -83,22 +82,6 @@ export default function NavLinks(): JSX.Element {
 
     return (
         <>
-            {/* {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
-                <div className={"nav-link-group bg-white p-4 mb-4"} key={groupName}>
-                    <h4 className={"nav-link-group-heading flex items-center gap-1 fill-wahaca-navy font-sans font-bold text-lg text-gray-800 mb-4 pb-2 border-b"}>
-                        {navGroup.icon}
-                        {groupName}
-                    </h4>
-                    <ul className={"nav-link-list"}>
-                        {navGroup.links.map(link => (
-                            <li key={link.path} className={`nav-link ${router.asPath === link.path ? "active" : ""}`}>
-                                <Link href={link.path}>{link.display}</Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                        ))}*/}
-        
             {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
                 <div className="bg-wahaca-light-blue p-4 mb-4" key={groupName}>
                     <div className="bg-white p-4">

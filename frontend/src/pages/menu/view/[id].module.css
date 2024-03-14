@@ -1,23 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 /*all styles for order page*/
 .name {
-	font-weight: bold;
-	font-size: 50px;
+	font-family: subtitle;
+	font-size: 30px;
 }
 
 .description {
-	font-size: 15px;
+	font-family: Fira Sans;
+	font-size: 20px;
 	font-style: italic;
 }
 
 .price	{
-	font-size: 20px;
+	font-family: Fira Sans;
 	font-weight: bold;
-	font-style: italic;
+	font-size: 25px;
+	color: var(--wahaca-light-navy);
 }
 
 .calories	{
-	font-size: 18px;
+	font-family: Fira Sans;
+	font-size: 20px;
 	font-style: italic;
+	color: var(--wahaca-light-navy);
+	font-weight: bold;
 }
 
 .button {

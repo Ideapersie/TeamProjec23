@@ -57,12 +57,11 @@ export default function ViewTablesPage() {
 
         <>
             <PageHeader>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
-            <PageTitle>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
+                <PageTitle>
                     TABLES
                 </PageTitle>
             </PageHeader>
-            
         
             <div className="grid grid-cols-3 gap-4">
                 {[...Array(9)].map((_, index) => (

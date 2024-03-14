@@ -7,7 +7,7 @@ import PageTitle from "@/components/common/text/PageTitle";
 
 interface Props {
     name: string
-    price: string
+    price: number
     menuitem_id: number
 }
 

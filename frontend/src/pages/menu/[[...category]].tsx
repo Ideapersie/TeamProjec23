@@ -1,9 +1,9 @@
 import {MenuItem} from "@/types";
 import {GetServerSidePropsContext} from "next";
 import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
-import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
 import {env} from "../../../env.config";
+import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 
 // Declaring expected prop types
@@ -15,27 +15,18 @@ interface Props {
 // Page component - View Menu
 export default function ViewMenu(props: Props) {
     return <>
+        <PageHeader>
+            <PageTitle>
+                MENU
+            </PageTitle>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+        </PageHeader>
+        
         <section>
-            <div className={"mb-4"}>
-                <div className ={"flex justify-between items-center"}> 
-                
-                    {props.category &&
-                        <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
-                            Go back to all items
-                        </Link>
-                    }
-                    <PageTitle>MENU</PageTitle>
-                    {/* <h1 className={"mb-0 font-semibold"}>{props.category}</h1> */}
-                    <Link href={"/menu/view/cart"}>
-                        <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" 
-                        src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
-                    </Link>
-                </div>
-                {/* <p className={"text-stone-400"}>
-                    All our food is prepared with only the highest-quality ingredients,
-                    provided by local independent farms.
-                </p> */}
-            </div>
+
+            <button className={"bg-transparent absolute top-12 right-14"} onClick={() => window.location.href = "/menu/view/cart"}>
+                <i className="fas fa-shopping-cart text-wahaca-blue fa-3x"></i>
+            </button>
 
             {/*Filters*/}
             <div className=''>
@@ -43,7 +34,7 @@ export default function ViewMenu(props: Props) {
             </div>
 
             {/*Displaying menu items*/}
-            <div className={"grid grid-cols-3 gap-5"}>
+            <div className={"grid grid-cols-3 gap-5 bg-white"}>
                 {props?.data?.length ?
                     props.data.map(item => (
                         <CustomerMenuItem
@@ -58,7 +49,7 @@ export default function ViewMenu(props: Props) {
                         />
                     ))
                     :
-                    <div className={"bg-white shadow rounded-lg px-3 py-2 text-xs text-sky-800"}>
+                    <div className={"bg-white shadow px-3 py-2 text-xs text-sky-800"}>
                         No items for this category
                     </div>
                 }
