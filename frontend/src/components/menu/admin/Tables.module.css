@@ -62,7 +62,7 @@
 
 /* header row */
 .table th {
-    font-family: ''Fira Sans'';
+    font-family: 'Fira Sans';
     color: var(--wahaca-navy);
     border-bottom: 2px solid var(--wahaca-teal);
 }
@@ -73,7 +73,7 @@
 }
 
 .table tbody {
-    font-family: ''Fira Sans'';
+    font-family: 'Fira Sans';
     color: var(--wahaca-navy);
     font-weight: 500;
 }
