@@ -166,3 +166,30 @@ def get_order_by_table():
     except Exception as e:  #database couldn't be reached
         return jsonify("Something went wrong."), 500
 
+@order_bp.route('/api/changeorderstatus', methods=['POST'])
+def change_order_status():
+    """
+    An API endpoint to change the status of an order.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    order_to_change = request.json(force = True)
+    order_id = order_to_change['order_id']
+    status_change = order_to_change['status']
+
+    cursor.execute(f'''SELECT * FROM "Order" WHERE order_id = '{order_id}';''')
+    existing_order = cursor.fetchall()
+    if (existing_order != None):
+        cursor.execute(f'''UPDATE "Order" SET status = '{status_change}' WHERE order_id = '{order_id}';''')
+        message = {
+            "message" : "Order status has been changed"
+        }
+    else:
+        message = {
+            "message" : "Order status change unsuccessful, order does not exist."
+        }
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify(message)

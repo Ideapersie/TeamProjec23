@@ -118,21 +118,43 @@ export default function ItemPage(props: PageProps) {
                     <div className={"border-l border-gray-300 pl-10"}>
                         <h1 className={"text-lg text-bold font-bold font-style: italic"}> INGREDIENTS </h1>
                         <ol className={"list-disc"}>
-                        <pre>
-                            {JSON.stringify(props.data.ingredients, undefined, 2)}
-                        </pre>
-                            {/* <li> Burger Bun</li>
-                            <li> Patty</li>
-                            <li> Lettuce</li>
-                            <li> Tomato</li>
-                            <li> Onions</li>
-                            <li> Pickles</li>
-                            <li> Cheddar Cheese</li>
-                            <li> Burger Sauce</li> */}
+                            {props.data.ingredients.map((ingredient, index) => (
+                                <li key={index}>{ingredient.name}</li>
+                            ))}
+
                         </ol>
+                        <br></br>
+                        <h1 className={"text-lg text-bold font-bold italic"}>ALLERGENS</h1>
+                            <ol className={"list-disc"}>
+                                {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
+                                    props.data.ingredients.map((ingredient, index) => (
+                                        <li key={index}>{ingredient.allergen && <span>, {ingredient.allergen}</span>}</li>
+                                    ))
+                                ) : (
+                                    <li>No allergens</li>
+                                )}
+                            </ol>
                     </div>
                 </div>
                 {/* Need to add more like this section, like alike food type */}
+                <br></br>
+                <br></br>
+                <div>
+                    <h1 className = {"text-center font-semibold"}> Related Food Items: {props.data.type}</h1>
+
+                    <div className= "grid grid-cols-2 gap-4 ">
+                        {props.data.related.map((related,index) => (
+                            <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
+                                <img src = {related.image} width = "400" height ="400"/>
+                                <div >
+                                    <h2 className = "text-xl font-semibold">{related.name}</h2>
+                                        <p>{"£"+ related.price}</p>
+                                        <p>{related.calories+" Cal"}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </section>
     )
