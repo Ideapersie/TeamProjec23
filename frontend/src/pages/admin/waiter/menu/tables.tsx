@@ -3,10 +3,11 @@ import PageTitle from "@/components/common/text/PageTitle";
 import styles from "@/components/menu/admin/Tables.module.css";
 import { SetStateAction, useEffect, useState } from "react";
 import {Order} from "@/types";
+
 /**
  * View table numbers and the corresponding waiters assigned to them.
  * 
- * @returns 
+ * @returns A component displaying a list of tables with their respective orders.
  * @author Madeleine Huebner (Madeleine.Huebner.2022@live.rhul.ac.uk)
  */
 
@@ -17,9 +18,9 @@ interface Props {
 export default function ViewTablesPage() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [selectedItemId, setSelectedItemId] = useState(null);
+    const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
-    const handleClick = (id) => {
+    const handleClick = (id: number) => {
         setSelectedItemId(id);
         setIsSidebarOpen(true);
     };
@@ -51,7 +52,6 @@ export default function ViewTablesPage() {
 
     /**
      * Present the list of tables.
-     * 
      */
     return (
 
@@ -63,7 +63,6 @@ export default function ViewTablesPage() {
                 </PageTitle>
             </PageHeader>
             
-        
             <div className="grid grid-cols-3 gap-4">
                 {[...Array(9)].map((_, index) => (
                     <div
@@ -75,11 +74,13 @@ export default function ViewTablesPage() {
                 </div>
                 ))}
             </div>
-
+            
+            {/* Button to fetch orders instead of refreshing page */}
             <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
                 Fetch Orders
             </button>
 
+            {/* Open a sidebar to display table order information */}
             {isSidebarOpen && (
                 <div className={styles.sidebar}>
                     <button className={styles.close} onClick={handleCloseSidebar}>&#10006;</button>
@@ -98,8 +99,9 @@ export default function ViewTablesPage() {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {/* Filter by customer id (this is temporary until customer ids are set up along with table numbers) */}
                                     {items && items
-                                        .filter(order => order.customer_id === 1)
+                                        .filter(order => order.customer_id === 1234)
                                         .map(order => (
                                             <tr key={order.customer_id}>
                                                 <td>{order.order_id}</td>
