@@ -136,16 +136,21 @@ export default function ItemPage(props: PageProps) {
                             </ol>
                     </div>
                 </div>
-                {/* Need to add more like this section, like alike food type */}
                 <br></br>
                 <br></br>
                 <div>
-                    <h1 className = {"text-center font-semibold"}> Related Food Items: {props.data.type}</h1>
+                    <h1 className = {"text-center font-semibold "}> Related Food Items: {props.data.type}</h1>
 
                     <div className= "grid grid-cols-2 gap-4 ">
                         {props.data.related.map((related,index) => (
                             <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
-                                <img src = {related.image} width = "400" height ="400"/>
+                                {/* Makes the image centered */}
+                                <div className="flex justify-center"> 
+                                {/* Need to imrpove: Click goes to that item */}
+                                    <Link href = {"/menu/"}>
+                                        <img src={related.image} width="400" height="400" />
+                                    </Link>
+                                </div>
                                 <div >
                                     <h2 className = "text-xl font-semibold">{related.name}</h2>
                                         <p>{"£"+ related.price}</p>
