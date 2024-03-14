@@ -1,14 +1,9 @@
-
-import { MenuItem } from "@/types";
-import { GetServerSidePropsContext } from "next";
+import { allergens } from "@/components/allergens/helper";
 import { useState } from "react"
 
 
 // Array of filter options
-const FILTERS = [
-  'Eggs',
-  'Cheese',
-]
+const FILTERS = allergens;
 
 // filter component
 export function CustomerMenuFilters(){
@@ -17,9 +12,9 @@ export function CustomerMenuFilters(){
 
   // State for managing which filters are enabled
   const [filters, setFilters] = useState(() => {
-    return FILTERS.map((str) => {
+    return FILTERS.map((string) => {
       return {
-        name: str,
+        name: string,
         enabled: false
       };
     })
