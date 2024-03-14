@@ -106,10 +106,10 @@ export default function ViewTablesPage() {
                                             <tr key={order.customer_id}>
                                                 <td>{order.order_id}</td>
                                                 <td>
-                                                    {order.status === 'unconfirmed' && (
+                                                    {order.status === 'Unconfirmed' && (
                                                         <i className="fas fa-clock"></i>
                                                     )}
-                                                    {order.status !== 'unconfirmed' && order.status}
+                                                    {order.status !== 'Unconfirmed' && order.status}
                                                 </td>
                                                 <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
                                                 <td>name</td>
