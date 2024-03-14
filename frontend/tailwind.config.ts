@@ -24,8 +24,9 @@ const config: Config = {
         'wahaca-light-navy': '#3b527d',
       },
       fontFamily: {
-        subtitle: ['subtitle', 'calibri'],
-        title: ['title', 'Georgia'],
+        subtitle: ['subtitle', 'sans-serif'],
+        title: ['title', 'sans-serif'],
+        paragraph: ['paragraph', 'sans-serif']
       },
     },
   },

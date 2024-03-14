@@ -161,15 +161,12 @@ def get_menu_item_by_id(item_id: int):
 
         # TODO: See if possible to combine all sql statements into one query
 
-        # Prepare sql query
-        sql_main_item = f"""
-            SELECT menuitem_id, name, description, type, price, calories, image
-            FROM MenuItem
-            WHERE menuitem_id = {item_id};
-        """
-
         # Execute query + pull data into python
-        cursor.execute(sql_main_item)
+        cursor.execute("""
+            SELECT menuitem_id, name, description, type, price, calories, image, spice
+            FROM MenuItem
+            WHERE menuitem_id = %s;
+        """, (item_id,))
         data_main_item = cursor.fetchone()
 
         related_items = []
@@ -180,17 +177,16 @@ def get_menu_item_by_id(item_id: int):
             item_type = data_main_item[3]
 
             # Get related items
-            sql_related = f"""
-                SELECT menuitem_id, name, description, type, price, calories, image
+            cursor.execute("""
+                SELECT menuitem_id, name, description, type, price, calories, image, spice
                 FROM MenuItem
-                WHERE (menuitem_id <> {item_id}) AND (MenuItem.type = '{item_type}');
-            """
-            cursor.execute(sql_related)
+                WHERE (menuitem_id <> %s) AND (MenuItem.type = %s);
+            """, (item_id, item_type))
             data_related = cursor.fetchall()
 
             if data_related:
                 for row in data_related:
-                    [menuitem_id, name, description, type, price, calories, image] = row
+                    [menuitem_id, name, description, type, price, calories, image, spice] = row
 
                     related_items.append({
                         'menuitem_id': menuitem_id,
@@ -199,24 +195,26 @@ def get_menu_item_by_id(item_id: int):
                         'type': type,
                         'price': price,
                         'calories': calories,
-                        'image': image
+                        'image': image,
+                        'spice': int(spice)
                     })
 
             # Get ingredients
-            sql_ingredients = f"""
-                SELECT menuitem_id, ingredient_name
-                FROM menuingredient
-                WHERE menuitem_id = {item_id};
-            """
-            cursor.execute(sql_ingredients)
+            cursor.execute("""
+                SELECT menuitem_id, MenuIngredient.ingredient_name, Ingredient.allergen_name
+                FROM MenuIngredient
+                INNER JOIN Ingredient on MenuIngredient.ingredient_name = Ingredient.ingredient_name
+                WHERE menuitem_id = %s;
+            """, (item_id,))
             data_ingredients = cursor.fetchall()
 
             if data_ingredients:
                 for row in data_ingredients:
                     ingredient_name = row[1]
+                    allergen_name = row[2]
                     new_item = {
                         'name': ingredient_name,
-                        'allergen': None
+                        'allergen': allergen_name
                     }
                     ingredients.append(new_item)
 
@@ -225,7 +223,7 @@ def get_menu_item_by_id(item_id: int):
         conn.close()
 
         if data_main_item:
-            [menuitem_id, name, description, type, price, calories, image] = data_main_item
+            [menuitem_id, name, description, type, price, calories, image, spice] = data_main_item
 
             # Return success response + data
             return jsonify({
@@ -237,6 +235,7 @@ def get_menu_item_by_id(item_id: int):
                     "type": type,
                     "price": float(price),
                     "calories": int(calories),
+                    "spice": int(spice),
                     "image": image,
                     "related": related_items,
                     "ingredients": ingredients
@@ -294,22 +293,48 @@ def update_item(menuitem_id):
         type = data['type']
         calories = data['calories']
         image = data['image']
+        ingredients = data['ingredients']
+        spice = data['spice']
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        statement = f"""
-                UPDATE MenuItem
-                SET name='{name}',
-                    description='{description}',
-                    price='{price}',
-                    type='{type}',
-                    calories='{calories}',
-                    image='{image}'
-                WHERE menuitem_id={menuitem_id}
-            """
+        cursor.execute("""
+            UPDATE MenuItem
+            SET name = %s,
+                description = %s,
+                price = %s,
+                spice = %s,
+                type = %s,
+                calories = %s,
+                image = %s
+            WHERE menuitem_id = %s
+        """, (name, description, price, spice, type, calories, image, menuitem_id))
 
-        cursor.execute(statement)
+        # Delete previous links
+        cursor.execute("""
+            DELETE FROM MenuIngredient
+            WHERE menuitem_id=%s
+        """, (menuitem_id,))
+
+        # Add each ingredient one by one
+        for ingredient in ingredients:
+            cursor.execute("""
+                INSERT INTO Ingredient(ingredient_name, allergen_name)
+                VALUES (%(name)s, %(allergen)s)
+                ON CONFLICT (ingredient_name)
+                DO UPDATE
+                SET ingredient_name = %(name)s,
+                    allergen_name = %(allergen)s;
+                    
+                INSERT INTO MenuIngredient(menuitem_id, ingredient_name)
+                VALUES (%(id)s, %(name)s)
+            """, {
+                'name': ingredient['name'],
+                'allergen': ingredient['allergen'],
+                'id': menuitem_id
+            })
+
         conn.commit()
 
         cursor.close()

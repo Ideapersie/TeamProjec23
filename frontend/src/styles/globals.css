@@ -56,20 +56,20 @@ label {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  font-size: 0.7rem;
+  /*font-size: 0.7rem;*/
   font-weight: 400;
-  color: #9a9a9a;
+  /*color: #9a9a9a;*/
   color: var(--wahaca-navy);
   font-size: 14px;
-  font-family: 'subtitle' ;
+  font-family: 'subtitle', sans-serif ;
 }
 
 select, input, textarea {
   border: 1px solid #dadada;
   border-radius: 5px;
   padding: 4px 7px;
-  font-size: 0.8rem;
-  font-family: 'calibri';
+  /*font-size: 0.8rem;*/
+  font-family: 'calibri', sans-serif;
   font-size: 14px;
   font-weight: 500;
   background-color: white;
@@ -77,7 +77,7 @@ select, input, textarea {
 }
 
 h1 {
-  font-family: 'title';
+  font-family: 'title', sans-serif;
   margin-bottom: 20px;
   color: var(--wahaca-teal);
 }
@@ -86,17 +86,17 @@ h3 {
   font-size: 20px;
   font-weight: 500;
   margin-bottom: 20px;
-  
+
 }
 
 h4 {
   color: var(--wahaca-navy);
   margin-bottom: 3px;
-  font-family: 'subtitle';
+  font-family: 'subtitle', sans-serif;
 }
 
 ul {
-  font-family: 'subtitle';
+  font-family: 'subtitle', sans-serif;
 }
 
 button {
@@ -108,7 +108,7 @@ button {
   transition: background-color 0.3s ease,translate 0.3s;
   border: none;
   cursor: pointer;
-  font-family: 'subtitle';
+  font-family: 'subtitle', sans-serif;
   font-size: 16px;
 
   &:hover {
@@ -122,7 +122,7 @@ button {
 }
 
 .page-title {
-  font-family: 'title';
+  font-family: 'title', sans-serif;
   font-size: 40px;
   margin-bottom: 5px;
   color: var(--wahaca-teal);
@@ -135,10 +135,6 @@ button {
   opacity: 80%;
   margin-bottom: 10px;
   max-width: 700px;
-}
-
-.props-header {
-  margin-bottom: 30px;
 }
 
 @font-face {

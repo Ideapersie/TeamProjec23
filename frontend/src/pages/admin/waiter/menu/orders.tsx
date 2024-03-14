@@ -1,47 +1,71 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
+import {Order} from "@/types";
 import { useEffect, useState } from "react";
 
 /**
- * View Customer orders.
+ * Data to be passed in as props.
+ */
+interface Props {
+    data: Order[]
+}
+
+/**
+ * Fetch and display customer orders.
  * 
- * @returns A list of customer orders
+ * @param {Props} props The props object containing the customer order data.
+ * @returns {JSX.Element} The list of customer orders.
  * @author Madeleine Huebner (Madeleine.Huebner.2022@live.rhul.ac.uk)
  */
+export default function ViewOrdersPage(props: Props): JSX.Element {
+    const [items, setItems] = useState<Order[]>([]);
 
-export default function ViewCustomerOrdersPage() {
-
-    /**
-     * Manage the state of the elements.
-     */
-    const [orders, setOrders] = useState(null);
-
-    /**
-     * Fetch order data from Flask API route.
-     */
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/fetchOrders")
-        .then(response => response.json())
-        .then(data => setOrders(data))
-        .catch(error => console.error(error));
+        fetchItems().then((data) => {
+            setItems(data);
+        }).catch((error) => {
+            console.error(error);
+        });
     }, []);
 
-    /**
-     * Present the list of customer orders.
-     * 
-     * TODO: list cutomer orders and sort by timestamps.
-     */
+    async function fetchItems(): Promise<Order[]> {
+        try {
+            const response = await fetch("/api/fetchorders");
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    }
+
     return (
         <>
             <PageHeader>
                 <PageTitle>
-                    Customer Orders
+                    View Orders
                 </PageTitle>
                 <PageSubtitle>
-                    View and confirm customer orders.
+                    View customer orders
                 </PageSubtitle>
             </PageHeader>
+
+            <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
+                Fetch Orders
+            </button>
+
+            <ul>
+                {items && items.map((order) => (
+                    <li key={order.order_id}>
+                        Order ID: {order.order_id}, 
+                        Customer ID: {order.customer_id}, 
+                        Status: {order.status}, 
+                        Time Ordered: {order.time_ordered}, 
+                        Table Number: {order.table_number}
+                    </li>
+                ))}
+            </ul>
 
         </>
     )
