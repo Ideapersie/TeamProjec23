@@ -122,13 +122,13 @@ export default function ItemPage(props: PageProps) {
                                 <li key={index}>{ingredient.name}</li>
                             ))}
                         </ol>
-                        
+
                         <br></br>
                         <h1 className={"text-lg text-bold font-bold italic"}>ALLERGENS</h1>
                             <ol className={"list-disc"}>
                                 {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
                                     props.data.ingredients.map((ingredient, index) => (
-                                        <li key={index}>{ingredient.allergen && <span>, {ingredient.allergen}</span>}</li>
+                                        <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
                                     ))
                                 ) : (
                                     <li>No allergens</li>
@@ -145,7 +145,7 @@ export default function ItemPage(props: PageProps) {
                         {props.data.related.map((related,index) => (
                             <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
                                 {/* Makes the image centered */}
-                                <div className="flex justify-center"> 
+                                <div className="flex justify-center bg-center"> 
                                 {/* Clicking on the image, sends user to that item */}
                                     <Link href={`/menu/view/${related.menuitem_id}`}>
                                         <img src={related.image} width="400" height="400"/>
