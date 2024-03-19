@@ -16,17 +16,15 @@ export function CustomerMenuFilters() {
     const [open, setOpen] = useState(true)
 
     // State for managing which filters are enabled
-    const [filters, setFilters] = useState(() => {
-        return allergens.map((string) => {
-            return {
-                name: string,
-                enabled: false
-            };
-        })
-    });
+    const [filters, setFilters] = useState(
+        allergens.map((string) => ({
+            name: string,
+            enabled: false
+        }))
+    );
 
     // Function to handle click events on filters
-    const clickFilter = (name: string) => {
+    function clickFilter(name: string) {
         const updatedFilters = filters.map((item) => {
             if (item.name === name) {
                 return {...item, enabled: !item.enabled}; // Toggle the enabled state
@@ -45,7 +43,7 @@ export function CustomerMenuFilters() {
             : 'http://localhost:3000/menu/';
 
         router.push(url);
-    };
+    }
 
     return (
         <div>
