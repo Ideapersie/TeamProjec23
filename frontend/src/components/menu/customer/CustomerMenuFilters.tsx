@@ -13,7 +13,7 @@ export function CustomerMenuFilters() {
     const router = useRouter();
 
     // State for managing dropdown
-    const [open, setOpen] = useState(true)
+    const [open, setOpen] = useState(false)
 
     // State for managing which filters are enabled
     const [filters, setFilters] = useState(loadFromUrl);
