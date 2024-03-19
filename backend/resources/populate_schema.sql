@@ -10,8 +10,7 @@ INSERT INTO MenuItem(menuitem_id, name, description, type, price, calories, spic
 (DEFAULT, 'Seasonal Greens', 'Grilled broccoli and winter kale in a mojo de ajo and lime dressing', 'Sides', 5.75, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg'),
 (DEFAULT, 'Seasonal Veg Tetela', 'A large crisp tortilla parcel, filled with roasted vegetables and black beans, topped with feta, avocado salsa and cashew crema', 'Specials', 6.50, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg'),
 (DEFAULT, 'Spiced Roast Pineapple', 'With a chipotle agave glaze, vanilla ice cream and a coconut crumb', 'Desserts', 6.95, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg'),
-(DEFAULT, 'Build Your Own Tacos', 'Tortillas with lettuce, cheese, slaw and black beans, with veg stick dippers and crunchy chips', 'Kids menu', 6.95, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg'),
-(DEFAULT, 'Coke', 'The original recipe', 'Drinks', 3.95, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg');
+(DEFAULT, 'Build Your Own Tacos', 'Tortillas with lettuce, cheese, slaw and black beans, with veg stick dippers and crunchy chips', 'Kids menu', 6.95, 50, 0, 'https://i.postimg.cc/sXp5ndVF/CocaCola.jpg');
 
 INSERT INTO Allergen(allergen_name) VALUES
 ('Celery'),
@@ -37,8 +36,7 @@ INSERT INTO Ingredient(ingredient_name) VALUES
 ('Kale'),
 ('Nacho'),
 ('Taco'),
-('Pineapple'),
-('Coca cola');
+('Pineapple');
 
 INSERT INTO Ingredient(ingredient_name, allergen_name) VALUES
 ('Cheese', 'Milk'),
@@ -79,5 +77,4 @@ INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
 (12, 'Black beans'),
 (12, 'Tortilla'),
 (12, 'Coleslaw'),
-(12, 'Cheese'),
-(13, 'Coca Cola');
+(12, 'Cheese');
