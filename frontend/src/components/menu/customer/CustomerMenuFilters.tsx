@@ -64,21 +64,44 @@ export function CustomerMenuFilters() {
     }
 
     return (
-        <div>
+        <div className={"select-none mb-5"}>
             <div
-                className="w-56 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-inset hover:bg-gray-100"
+                role={"button"}
+                className={`w-56 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow ring-inset
+                            bg-white hover:brightness-90 flex items-center gap-2
+                            ${open ? `bg-wahaca-light-navy text-white fill-white` : ''}
+                `}
                 onClick={() => setOpen(!open)}>
-                ALLERGENS FILTER
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     height={"1rem"}
+                     viewBox="0 0 512 512">
+                    {/*!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.*/}
+                    <path
+                        d="M64 32C28.7 32 0 60.7 0 96s28.7 64 64 64h1c3.7 88.9 77 160 167 160h56V128H264 88.8 64c-17.7 0-32-14.3-32-32s14.3-32 32-32H464c8.8 0 16-7.2 16-16s-7.2-16-16-16H64zM224 456c0 13.3 10.7 24 24 24h72V407.8l-64.1-22.4c-12.5-4.4-26.2 2.2-30.6 14.7s2.2 26.2 14.7 30.6l4.5 1.6C233 433.9 224 443.9 224 456zm128 23.3c36.4-3.3 69.5-17.6 96.1-39.6l-86.5-34.6c-3 1.8-6.2 3.2-9.6 4.3v69.9zM472.6 415c24.6-30.3 39.4-68.9 39.4-111c0-12.3-1.3-24.3-3.7-35.9L382.8 355.1c.8 3.4 1.2 7 1.2 10.6c0 4.6-.7 9-1.9 13.1L472.6 415zM336 128H320V320h18.3c9.9 0 19.1 3.2 26.6 8.5l133.5-92.4C471.8 172.6 409.1 128 336 128zM168 192a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"/>
+                </svg>
+                {open ? 'Close filter' : 'Filter allergens'}
             </div>
 
             {open && (
-                <div className="rounded-md bg-white shadow-lg">
-                    <div className="px-3 py-2">Does not contain:</div>
-                    <div className="grid grid-cols-9 gap-1 p-3">
+                <div className="mt-2 rounded-md bg-wahaca-teal text-white shadow p-5">
+                    <div
+                        onClick={() => setOpen(false)}
+                        role={"button"}
+                    >
+                        <div className="text-wahaca-light-blue text-sm">
+                            <strong>Click</strong> any of the allergens below to filter them out from the items on this
+                            page:
+                        </div>
+
+                        <hr className={"opacity-20 my-3"}/>
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-y-3 p-3">
                         {filters.map((item) => (
                             <div
+                                role={"button"}
                                 key={item.name}
-                                className={`w-40 rounded-md text-gray-700 block px-3 py-2 text-sm ${item.enabled ? 'bg-violet-400 hover:bg-violet-300' : 'hover:bg-gray-100'}`}
+                                className={`rounded-md text-sm hover:text-wahaca-white ${item.enabled ? 'font-bold text-wahaca-yellow' : 'text-wahaca-light-blue text-opacity-50'}`}
                                 onClick={() => clickFilter(item.name)}>
                                 {item.name}
                             </div>
