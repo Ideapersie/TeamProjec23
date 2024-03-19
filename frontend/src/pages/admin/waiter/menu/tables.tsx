@@ -20,9 +20,12 @@ export default function ViewTablesPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
+    const [darken, setDarken] = useState(false);
+
     const handleClickFetch = (tableNumber: number) => {
         setSelectedItemId(tableNumber);
         setIsSidebarOpen(true);
+        setDarken(!darken);
     };
 
     const handleCloseSidebar = () => {
@@ -78,7 +81,9 @@ export default function ViewTablesPage() {
                     TABLES
                 </PageTitle>
             </PageHeader>
-            
+
+            {isSidebarOpen && <div className={styles.overlay}></div>}
+
             <div className="grid grid-cols-3 gap-4">
                 {[...Array(9)].map((_, index) => (
                     <div
@@ -95,6 +100,7 @@ export default function ViewTablesPage() {
             <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
                 Fetch Orders
             </button>
+
 
             {/* Open a sidebar to display table order information */}
             {isSidebarOpen && (
@@ -137,7 +143,12 @@ export default function ViewTablesPage() {
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button className={styles.confirm}><i className="fas fa-check"></i></button>
+                                                    {order.status === 'Unconfirmed' && (
+                                                        <button className={styles.confirm}><i className="fas fa-check"></i></button>
+                                                    )}
+                                                    {order.status !== 'Unconfirmed' && (
+                                                        <i className= "fas fa-check"></i>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
@@ -147,6 +158,7 @@ export default function ViewTablesPage() {
                     </div>
                 </div>
             )}
+              
         </>
     )
 }
