@@ -41,7 +41,7 @@ export default function ViewMenu(props: Props) {
             <CustomerMenuFilters/>
 
             {/*Displaying menu items*/}
-            <div className={"grid grid-cols-3 gap-5"}>
+            <div className={"grid grid-cols-4 gap-4"}>
                 {props?.data?.length ?
                     props.data.map(item => (
                         <CustomerMenuItem
