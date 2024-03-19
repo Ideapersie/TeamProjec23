@@ -16,14 +16,29 @@ export function CustomerMenuFilters() {
     const [open, setOpen] = useState(true)
 
     // State for managing which filters are enabled
-    const [filters, setFilters] = useState(
-        allergens.map((string) => ({
-            name: string,
-            enabled: false
-        }))
-    );
+    const [filters, setFilters] = useState(loadFromUrl);
 
-    // Function to handle click events on filters
+    /**
+     * Gets allergies stored as URL params.
+     * This function is used to initialise the component when it is first mounted.
+     *
+     * @author Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
+     */
+    function loadFromUrl(): {enabled: boolean, name: string}[] {
+
+        const urlAllergiesString: string = router.query.allergies as string || "";
+        const urlAllergies = urlAllergiesString.split(",").map(i => i.trim());
+
+        return allergens.map((allergenName) => ({
+            name: allergenName,
+            enabled: urlAllergies.includes(allergenName)
+        }));
+    }
+
+    /**
+     * Function to handle click events on filters.
+     * @param name
+     */
     function clickFilter(name: string) {
         const updatedFilters = filters.map((item) => {
             if (item.name === name) {
