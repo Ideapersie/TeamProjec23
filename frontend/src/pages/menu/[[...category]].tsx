@@ -38,10 +38,7 @@ export default function ViewMenu(props: Props) {
             </div>
 
             {/*Filters*/}
-            <div className=''>
-                <CustomerMenuFilters/>
-            </div>
-            <br></br>
+            <CustomerMenuFilters/>
 
             {/*Displaying menu items*/}
             <div className={"grid grid-cols-3 gap-5"}>
@@ -71,11 +68,16 @@ export default function ViewMenu(props: Props) {
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props }> {
 
     const category = context.query?.category?.[0] as string | undefined;
+    const allergies = context.query.allergies as string | undefined;
 
-    let endpoint = env.apiHost + "/api/menu";
+    let endpoint = new URL(env.apiHost + "/api/menu");
 
     if (category) {
-        endpoint += `?type=${category}`;
+        endpoint.searchParams.set('type', category);
+    }
+
+    if (allergies) {
+        endpoint.searchParams.set('allergies', allergies);
     }
 
     const response = await fetch(endpoint);
