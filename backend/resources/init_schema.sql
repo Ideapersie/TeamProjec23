@@ -53,6 +53,14 @@ CREATE TABLE PaymentInfo (
     expiration_date DATE NOT NULL
 );
 
+DROP TABLE IF EXISTS "Notification" CASCADE; -- 'Notification' is a reserved keyword, "" required
+CREATE TABLE "Notification" (
+    staff_id INTEGER REFERENCES Staff(staff_id) NOT NULL,
+    message VARCHAR(50) NOT NULL,
+    seen BOOLEAN NOT NULL,
+    PRIMARY KEY (staff_id, message)
+);
+
 /* Junction Tables */
 
 DROP TABLE IF EXISTS OrderMenu CASCADE;
