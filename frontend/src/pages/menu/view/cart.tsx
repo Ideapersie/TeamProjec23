@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import styles from "./cart.module.css";
 import {BrowserCartObject} from "@/types";
+import PageSubtitle from "@/components/common/text/PageSubtitle";
+import PageTitle from "@/components/common/text/PageTitle";
 import router from "next/router";
 
 interface Props {
@@ -123,7 +125,7 @@ export default function Cart(props: Props) {
                     {orderedItems === undefined ?
                         <p>Loading...</p>
                         : orderedItems === null ?
-                            <p>No items in cart</p>
+                            <PageSubtitle>No items in cart</PageSubtitle>
                             :
                             <table className="min-w-full">
                                 <thead className="border-b">

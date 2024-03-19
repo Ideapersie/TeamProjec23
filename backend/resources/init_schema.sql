@@ -73,7 +73,7 @@ CREATE TABLE StaffOrder (
 DROP TABLE IF EXISTS Ingredient CASCADE;
 CREATE TABLE Ingredient (
     ingredient_name VARCHAR(50) NOT NULL,
-    allergen_name VARCHAR(50),
+    allergen_name VARCHAR(50) REFERENCES Allergen(allergen_name),
     PRIMARY KEY (ingredient_name)
 );
 

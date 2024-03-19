@@ -96,7 +96,7 @@ export default function ItemPage(props: PageProps) {
                         <div className={styles.calories}>Calories: {props.data.calories} Cal</div>
                         <div>
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
-                            text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
+                                text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
                             </button>
                         </div>
                     </div>
@@ -121,14 +121,14 @@ export default function ItemPage(props: PageProps) {
                             {props.data.ingredients.map((ingredient, index) => (
                                 <li key={index}>{ingredient.name}</li>
                             ))}
-
                         </ol>
+
                         <br></br>
                         <h1 className={"text-lg text-bold font-bold italic"}>ALLERGENS</h1>
                             <ol className={"list-disc"}>
                                 {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
                                     props.data.ingredients.map((ingredient, index) => (
-                                        <li key={index}>{ingredient.allergen && <span>, {ingredient.allergen}</span>}</li>
+                                        <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
                                     ))
                                 ) : (
                                     <li>No allergens</li>
@@ -136,16 +136,21 @@ export default function ItemPage(props: PageProps) {
                             </ol>
                     </div>
                 </div>
-                {/* Need to add more like this section, like alike food type */}
                 <br></br>
                 <br></br>
                 <div>
-                    <h1 className = {"text-center font-semibold"}> Related Food Items: {props.data.type}</h1>
+                    <h1 className = {"text-center font-semibold "}> Related Food Items: {props.data.type}</h1>
 
                     <div className= "grid grid-cols-2 gap-4 ">
                         {props.data.related.map((related,index) => (
                             <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
-                                <img src = {related.image} width = "400" height ="400"/>
+                                {/* Makes the image centered */}
+                                <div className="flex justify-center bg-center"> 
+                                {/* Clicking on the image, sends user to that item */}
+                                    <Link href={`/menu/view/${related.menuitem_id}`}>
+                                        <img src={related.image} width="400" height="400"/>
+                                    </Link>
+                                </div>
                                 <div >
                                     <h2 className = "text-xl font-semibold">{related.name}</h2>
                                         <p>{"£"+ related.price}</p>

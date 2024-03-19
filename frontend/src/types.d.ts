@@ -6,12 +6,18 @@ export type MenuItem = {
     price: string,
     type: string,
     image: string,
-    link: string
+    link: string,
+    spice: number
 }
 
 export type Ingredient = {
     name: string
     allergen: string | null
+}
+
+export type MenuItemRelatedIngredients = MenuItem & {
+    ingredients: Ingredient[],
+    related: MenuItem[]
 }
 
 export type Order = {
