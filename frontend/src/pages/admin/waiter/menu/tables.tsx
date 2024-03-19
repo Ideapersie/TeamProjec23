@@ -20,16 +20,19 @@ export default function ViewTablesPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
-    const handleClick = (id: number) => {
-        setSelectedItemId(id);
+    const [darken, setDarken] = useState(false);
+
+    const handleClickFetch = (tableNumber: number) => {
+        setSelectedItemId(tableNumber);
         setIsSidebarOpen(true);
+        setDarken(!darken);
     };
 
     const handleCloseSidebar = () => {
         setIsSidebarOpen(false);
     };
 
-    const [items, setItems] = useState<Order[]>([]);
+    const [items, setItems] = useState<OrderWithTable[]>([]);
 
     useEffect(() => {
         fetchItems().then((data) => {
@@ -39,11 +42,27 @@ export default function ViewTablesPage() {
         });
     }, []);
 
-    async function fetchItems(): Promise<Order[]> {
+    interface OrderWithTable extends Order {
+        table_number: number;
+    }
+    
+    async function fetchItems(): Promise<OrderWithTable[]> {
         try {
-            const response = await fetch("/api/fetchorders");
-            const data = await response.json();
-            return data;
+            const responseOrder = await fetch("/api/fetchorders");
+            const responseTable = await fetch("/api/getTableOrder");
+            const dataOrder: Order[] = await responseOrder.json();
+            const dataTable: { order_id: number; table_number: number }[] = await responseTable.json();
+    
+            {/* Create a map from order_id to table_number for efficient lookup */} 
+            const tableMap = new Map(dataTable.map(({ order_id, table_number }) => [order_id, table_number]));
+    
+            {/* Join order and table information */}
+            const ordersWithTable: OrderWithTable[] = dataOrder.map(order => ({
+                ...order,
+                table_number: tableMap.get(order.order_id) || 0
+            }));
+    
+            return ordersWithTable;
         } catch (error) {
             console.error(error);
             throw error;
@@ -62,13 +81,15 @@ export default function ViewTablesPage() {
                     TABLES
                 </PageTitle>
             </PageHeader>
-            
+
+            {isSidebarOpen && <div className={styles.overlay}></div>}
+
             <div className="grid grid-cols-3 gap-4">
                 {[...Array(9)].map((_, index) => (
                     <div
                         key={index}
                         className={styles.tableItem}
-                        onClick={() => handleClick(index + 1)}
+                        onClick={() => handleClickFetch(index + 1)}
                     >
                         {index + 1}
                 </div>
@@ -79,6 +100,7 @@ export default function ViewTablesPage() {
             <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
                 Fetch Orders
             </button>
+
 
             {/* Open a sidebar to display table order information */}
             {isSidebarOpen && (
@@ -94,14 +116,14 @@ export default function ViewTablesPage() {
                                         <th>STATUS</th>
                                         <th>TIME</th>
                                         <th>WAITER</th>
-                                        <th></th>
-                                        <th></th>
+                                        <th>EDIT</th>
+                                        <th>CONFIRM</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* Filter by customer id (this is temporary until customer ids are set up along with table numbers) */}
+                                    {/* Filter by selected table number */}
                                     {items && items
-                                        .filter(order => order.customer_id === 1234)
+                                        .filter(order => order.table_number === selectedItemId)
                                         .map(order => (
                                             <tr key={order.customer_id}>
                                                 <td>{order.order_id}</td>
@@ -109,7 +131,9 @@ export default function ViewTablesPage() {
                                                     {order.status === 'Unconfirmed' && (
                                                         <i className="fas fa-clock"></i>
                                                     )}
-                                                    {order.status !== 'Unconfirmed' && order.status}
+                                                    {order.status !== 'Unconfirmed' && (
+                                                        <i className= "fas fa-check"></i>
+                                                    )}
                                                 </td>
                                                 <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
                                                 <td>name</td>
@@ -119,7 +143,12 @@ export default function ViewTablesPage() {
                                                     </button>
                                                 </td>
                                                 <td>
-                                                    <button className={styles.confirm}>Confirm</button>
+                                                    {order.status === 'Unconfirmed' && (
+                                                        <button className={styles.confirm}><i className="fas fa-check"></i></button>
+                                                    )}
+                                                    {order.status !== 'Unconfirmed' && (
+                                                        <i className= "fas fa-check"></i>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
@@ -129,6 +158,7 @@ export default function ViewTablesPage() {
                     </div>
                 </div>
             )}
+              
         </>
     )
 }

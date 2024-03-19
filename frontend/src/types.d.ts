@@ -25,7 +25,6 @@ export type Order = {
     customer_id: number,
     status: string,
     time_ordered: number,
-    table_number: number
 }
 
 /**
