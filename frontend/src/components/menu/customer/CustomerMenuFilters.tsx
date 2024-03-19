@@ -39,7 +39,7 @@ export function CustomerMenuFilters() {
      * Function to handle click events on filters.
      * @param name
      */
-    function clickFilter(name: string) {
+    async function clickFilter(name: string) {
         const updatedFilters = filters.map((item) => {
             if (item.name === name) {
                 return {...item, enabled: !item.enabled}; // Toggle the enabled state
@@ -52,12 +52,15 @@ export function CustomerMenuFilters() {
         // Filter out only the enabled filters
         const enabledFilters = updatedFilters.filter(item => item.enabled).map(item => item.name);
 
-        // Check if there are any enabled filters and construct the URL accordingly
-        const url = enabledFilters.length > 0
-            ? `http://localhost:3000/menu/Sides?allergies=${enabledFilters.join(',')}`
-            : 'http://localhost:3000/menu/';
+        const url = new URL(window.location.href);
 
-        router.push(url);
+        if (enabledFilters.length > 0) {
+            url.searchParams.set('allergies', enabledFilters.join(','));
+        } else {
+            url.searchParams.delete('allergies');
+        }
+
+        await router.push(url);
     }
 
     return (
