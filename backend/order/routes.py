@@ -159,9 +159,11 @@ def get_order_by_table():
         #close connection
         cursor.close()
         conn.close()
+
+        formatted_orders = [{"order_id": row[1], "table_number": row[0]} for row in orders]
         
         #return data
-        return jsonify(orders)
+        return jsonify(formatted_orders)
         
     except Exception as e:  #database couldn't be reached
         return jsonify("Something went wrong."), 500
