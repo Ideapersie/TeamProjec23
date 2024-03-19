@@ -25,6 +25,7 @@ export function CustomerMenuItem(props: Props) {
                     backgroundRepeat: "no-repeat"
                 }}/>
                 <div className={styles.name}>{props.name}</div>
+                <br></br>
                 <div className={styles.description}>{props.description}</div>
                 <div className={styles.price}>£{props.price}</div>
                 <div className={styles.calories}>{props.calories} Cal</div>

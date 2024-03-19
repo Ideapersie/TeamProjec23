@@ -30,7 +30,7 @@ export default function ViewMenu(props: Props) {
                         src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
                     </Link>
                 </div>
-                
+
                 <p className={"text-stone-400"}>
                     All our food is prepared with only the highest-quality ingredients,
                     provided by local independent farms.
@@ -41,6 +41,7 @@ export default function ViewMenu(props: Props) {
             <div className=''>
                 <CustomerMenuFilters/>
             </div>
+            <br></br>
 
             {/*Displaying menu items*/}
             <div className={"grid grid-cols-3 gap-5"}>
