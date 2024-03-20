@@ -28,6 +28,7 @@ interface PageProps {
 export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
+    const [showPopup, setShowPopup] = useState(false);
 
     if (props.data === null) {
         return <>Item does not exist</>
@@ -58,6 +59,13 @@ export default function ItemPage(props: PageProps) {
         }
 
         sessionStorage.setItem("Cart", JSON.stringify(cart))
+
+        setShowPopup(true);
+
+        // Hide popup message after 2 seconds
+        setTimeout(() => {
+            setShowPopup(false);
+        }, 2000);
 
     }
 
@@ -98,6 +106,12 @@ export default function ItemPage(props: PageProps) {
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
                                 text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
                             </button>
+
+                            {showPopup && (
+                                <div className="static bg-wahaca-teal text-white p-2 rounded-lg">
+                                    Order added to cart
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
