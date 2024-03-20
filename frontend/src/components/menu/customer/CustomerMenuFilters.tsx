@@ -27,7 +27,12 @@ export function CustomerMenuFilters() {
     function loadFromUrl(): {enabled: boolean, name: string}[] {
 
         const urlAllergiesString: string = router.query.allergies as string || "";
-        const urlAllergies = urlAllergiesString.split(",").map(i => i.trim());
+        const urlAllergies = urlAllergiesString.split(",").map(i => i.trim()).filter(i => i);
+
+        // Opening filter if allergies loaded from url
+        if (urlAllergies.length > 0) {
+            setOpen(true);
+        }
 
         return allergens.map((allergenName) => ({
             name: allergenName,
