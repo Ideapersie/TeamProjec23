@@ -188,7 +188,8 @@ def login():
                     cursor.close()
                     conn.close()
 
-                except:
+                except Exception as e:
+                    print(e)
                     return jsonify({'message': 'There are currently no waiters that are logged in.'}), 400
                 response.set_cookie('customer_id', f'{customer_id}', httponly=True, secure=True)
             
