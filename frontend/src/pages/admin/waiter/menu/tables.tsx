@@ -76,23 +76,23 @@ export default function ViewTablesPage() {
 
             {isSidebarOpen && <div className={styles.overlay}></div>}
 
+            {/* Display clickable table number tiles. Fetch and display order information on click.*/}
             <div className="grid grid-cols-3 gap-4">
                 {[...Array(9)].map((_, index) => (
                     <div
                         key={index}
                         className={styles.tableItem}
-                        onClick={() => handleClickFetch(index + 1)}
+                        onClick={() => {
+                            handleClickFetch(index + 1);
+                            fetchItems()
+                                .then((data) => setItems(data))
+                                .catch((error) => console.error(error));
+                        }}
                     >
                         {index + 1}
                 </div>
                 ))}
             </div>
-            
-            {/* Button to fetch orders instead of refreshing page */}
-            <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
-                Fetch Orders
-            </button>
-
 
             {/* Open a sidebar to display table order information */}
             {isSidebarOpen && (
