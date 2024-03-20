@@ -26,6 +26,7 @@ export default function ViewMenu(props: Props) {
                     <PageTitle>MENU</PageTitle>
                     
                     <button
+                        className="bg-wahaca-blue hover:bg-wahaca-teal text-white font-bold py-2 px-4 rounded-lg transition-colors ease-in-out mr-4" 
                         onClick={() => alert('The waiter has been called!')}>
                         Call Waiter
                     </button>
