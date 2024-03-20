@@ -3,6 +3,7 @@ import {useRouter} from "next/router"
 import {Ingredient, MenuItem} from "@/types";
 import styles from "./[id].module.css";
 import Link from "next/link";
+import { useState } from "react";
 
 /**
  * Adds to menu item type to mirror response from api.
@@ -28,6 +29,7 @@ interface PageProps {
 export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
+    const [showPopup, setShowPopup] = useState(false);
 
     if (props.data === null) {
         return <>Item does not exist</>
@@ -59,20 +61,28 @@ export default function ItemPage(props: PageProps) {
 
         sessionStorage.setItem("Cart", JSON.stringify(cart))
 
+        setShowPopup(true);
+
+        // Hide popup message after 2 seconds
+        setTimeout(() => {
+            setShowPopup(false);
+        }, 2000);
+
     }
 
     return (
         <section>
             <div className={"flex justify-between"}>
                 <div>
-                    <button className={"bg-white text-lg text-sky-500 shadow-none"} onClick={() => router.back()}>
+                    <button className={"bg-white text-lg text-wahaca-teal hover:text-wahaca-blue"} onClick={() => router.back()}>
                         Go back
                     </button>
                 </div>
                 <Link href={"/menu/view/cart"}>
                     <img className="hover:rounded-lg hover:border-2 border-slate-200" alt="cart"
                          src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100"
-                         height="100"></img>
+                         height="100">
+                    </img>
                 </Link>
             </div>
 
@@ -98,20 +108,26 @@ export default function ItemPage(props: PageProps) {
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
                                 text-lg text-white-500 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
                             </button>
+
+                            {showPopup && (
+                                <div className="static bg-wahaca-teal text-white p-2 rounded-lg">
+                                    Order added to cart
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 <hr className={"border-gray-300"}></hr>
 
-                <div className={"grid grid-cols-2 pt-5 flex-grow"}>
+                <div className={"grid grid-cols-2 pt-5 pl-5 flex-grow"}>
                     <div>
                         <h1 className={"text-lg text-bold font-bold font-style: italic"}> DESCRIPTION </h1>
                         <p>
                             Delicious burger with beef patty from local cows fed with organic grass, cows raised in
                             northern
                             England in perfect conditions for growth. Our sauce is also housemade prepared with daily
-                            ingredients for a fresh flavour
+                            ingredients for a fresh flavour.
                         </p>
                     </div>
 
@@ -128,10 +144,12 @@ export default function ItemPage(props: PageProps) {
                             <ol className={"list-disc"}>
                                 {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
                                     props.data.ingredients.map((ingredient, index) => (
+                                        ingredient.allergen && ingredient.allergen.trim() !== '' && (
                                         <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
+                                        )
                                     ))
                                 ) : (
-                                    <li>No allergens</li>
+                                    <li> No allergens </li>
                                 )}
                             </ol>
                     </div>
@@ -141,20 +159,20 @@ export default function ItemPage(props: PageProps) {
                 <div>
                     <h1 className = {"text-center font-semibold "}> Related Food Items: {props.data.type}</h1>
 
-                    <div className= "grid grid-cols-2 gap-4 ">
+                    <div className= "grid grid-cols-2 gap-6 ">
                         {props.data.related.map((related,index) => (
-                            <div key={index} className = "grid grid-rows-2 text-center items-center tracking-wide rounded-xl bg-white shadow-lg">
+                            <div key={index} className = "grid grid-rows-2 text-center tracking-wide rounded-xl bg-white shadow-lg">
                                 {/* Makes the image centered */}
-                                <div className="flex justify-center bg-center"> 
+                                <div className="flex justify-center items-center"> 
                                 {/* Clicking on the image, sends user to that item */}
                                     <Link href={`/menu/view/${related.menuitem_id}`}>
                                         <img src={related.image} width="400" height="400"/>
                                     </Link>
                                 </div>
-                                <div >
+                                <div className="flex flex-col justify-center items-center">
                                     <h2 className = "text-xl font-semibold">{related.name}</h2>
-                                        <p>{"£"+ related.price}</p>
-                                        <p>{related.calories+" Cal"}</p>
+                                        <p>{ "£" + related.price}</p>
+                                        <p>{related.calories + " Cal"}</p>
                                 </div>
                             </div>
                         ))}

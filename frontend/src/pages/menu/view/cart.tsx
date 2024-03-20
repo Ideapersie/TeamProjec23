@@ -112,14 +112,14 @@ export default function Cart(props: Props) {
     }
     
     return (
-        <div className={""}>
-			<Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-2 hover:ease-in"}>
+        <div>
+			<Link href={"/menu"} className={"text-base text-wahaca-teal hover:text-wahaca-blue"}>
                 Go back to all items
             </Link>
 
             <br></br>            
             <br></br>
-			<h1> CART </h1>
+			<h1 className = "text-4xl pl-3"> CART </h1>
             <div className="grid md:grid-cols-4 md:gap-5">
                 <div className="overflow-x-auto md:col-span-3">
                     {orderedItems === undefined ?

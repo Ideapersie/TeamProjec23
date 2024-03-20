@@ -68,37 +68,37 @@ def get_all_menu_items():
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        type_filter = request.args.get("type")
+        type_filter = request.args.get("type")  # e.g. Burger
+        allergen_filter = (request.args.get("allergies") or "").split(",")  # e.g. Eggs, Cheese, Gluten
 
         # Get all ingredients
         sql_ingredients = """
-            SELECT menuitem_id, ingredient_name
-            FROM menuingredient;
+            SELECT menuitem_id, MenuIngredient.ingredient_name, Ingredient.allergen_name
+            FROM MenuIngredient
+            INNER JOIN Ingredient on MenuIngredient.ingredient_name = Ingredient.ingredient_name;
         """
         cursor.execute(sql_ingredients)
         data_ingredients = cursor.fetchall()
 
         # Parse data into ingredients list
-        ingredients = {}
+        all_ingredients = {}
         if data_ingredients:
             for item in data_ingredients:
-                [menuitem_id, ingredient_name] = item
+                [menuitem_id, ingredient_name, allergen_name] = item
 
                 new_item = {
                     'name': ingredient_name,
-                    'allergen': None
+                    'allergen': allergen_name
                 }
 
-                if menuitem_id in ingredients:
-                    ingredients[menuitem_id].append(new_item)
+                if menuitem_id in all_ingredients:
+                    all_ingredients[menuitem_id].append(new_item)
                 else:
-                    ingredients[menuitem_id] = [new_item]
-
-        print("Ingredients:", ingredients)
+                    all_ingredients[menuitem_id] = [new_item]
 
         # Get all menu items from database
         sql_items = f"""
-            SELECT menuitem.menuitem_id, name, description, type, price, calories, image
+            SELECT menuitem.menuitem_id, name, description, type, price, calories, image, spice
             FROM MenuItem
             {f"WHERE type = '{type_filter}'" if type_filter is not None else ""}
         """
@@ -110,7 +110,21 @@ def get_all_menu_items():
         menu_items = []
         if data_items:
             for item in data_items:
-                [menuitem_id, name, description, type, price, calories, image] = item
+                [menuitem_id, name, description, type, price, calories, image, spice] = item
+
+                ingredients = all_ingredients.get(menuitem_id) or []
+
+                # Check each ingredient for filtered allergens
+                has_filtered_allergen = False
+                for ing in ingredients:
+                    if ing['allergen'] in allergen_filter:
+                        has_filtered_allergen = True
+                        break
+
+                # If found, skip to next menu item
+                if has_filtered_allergen:
+                    continue
+
                 menu_items.append({
                     "menuitem_id": menuitem_id,
                     "name": name,
@@ -119,7 +133,8 @@ def get_all_menu_items():
                     "price": price,
                     "calories": calories,
                     "image": image,
-                    "ingredients": ingredients.get(menuitem_id) or []
+                    "ingredients": ingredients,
+                    "spice": spice
                 })
 
         print("Items:", menu_items)
