@@ -104,7 +104,7 @@ def login():
     Returns:
         A JSON response and a HTTP code.
     """
-    data = request.get_json()
+    data = request.get_json(force=True)
     email = data['email']
     password = data['password']
 
@@ -239,7 +239,7 @@ def logout():
         print(customer_waiters) # Debug
 
     response = make_response(jsonify({'message': 'Logged out successfully.'}), 200)
-    response.set_cookie('token', '', expires=0, httponly=True, secure=True)
     response.set_cookie('customer_id', '', expires=0, httponly=True, secure=True)
     response.set_cookie('staff_id', '', expires=0, httponly=True, secure=True)
+    response.set_cookie('token', '', expires=0, httponly=True, secure=True)
     return response
