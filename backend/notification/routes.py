@@ -19,10 +19,11 @@ def fetch_unseen_notification():
 
     staff_id = staff['staff_id']
 
-    cursor.execute(f'''SELECT message FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false';''')
+    cursor.execute(f'''SELECT message, time_sent FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false' ORDER BY time_sent ASC;''')
     notification = cursor.fetchall()
     if (notification != None):
-        notifications = [{'message' : item[0] for item in notification}]
+        notifications = [{'message' : item[0], 
+                          'time_sent' : item[1]} for item in notification]
         cursor.close()
         conn.close()
         return jsonify(notifications)
