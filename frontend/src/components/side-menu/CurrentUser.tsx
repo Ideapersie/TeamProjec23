@@ -21,7 +21,10 @@ export default function CurrentUser() {
     }, []);
 
     async function handleLogout() {
-        const res = await fetch('/api/auth/logout');
+        const res = await fetch('/api/logout', {
+            method: "POST"
+        });
+
         if (res.status === 200) {
             await router.push('/auth/login');
         }

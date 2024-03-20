@@ -1,1 +1,1 @@
-export const sessionCookieName = 'session';
+export const sessionCookieName = 'token';
