@@ -24,6 +24,11 @@ export default function ViewMenu(props: Props) {
                         </Link>
                     }
                     <PageTitle>MENU</PageTitle>
+                    
+                    <button
+                        onClick={() => alert('The waiter has been called!')}>
+                        Call Waiter
+                    </button>
 
                     <Link href={"/menu/view/cart"}>
                         <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" 
