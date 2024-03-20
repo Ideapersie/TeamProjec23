@@ -98,7 +98,7 @@ def get_all_menu_items():
 
         # Get all menu items from database
         sql_items = f"""
-            SELECT menuitem.menuitem_id, name, description, type, price, calories, image
+            SELECT menuitem.menuitem_id, name, description, type, price, calories, image, spice
             FROM MenuItem
             {f"WHERE type = '{type_filter}'" if type_filter is not None else ""}
         """
@@ -110,7 +110,7 @@ def get_all_menu_items():
         menu_items = []
         if data_items:
             for item in data_items:
-                [menuitem_id, name, description, type, price, calories, image] = item
+                [menuitem_id, name, description, type, price, calories, image, spice] = item
 
                 ingredients = all_ingredients.get(menuitem_id) or []
 
@@ -133,7 +133,8 @@ def get_all_menu_items():
                     "price": price,
                     "calories": calories,
                     "image": image,
-                    "ingredients": ingredients
+                    "ingredients": ingredients,
+                    "spice": spice
                 })
 
         print("Items:", menu_items)
