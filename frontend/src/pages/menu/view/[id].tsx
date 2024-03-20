@@ -144,10 +144,12 @@ export default function ItemPage(props: PageProps) {
                             <ol className={"list-disc"}>
                                 {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
                                     props.data.ingredients.map((ingredient, index) => (
+                                        ingredient.allergen && ingredient.allergen.trim() !== '' && (
                                         <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
+                                        )
                                     ))
                                 ) : (
-                                    <li>No allergens</li>
+                                    <li> No allergens </li>
                                 )}
                             </ol>
                     </div>
