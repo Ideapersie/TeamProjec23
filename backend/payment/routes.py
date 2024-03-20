@@ -28,7 +28,7 @@ def pay_bill(order_id):
     Returns:
         HTTP 200 if payment card is valid, HTTP 400 otherwise.
     """
-    data = request.get_json()
+    data = request.get_json(force=True)
     customer_id = data['customer_id']
     store_card = data['store_card']
     card_number = data['card_number']
