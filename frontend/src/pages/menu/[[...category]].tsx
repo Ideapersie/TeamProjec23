@@ -19,7 +19,7 @@ export default function ViewMenu(props: Props) {
             <div className={"mb-4"}>
                 <div className ={"flex justify-between items-center"}>                
                     {props.category &&
-                        <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:translate-x-1 hover:ease-in"}>
+                        <Link href={"/menu"} className={"text-base text-wahaca-teal hover:text-wahaca-blue  hover:translate-x-1 hover:ease-in"}>
                             Go back to all items
                         </Link>
                     }
