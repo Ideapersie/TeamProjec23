@@ -58,6 +58,7 @@ CREATE TABLE "Notification" (
     staff_id INTEGER REFERENCES Staff(staff_id) NOT NULL,
     message VARCHAR(50) NOT NULL,
     seen BOOLEAN NOT NULL,
+    time_sent TIMESTAMP NOT NULL,
     PRIMARY KEY (staff_id, message)
 );
 
