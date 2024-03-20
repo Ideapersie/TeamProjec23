@@ -56,41 +56,49 @@ def signup():
     Raises:
         KeyError: If the token is not provided.
     """
-    data = request.get_json()
-    email = data['email']
-    password = data['password']
-    first_name = data['first_name']
-    last_name = data['last_name']
+
     try:
-        token = data['token']
-    except KeyError:
-        token = None
+        data = request.get_json(force=True)
+        email = data['email']
+        password = data['password']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        token = data.get('token', None)
 
-    conn = psycopg2.connect(dbname=config.DATABASE_NAME,
-                            user=config.DATABASE_USER,
-                            password=config.DATABASE_PASSWORD,
-                            host=config.DATABASE_HOST)
-    cursor = conn.cursor()
+        conn = psycopg2.connect(dbname=config.DATABASE_NAME,
+                                user=config.DATABASE_USER,
+                                password=config.DATABASE_PASSWORD,
+                                host=config.DATABASE_HOST)
+        cursor = conn.cursor()
 
-    hashed_password = generate_password_hash(password)
+        hashed_password = generate_password_hash(password)
 
-    if not token:
-        cursor.execute("""
-                       INSERT INTO Customer(email, password, first_name, last_name, table_number)
-                       VALUES(%s, %s, %s, %s, '-1')
-                       """, (email, hashed_password, first_name, last_name))
-    else:
-        if not validate_signup_token(token, secret_key):
-            abort(403, 'Token is invalid/expired.')
-        cursor.execute("""
-                       INSERT INTO Staff(email, password, admin, first_name, last_name)
-                       VALUES(%s, %s, %s, %s, %s)
-                       """, (email, hashed_password, 'False', first_name, last_name))
-    
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify({'message': f'An account for {email} has been created.'}), 201
+        if not token:
+            cursor.execute("""
+                           INSERT INTO Customer(email, password, first_name, last_name, table_number)
+                           VALUES(%s, %s, %s, %s, '-1')
+                           """, (email, hashed_password, first_name, last_name))
+        else:
+            if not validate_signup_token(token, secret_key):
+                abort(403, 'Token is invalid/expired.')
+            cursor.execute("""
+                           INSERT INTO Staff(email, password, admin, first_name, last_name)
+                           VALUES(%s, %s, %s, %s, %s)
+                           """, (email, hashed_password, 'False', first_name, last_name))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({'message': f'An account for {email} has been created.'}), 201
+
+    except Exception as e:
+        message: str = e.args[0]
+        if message.find("already exists") is not -1:
+            return jsonify({'message': "A customer with this email address already exists"}), 409
+        else:
+            return jsonify("An error occurred"), 500
+
 
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
