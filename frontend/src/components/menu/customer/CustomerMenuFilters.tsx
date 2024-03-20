@@ -74,7 +74,7 @@ export function CustomerMenuFilters() {
                 role={"button"}
                 className={`w-56 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-inset
                             bg-white hover:brightness-90 flex items-center gap-2
-                            ${open ? `bg-wahaca-light-navy text-white fill-white` : ''}
+                            ${open ? `!bg-wahaca-light-navy text-wahaca-white fill-wahaca-white` : ''}
                 `}
                 onClick={() => setOpen(!open)}>
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ export function CustomerMenuFilters() {
             </div>
 
             {open && (
-                <div className="mt-2 rounded-md bg-wahaca-teal text-white shadow p-5">
+                <div className="mt-2 rounded-md bg-wahaca-light-navy text-white shadow p-7">
                     <div
                         onClick={() => setOpen(false)}
                         role={"button"}
@@ -97,16 +97,14 @@ export function CustomerMenuFilters() {
                             <strong>Click</strong> any of the allergens below to filter them out from the items on this
                             page:
                         </div>
-
-                        <hr className={"opacity-20 my-3"}/>
                     </div>
 
-                    <div className="grid grid-cols-7 gap-y-3 p-3">
+                    <div className="grid grid-cols-7 gap-y-3 mt-7">
                         {filters.map((item) => (
                             <div
                                 role={"button"}
                                 key={item.name}
-                                className={`rounded-md text-sm hover:text-wahaca-white ${item.enabled ? 'font-bold text-wahaca-yellow' : 'text-wahaca-light-blue text-opacity-50'}`}
+                                className={`rounded-md text-sm text-wahaca-white hover:text-wahaca-white ${item.enabled ? 'font-bold' : 'text-opacity-50'}`}
                                 onClick={() => clickFilter(item.name)}>
                                 {item.name}
                             </div>
