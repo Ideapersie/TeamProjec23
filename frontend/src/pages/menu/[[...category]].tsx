@@ -46,13 +46,7 @@ export default function ViewMenu(props: Props) {
                     props.data.map(item => (
                         <CustomerMenuItem
                             key={item.menuitem_id}
-                            name={item.name}
-                            description={item.description}
-                            price={item.price}
-                            calories={item.calories}
-                            image={item.image}
-                            menuitem_id={item.menuitem_id}
-                            type={item.type}
+                            data={item}
                         />
                     ))
                     :
