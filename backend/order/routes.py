@@ -2,14 +2,16 @@
 A Flask blueprint defining the API routes for interacting with the orders.
 
 The blueprint defines the following endpoints:
-- /api/addorder (POST): Adds an order to the database.
-- /api/deleteorder (POST): Deletes an order from the database.
-- /api/modifyorder (POST): Modifies an existing order.
-- /api/fetchorders (GET): Fetches all current orders.
-- /api/getTableOrder (GET): Fetches orders by table number.
+    /api/addorder (POST): Adds an order to the database.
+    /api/deleteorder (POST): Deletes an order from the database.
+    /api/modifyorder (POST): Modifies an existing order.
+    /api/fetchorders (GET): Fetches all current orders.
+    /api/getTableOrder (GET): Fetches orders by table number.
+    /api/fetch_customer_order (GET): Fetches orders related to a customer.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
+from datetime import datetime, timedelta
 
 order_bp = Blueprint('order', __name__)
 
@@ -196,17 +198,19 @@ def change_order_status():
     conn.close()
     return jsonify(message)
 
-"""
-An API endpoint to fetch the order information associated to a customer.
-
-The customer_id in the request body is optional, but currently necessary for testing purposes.
-When login is implemented properly, the customer_id will be automatically fetched from a cookie.
-
-Returns:
-    The order information as JSON and a HTTP code.
-"""
 @order_bp.route('/api/fetch_customer_order', methods=['POST'])
 def fetch_customer_order():
+    """
+    An API endpoint to fetch the order information associated to a customer.
+
+    The customer_id in the request body is optional, but currently necessary for testing purposes.
+    When login is implemented properly, the customer_id will be automatically fetched from a cookie.
+
+    The status is also updated based on milestones e.g. if current_time - time_ordered > 5 mins then status is `Cooking`.
+
+    Returns:
+        The order information as JSON and a HTTP code.
+    """
     data = request.get_json()
     # Sending customer_id via body is for testing purposes
     # When auth is implemented, customer_id is automatically fetched via a cookie
@@ -226,9 +230,23 @@ def fetch_customer_order():
     cursor.close()
     conn.close()
     # Return as formatted JSON
-    out = [{'menuitem_id': order[0],
-            'customer_id': order[1],
-            'status': order[2],
-            'time_ordered': order[3],
-            'is_paid': order[4]} for order in orders]
+    out = []
+    for order in orders:
+        # Compute time elapsed until order was placed
+        time_ordered = order[3]
+        current_time = datetime.now()
+        time_elapsed = current_time - time_ordered
+        time_elapsed_seconds = time_elapsed.total_seconds()
+        # Milestones are small for testing purposes
+        if (time_elapsed_seconds < 30):
+            status = 'Preparing'
+        elif (30 < time_elapsed_seconds < 60):
+            status = 'Cooking'
+        elif (time_elapsed_seconds > 60):
+            status = 'Finishing Up'
+        out.append({'menuitem_id': order[0],
+                 'customer_id': order[1],
+                 'status': status,
+                 'time_ordered': order[3],
+                 'is_paid': order[4]})
     return jsonify(out), 200
