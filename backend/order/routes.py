@@ -211,7 +211,7 @@ def fetch_customer_order():
     Returns:
         The order information as JSON and a HTTP code.
     """
-    data = request.get_json()
+    data = request.get_json(force=True)
     # Sending customer_id via body is for testing purposes
     # When auth is implemented, customer_id is automatically fetched via a cookie
     if not data:
