@@ -136,7 +136,13 @@ export default function ViewTablesPage() {
                                                 </td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
-                                                        <button className={styles.confirm} onClick={() => handleStatusChange(order.order_id, order.status)}><i className="fas fa-check"></i></button>
+                                                        <button className={styles.confirm} onClick={() => {
+                                                            handleStatusChange(order.order_id, order.status);
+                                                            fetchItems()
+                                                                .then((data) => setItems(data))
+                                                                .catch((error) => console.error(error));
+                                                        }}>
+                                                            <i className="fas fa-check"></i></button>
                                                     )}
                                                     {order.status !== 'Unconfirmed' && (
                                                         <i className= "fas fa-check"></i>
