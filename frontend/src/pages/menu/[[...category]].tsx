@@ -43,7 +43,7 @@ export default function ViewMenu(props: Props) {
             {/*Displaying menu items*/}
             <div className={"grid grid-cols-4 gap-4"}>
                 {props?.data?.length ?
-                    props.data.map(item => (
+                    props.data.slice().reverse().map(item => (
                         <CustomerMenuItem
                             key={item.menuitem_id}
                             data={item}
