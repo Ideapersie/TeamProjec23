@@ -23,8 +23,9 @@ export default function ViewMenu(props: Props) {
                             Go back to all items
                         </Link>
                     }
-                    <PageTitle>MENU</PageTitle>
-                    
+                    <div className="flex-grow flex justify-center">
+                        <PageTitle>MENU</PageTitle>
+                    </div>
                     <button
                         className="bg-wahaca-blue hover:bg-wahaca-teal text-white font-bold py-2 px-4 rounded-lg transition-colors ease-in-out mr-4" 
                         onClick={() => alert('The waiter has been called!')}>
