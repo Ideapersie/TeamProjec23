@@ -195,3 +195,40 @@ def change_order_status():
     cursor.close()
     conn.close()
     return jsonify(message)
+
+"""
+An API endpoint to fetch the order information associated to a customer.
+
+The customer_id in the request body is optional, but currently necessary for testing purposes.
+When login is implemented properly, the customer_id will be automatically fetched from a cookie.
+
+Returns:
+    The order information as JSON and a HTTP code.
+"""
+@order_bp.route('/api/fetch_customer_order', methods=['POST'])
+def fetch_customer_order():
+    data = request.get_json()
+    # Sending customer_id via body is for testing purposes
+    # When auth is implemented, customer_id is automatically fetched via a cookie
+    if not data:
+        customer_id = request.cookies.get('customer_id')
+    else:
+        customer_id = data['customer_id']
+    # Query database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+                   SELECT *
+                   FROM "Order"
+                   WHERE customer_id = %s
+                   """, (customer_id))
+    orders = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    # Return as formatted JSON
+    out = [{'menuitem_id': order[0],
+            'customer_id': order[1],
+            'status': order[2],
+            'time_ordered': order[3],
+            'is_paid': order[4]} for order in orders]
+    return jsonify(out), 200
