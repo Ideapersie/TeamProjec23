@@ -1,8 +1,9 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import styles from "@/components/menu/admin/Tables.module.css";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {Order} from "@/types";
+import { handleStatusChange } from "@/components/menu/admin/OrderUtils";
 
 /**
  * View table numbers and the corresponding waiters assigned to them.
@@ -18,12 +19,11 @@ interface Props {
 export default function ViewTablesPage() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-
+    const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
     const [darken, setDarken] = useState(false);
 
     const handleClickFetch = (tableNumber: number) => {
-        setSelectedItemId(tableNumber);
+        setSelectedTableId(tableNumber);
         setIsSidebarOpen(true);
         setDarken(!darken);
     };
@@ -33,14 +33,6 @@ export default function ViewTablesPage() {
     };
 
     const [items, setItems] = useState<OrderWithTable[]>([]);
-
-    useEffect(() => {
-        fetchItems().then((data) => {
-            setItems(data);
-        }).catch((error) => {
-            console.error(error);
-        });
-    }, []);
 
     interface OrderWithTable extends Order {
         table_number: number;
@@ -76,8 +68,8 @@ export default function ViewTablesPage() {
 
         <>
             <PageHeader>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
-            <PageTitle>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
+                <PageTitle>
                     TABLES
                 </PageTitle>
             </PageHeader>
@@ -108,7 +100,7 @@ export default function ViewTablesPage() {
                     <button className={styles.close} onClick={handleCloseSidebar}>&#10006;</button>
                     <div className={styles.sidebarContent}>
                         <div className="mt-4">
-                            <p className={styles.tableNumber}>Table {selectedItemId}</p>
+                            <p className={styles.tableNumber}>Table {selectedTableId}</p>
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
@@ -123,7 +115,7 @@ export default function ViewTablesPage() {
                                 <tbody>
                                     {/* Filter by selected table number */}
                                     {items && items
-                                        .filter(order => order.table_number === selectedItemId)
+                                        .filter(order => order.table_number === selectedTableId)
                                         .map(order => (
                                             <tr key={order.customer_id}>
                                                 <td>{order.order_id}</td>
@@ -144,7 +136,13 @@ export default function ViewTablesPage() {
                                                 </td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
-                                                        <button className={styles.confirm}><i className="fas fa-check"></i></button>
+                                                        <button className={styles.confirm} onClick={() => {
+                                                            handleStatusChange(order.order_id, order.status);
+                                                            fetchItems()
+                                                                .then((data) => setItems(data))
+                                                                .catch((error) => console.error(error));
+                                                        }}>
+                                                            <i className="fas fa-check"></i></button>
                                                     )}
                                                     {order.status !== 'Unconfirmed' && (
                                                         <i className= "fas fa-check"></i>

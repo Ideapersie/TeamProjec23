@@ -178,7 +178,7 @@ def change_order_status():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    order_to_change = request.json(force = True)
+    order_to_change = request.get_json(force = True)
     order_id = order_to_change['order_id']
     status_change = order_to_change['status']
 
