@@ -2,6 +2,7 @@ import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {FormEvent, useState} from "react";
 import {useRouter} from "next/router";
+import Link from "next/link";
 
 /**
  * A component for rendering the login page
@@ -64,7 +65,10 @@ export default function LoginPage() {
         <div className={"bg-wahaca-yellow min-h-screen flex"}>
             <div className={"bg-white rounded-xl shadow p-10 m-auto"}>
                 <PageTitle>LOGIN</PageTitle>
-                <PageSubtitle>Enter your email and password below to login</PageSubtitle>
+                <PageSubtitle>Enter your email and password below to login, or <Link
+                    href={"/auth/signup"}
+                    className={"underline text-wahaca-blue"}
+                >create an account</Link> here.</PageSubtitle>
                 <hr/>
 
                 <form onSubmit={handleLogin} className={"flex flex-col gap-3 mt-5"}>
