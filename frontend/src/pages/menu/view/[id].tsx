@@ -30,6 +30,7 @@ export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
     const [showPopup, setShowPopup] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
 
     if (props.data === null) {
         return <>Item does not exist</>
@@ -61,13 +62,14 @@ export default function ItemPage(props: PageProps) {
 
         sessionStorage.setItem("Cart", JSON.stringify(cart))
 
+        
         setShowPopup(true);
-
         // Hide popup message after 2 seconds
         setTimeout(() => {
             setShowPopup(false);
         }, 2000);
 
+        setCartCount(prevCount => prevCount + 1);
     }
 
     return (
@@ -83,6 +85,10 @@ export default function ItemPage(props: PageProps) {
                          src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100"
                          height="100">
                     </img>
+
+                    <span className="static ml-20 bg-wahaca-pink rounded-full text-white font-bold px-2 py-1">
+                        {cartCount}
+                    </span>
                 </Link>
             </div>
 
@@ -145,7 +151,7 @@ export default function ItemPage(props: PageProps) {
                                 {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
                                     props.data.ingredients.map((ingredient, index) => (
                                         ingredient.allergen && ingredient.allergen.trim() !== '' && (
-                                        <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
+                                            <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
                                         )
                                     ))
                                 ) : (
