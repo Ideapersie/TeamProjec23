@@ -3,8 +3,7 @@ import Link from "next/link";
 import styles from "./cart.module.css";
 import {BrowserCartObject} from "@/types";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
-import PageTitle from "@/components/common/text/PageTitle";
-import router from "next/router";
+import CartItem from "@/pages/menu/view/cart-item";
 
 interface Props {
     name: string
@@ -94,23 +93,6 @@ export default function Cart(props: Props) {
         }, 1500);
     }
     
-
-    const handleDeleteItem = (menuitemId: number) => {
-
-        const cart = handleRetrieveFromCart();
-
-        if(menuitemId in cart){
-
-            // Makes sure to delete the item once there's 0 quantity
-            cart[menuitemId] > 1 ? cart[menuitemId] -= 1 : delete cart[menuitemId];
-
-            sessionStorage.setItem("Cart", JSON.stringify(cart));
-
-            // Update the state to reflect the changes
-            setOrderedItems(cart);
-        }
-    }
-    
     return (
         <div>
 			<Link href={"/menu"} className={"text-base text-wahaca-teal hover:text-wahaca-blue"}>
@@ -138,15 +120,12 @@ export default function Cart(props: Props) {
                                 </thead>
                                 <tbody>
                                 {Object.entries(orderedItems).map(([id, quantity]) => (
-                                    <tr key={id} className="border-b">
-                                        <td className={styles.t_left}>Item_id = {id} </td>
-                                        <td className={styles.t_right}>Quantity = {quantity} </td>
-                                        {/* Need to use the price from item ordered */}
-                                        <td className={styles.t_right}>Price = {"price"} </td> 
-                                        <td className="p-5 text-center">
-                                            <button className="default-button" onClick={() => handleDeleteItem(JSON.parse(id))}>Delete</button>
-                                        </td>
-                                    </tr>
+                                    <CartItem
+                                        key={id}
+                                        id={parseInt(id)}
+                                        quantity={quantity}
+                                        setOrderedItems={setOrderedItems}
+                                    />
                                 ))}
                                 </tbody>
                             </table>
