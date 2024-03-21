@@ -34,7 +34,7 @@ export default async function handler(
 
         // Mapping response headers
         response.headers.forEach((value, key, parent) => {
-            res.setHeader(key, value);
+            res.appendHeader(key, value);
         });
 
         // Mapping response body
