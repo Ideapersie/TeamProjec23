@@ -52,7 +52,7 @@ def delete_order():
     """
     An API endpoint to delete orders from the database.
     """
-    order_to_delete = request.json(force = True)
+    order_to_delete = request.get_json(force = True)
     order_id = order_to_delete['order_id']
 
     conn = get_db_connection()
