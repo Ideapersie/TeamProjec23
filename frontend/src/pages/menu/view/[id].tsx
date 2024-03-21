@@ -32,10 +32,11 @@ export default function ItemPage(props: PageProps) {
     const [showPopup, setShowPopup] = useState(false);
     const [cartCount, setCartCount] = useState(0);
 
+
     if (props.data === null) {
         return <>Item does not exist</>
     }
-
+    
     function handleAddToCart() {
         if (props.data === null) {
             return;
@@ -62,14 +63,20 @@ export default function ItemPage(props: PageProps) {
 
         sessionStorage.setItem("Cart", JSON.stringify(cart))
 
-        
         setShowPopup(true);
         // Hide popup message after 2 seconds
         setTimeout(() => {
             setShowPopup(false);
         }, 2000);
 
-        setCartCount(prevCount => prevCount + 1);
+        // Increments count everytime new order is placed
+        let totalCount = 0;
+        if (cartString) {
+            const cart = JSON.parse(cartString);
+            totalCount = Object.values(cart).reduce((acc, curr) => acc + curr, 1);
+        }
+        setCartCount(totalCount);
+
     }
 
     return (
@@ -81,14 +88,17 @@ export default function ItemPage(props: PageProps) {
                     </button>
                 </div>
                 <Link href={"/menu/view/cart"}>
-                    <img className="hover:rounded-lg hover:border-2 border-slate-200" alt="cart"
-                         src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100"
-                         height="100">
-                    </img>
-
-                    <span className="static ml-20 bg-wahaca-pink rounded-full text-white font-bold px-2 py-1">
-                        {cartCount}
-                    </span>
+                    <div className = "flex items-center">
+                        <img className="hover:rounded-lg hover:border-2 border-slate-200" 
+                            alt = "cart"
+                            src = "https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" 
+                            width = "100"
+                            height = "100">
+                        </img>
+                        <span className ="static mt-10 bg-wahaca-pink rounded-full text-white font-bold px-3 py-1">
+                            {cartCount}
+                        </span>
+                    </div>
                 </Link>
             </div>
 
