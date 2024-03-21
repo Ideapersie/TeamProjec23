@@ -1,9 +1,9 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import styles from "@/components/menu/admin/Tables.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {Order} from "@/types";
-import { handleStatusChange } from "@/components/menu/admin/OrderUtils";
+import { handleCancelOrder, handleStatusChange } from "@/components/menu/admin/OrderUtils";
 
 /**
  * View table numbers and the corresponding waiters assigned to them.
@@ -68,7 +68,7 @@ export default function ViewTablesPage() {
 
         <>
             <PageHeader>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></link>  
                 <PageTitle>
                     TABLES
                 </PageTitle>
@@ -108,8 +108,8 @@ export default function ViewTablesPage() {
                                         <th>STATUS</th>
                                         <th>TIME</th>
                                         <th>WAITER</th>
-                                        <th>EDIT</th>
                                         <th>CONFIRM</th>
+                                        <th>CANCEL</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,19 +121,14 @@ export default function ViewTablesPage() {
                                                 <td>{order.order_id}</td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
-                                                        <i className="fas fa-clock"></i>
+                                                        <i className="fas fa-clock" title="Unconfirmed"></i>
                                                     )}
-                                                    {order.status !== 'Unconfirmed' && (
-                                                        <i className= "fas fa-check"></i>
+                                                    {order.status === 'Confirmed' && (
+                                                        <i className="fa fa-clipboard-check text-lg" title="Confirmed"></i>
                                                     )}
                                                 </td>
                                                 <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
                                                 <td>name</td>
-                                                <td>
-                                                    <button>
-                                                        <i className="fas fa-edit"></i>
-                                                    </button>
-                                                </td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
                                                         <button className={styles.confirm} onClick={() => {
@@ -142,11 +137,21 @@ export default function ViewTablesPage() {
                                                                 .then((data) => setItems(data))
                                                                 .catch((error) => console.error(error));
                                                         }}>
-                                                            <i className="fas fa-check"></i></button>
+                                                            <i className="fa-solid fa-check"></i></button>
                                                     )}
                                                     {order.status !== 'Unconfirmed' && (
-                                                        <i className= "fas fa-check"></i>
+                                                        <i className= "fa-solid fa-check" title="Confirmed"></i>
                                                     )}
+                                                </td>
+                                                <td>
+                                                    <button className={styles.cancel} onClick={() => {
+                                                        if (confirm("Are you sure you want to cancel this order?")) {
+                                                            handleCancelOrder(order.order_id);
+                                                            fetchItems()
+                                                                .then((data) => setItems(data))
+                                                                .catch((error) => console.error(error));
+                                                        }
+                                                    }}><i className= "fa-solid fa-xmark" title="Cancel"></i></button>
                                                 </td>
                                             </tr>
                                         ))}
