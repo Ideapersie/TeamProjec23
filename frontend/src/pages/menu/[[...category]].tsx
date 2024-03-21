@@ -5,7 +5,7 @@ import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
 import {env} from "../../../env.config";
 import PageTitle from "@/components/common/text/PageTitle";
-import { useState, useEffect } from 'react';
+import {CartButton} from "@/components/cart-button";
 
 
 // Declaring expected prop types
@@ -29,18 +29,7 @@ export default function ViewMenu(props: Props) {
                     }
                     <PageTitle>MENU</PageTitle>
 
-                    <Link href={"/menu/view/cart"}>
-                        <div className = "flex items-center">
-                            <img className = "hover:rounded-lg hover:border-2 border-slate-200" 
-                                alt="cart" 
-                                src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" 
-                                width="100" 
-                                height="100"/>
-                            <span className ="static mt-10 bg-wahaca-pink rounded-full text-white font-bold px-3 py-1">
-                                {/* {cartCount} */}
-                            </span>
-                        </div>
-                    </Link>
+                    <CartButton/>
                 </div>
 
                 <p className={"text-stone-400"}>

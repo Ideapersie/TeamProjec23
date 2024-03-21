@@ -4,6 +4,7 @@ import {Ingredient, MenuItem} from "@/types";
 import styles from "./[id].module.css";
 import Link from "next/link";
 import { useState } from "react";
+import {CartButton} from "@/components/cart-button";
 
 /**
  * Adds to menu item type to mirror response from api.
@@ -30,8 +31,6 @@ export default function ItemPage(props: PageProps) {
 
     const router = useRouter();
     const [showPopup, setShowPopup] = useState(false);
-    const [cartCount, setCartCount] = useState(0);
-
 
     if (props.data === null) {
         return <>Item does not exist</>
@@ -69,14 +68,8 @@ export default function ItemPage(props: PageProps) {
             setShowPopup(false);
         }, 2000);
 
-        // Increments count everytime new order is placed
-        let totalCount = 0;
-        if (cartString) {
-            const cart = JSON.parse(cartString);
-            totalCount = Object.values(cart).reduce((acc, curr) => acc + curr, 1);
-        }
-        setCartCount(totalCount);
-
+        const addToCartEvent = new CustomEvent("add-to-cart");
+        window.dispatchEvent(addToCartEvent);
     }
 
     return (
@@ -87,19 +80,7 @@ export default function ItemPage(props: PageProps) {
                         Go back
                     </button>
                 </div>
-                <Link href={"/menu/view/cart"}>
-                    <div className = "flex items-center">
-                        <img className="hover:rounded-lg hover:border-2 border-slate-200" 
-                            alt = "cart"
-                            src = "https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" 
-                            width = "100"
-                            height = "100">
-                        </img>
-                        <span className ="static mt-10 bg-wahaca-pink rounded-full text-white font-bold px-3 py-1">
-                            {cartCount}
-                        </span>
-                    </div>
-                </Link>
+                <CartButton/>
             </div>
 
             <div className={"min-h-screen flex-col"}>
