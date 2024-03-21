@@ -124,7 +124,7 @@ export default function ViewTablesPage() {
                                                         <i className="fas fa-clock" title="Unconfirmed"></i>
                                                     )}
                                                     {order.status === 'Confirmed' && (
-                                                        <i className="fa fa-clipboard-check text-lg" title="Confirmed"></i>
+                                                        <i className="fa-solid fa-check" title="Confirmed"></i>
                                                     )}
                                                 </td>
                                                 <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
