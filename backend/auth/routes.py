@@ -151,12 +151,12 @@ def login():
     if data:
         if check_password_hash(password_hash, password):
             response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
-            response.set_cookie('token', token, httponly=True, secure=True)
+            response.set_cookie('token', token, httponly=False, secure=True)
 
             if type == 'staff':
                 customer_waiters.update({f'{staff_id}': []})
                 print(customer_waiters) # Debug
-                response.set_cookie('staff_id', f'{staff_id}', httponly=True, secure=True)
+                response.set_cookie('staff_id', f'{staff_id}', httponly=False, secure=True)
             elif type == 'customer':
                 try:
                     least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
@@ -191,7 +191,7 @@ def login():
                 except Exception as e:
                     print(e)
                     return jsonify({'message': 'There are currently no waiters that are logged in.'}), 400
-                response.set_cookie('customer_id', f'{customer_id}', httponly=True, secure=True)
+                response.set_cookie('customer_id', f'{customer_id}', httponly=False, secure=True)
             
             return response
         else:
@@ -248,7 +248,7 @@ def logout():
         print(customer_waiters) # Debug
 
     response = make_response(jsonify({'message': 'Logged out successfully.'}), 200)
-    response.set_cookie('customer_id', '', expires=0, httponly=True, secure=True)
-    response.set_cookie('staff_id', '', expires=0, httponly=True, secure=True)
-    response.set_cookie('token', '', expires=0, httponly=True, secure=True)
+    response.set_cookie('customer_id', '', expires=0, httponly=False, secure=True)
+    response.set_cookie('staff_id', '', expires=0, httponly=False, secure=True)
+    response.set_cookie('token', '', expires=0, httponly=False, secure=True)
     return response
