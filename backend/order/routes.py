@@ -255,46 +255,33 @@ def fetch_customer_order():
 @order_bp.route('/api/fetch_table_waiter_order', methods=['GET'])
 def fetch_table_staff_order():
     """
-    An API endpoint to fetch the customer, waiter, and order information associated to a table number.
+    An API endpoint to fetch the customer, waiter, and order information associated with a table number.
     
     For the customer, this route fetches their full name and table number.
-    For the waiter, it fetches their full name.
+    For the waiter, it fetches their full name and staff ID.
     For the order, it fetches the order_id, is_paid attribute, status, and time ordered.
 
     Returns:
-        This information as JSON and a HTTP code.
+        This information as JSON and an HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Fetch staff names and store them in a dictionary for fast lookup
+    # Fetch order customer and waiter information
     cursor.execute("""
-                   SELECT staff_id, first_name, last_name
-                   FROM Staff
-                   """)
-    staff_data = cursor.fetchall()
-    # Create a dictionary to map staff_id to first_name + last_name
-    staff_names = {row[0]: f'{row[1]} {row[2]}' for row in staff_data}
-    print(staff_names) # Debug
-    # Fetch order customer information
-    cursor.execute("""
-                   SELECT c.customer_id, c.first_name, c.last_name, c.table_number,
-                          o.status, o.time_ordered, o.order_id, o.is_paid
+                   SELECT c.customer_id, c.first_name AS customer_first_name, c.last_name AS customer_last_name, 
+                          c.table_number, o.status, o.time_ordered, o.order_id, o.is_paid, s.staff_id, 
+                          s.first_name AS waiter_first_name, s.last_name AS waiter_last_name
                    FROM Customer c
                    JOIN "Order" o ON c.customer_id = o.customer_id
+                   JOIN StaffOrder so ON o.order_id = so.order_id
+                   JOIN Staff s ON so.staff_id = s.staff_id
                    WHERE c.table_number != -1
                    """)
     data = cursor.fetchall()
     # Convert fetched data to a list of dictionaries for processing
-    data_dicts = [{'customer_id': row[0], 'customer_full_name': row[1] + ' ' + row[2], 'table_number': row[3],
-                  'status': row[4], 'time_ordered': row[5], 'order_id': row[6], 'is_paid': row[7]} for row in data]
-    # Match each order with the staff's name based on customer_id
-    for data_dict in data_dicts:
-        for staff_id, customer_ids in customer_waiters.items():
-            if data_dict['customer_id'] in customer_ids:
-                print(staff_id)
-                data_dict['waiter_full_name'] = staff_names.get(int(staff_id), 'NOT FOUND')
-                break
-    # Delete redundant information
-    for data_dict in data_dicts:
-        del data_dict['customer_id']
+    data_dicts = [{'customer_full_name': row[1] + ' ' + row[2], 'table_number': row[3],
+                  'status': row[4], 'time_ordered': row[5], 'order_id': row[6], 'is_paid': row[7],
+                  'staff_id': row[8], 'waiter_full_name': f"{row[9]} {row[10]}"}
+                  for row in data]
+    
     return jsonify(data_dicts), 200
