@@ -29,7 +29,8 @@ export default function SignupPage() {
             email: formData.get("input-email"),
             password: formData.get("input-password"),
             first_name: formData.get("input-first-name"),
-            last_name: formData.get("input-last-name")
+            last_name: formData.get("input-last-name"),
+            token: router.query.token
         }
 
         // Check if password confirmed correctly.
