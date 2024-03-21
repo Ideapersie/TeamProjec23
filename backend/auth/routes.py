@@ -33,7 +33,7 @@ def invite():
     Returns:
         JSON response and a HTTP code.
     """
-    data = request.get_json()
+    data = request.get_json(force=True)
     email = data['email']
     token = generate_signup_token(email, secret_key)
     base_url = 'http://127.0.0.1:5000/api/menuitems' # Adjust when the frontend page is created
