@@ -21,10 +21,15 @@ export type MenuItemRelatedIngredients = MenuItem & {
 }
 
 export type Order = {
-    order_id: number,
     customer_id: number,
+    customer_full_name: string,
+    table_number: number,
     status: string,
-    time_ordered: number,
+    time_ordered: string,
+    order_id: number,
+    is_paid: string,
+    staff_id: number,
+    waiter_full_name: string,   
 }
 
 /**

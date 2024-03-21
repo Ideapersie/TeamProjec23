@@ -32,33 +32,28 @@ export default function ViewTablesPage() {
         setIsSidebarOpen(false);
     };
 
-    const [items, setItems] = useState<OrderWithTable[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
 
-    interface OrderWithTable extends Order {
-        table_number: number;
-    }
-    
-    async function fetchItems(): Promise<OrderWithTable[]> {
-        try {
-            const responseOrder = await fetch("/api/fetchorders");
-            const responseTable = await fetch("/api/getTableOrder");
-            const dataOrder: Order[] = await responseOrder.json();
-            const dataTable: { order_id: number; table_number: number }[] = await responseTable.json();
-    
-            {/* Create a map from order_id to table_number for efficient lookup */} 
-            const tableMap = new Map(dataTable.map(({ order_id, table_number }) => [order_id, table_number]));
-    
-            {/* Join order and table information */}
-            const ordersWithTable: OrderWithTable[] = dataOrder.map(order => ({
-                ...order,
-                table_number: tableMap.get(order.order_id) || 0
-            }));
-    
-            return ordersWithTable;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+    {/* Fetch order information */}
+    {/* customer_id, customer_full_name, table_number, status, time_ordered, order_id, is_paid, staff_id, waiter_full_name */}
+    async function fetchItems(): Promise<Order[]> {
+        const response = await fetch('/api/fetch_table_waiter_order');
+        const data = await response.json();
+
+        const orders: Order[] = data.map((item: any) => ({
+            customer_id: item.customer_id,
+            customer_full_name: item.customer_full_name,
+            table_number: item.table_number,
+            status: item.status,
+            time_ordered: item.time_ordered,
+            order_id: item.order_id,
+            is_paid: item.is_paid ? 'Paid' : 'Not Paid',
+            staff_id: item.staff_id,
+            waiter_full_name: item.waiter_full_name,
+        }));
+
+        setOrders(orders);
+        return orders;
     }
 
     /**
@@ -85,7 +80,7 @@ export default function ViewTablesPage() {
                         onClick={() => {
                             handleClickFetch(index + 1);
                             fetchItems()
-                                .then((data) => setItems(data))
+                                .then((data) => setOrders(data))
                                 .catch((error) => console.error(error));
                         }}
                     >
@@ -106,6 +101,7 @@ export default function ViewTablesPage() {
                                     <tr>
                                         <th>ORDER</th>
                                         <th>STATUS</th>
+                                        <th>PAID</th>
                                         <th>TIME</th>
                                         <th>WAITER</th>
                                         <th>CONFIRM</th>
@@ -114,7 +110,7 @@ export default function ViewTablesPage() {
                                 </thead>
                                 <tbody>
                                     {/* Filter by selected table number */}
-                                    {items && items
+                                    {orders && orders
                                         .filter(order => order.table_number === selectedTableId)
                                         .map(order => (
                                             <tr key={order.customer_id}>
@@ -127,14 +123,15 @@ export default function ViewTablesPage() {
                                                         <i className="fa-solid fa-check" title="Confirmed"></i>
                                                     )}
                                                 </td>
+                                                <td>{order.is_paid}</td>
                                                 <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
-                                                <td>name</td>
+                                                <td>{order.waiter_full_name}</td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
                                                         <button className={styles.confirm} onClick={() => {
                                                             handleStatusChange(order.order_id, order.status);
                                                             fetchItems()
-                                                                .then((data) => setItems(data))
+                                                                .then((data) => setOrders(data))
                                                                 .catch((error) => console.error(error));
                                                         }}>
                                                             <i className="fa-solid fa-check"></i></button>
@@ -148,7 +145,7 @@ export default function ViewTablesPage() {
                                                         if (confirm("Are you sure you want to cancel this order?")) {
                                                             handleCancelOrder(order.order_id);
                                                             fetchItems()
-                                                                .then((data) => setItems(data))
+                                                                .then((data) => setOrders(data))
                                                                 .catch((error) => console.error(error));
                                                         }
                                                     }}><i className= "fa-solid fa-xmark" title="Cancel"></i></button>
