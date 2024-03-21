@@ -43,10 +43,6 @@ export default function Cart(props: Props) {
         return JSON.parse(cart);
     }
 
-    function refreshPage(){
-        window.location.reload();
-    }
-
     const handleSubmit = async (e:any) => {
         e.preventDefault();
 
@@ -81,17 +77,6 @@ export default function Cart(props: Props) {
 
             //Removes the order in browser storage after checkout. 
             sessionStorage.removeItem("Cart");
-
-            // Requires more testing, since it is not working as intended 
-            // if (response.status === 200) {
-            //     sessionStorage.removeItem("Cart");
-
-            // } else if (response.status === 400) {
-            //     alert("Item with this name already exists");
-
-            // } else {
-            //     alert("Something went wrong");
-            // }
 
         } catch (e) {
             console.error(e);
