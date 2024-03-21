@@ -170,7 +170,7 @@ def login():
                     cursor = conn.cursor()
 
                     if len(occupied_tables) >= 25:
-                        return jsonify({'message': 'There are currently no free tables.'}), 401
+                        return jsonify({'message': 'There are currently no free tables.'}), 409
                     
                     unoccupied_table = random.randint(1, 25)
                     while unoccupied_table in occupied_tables:
