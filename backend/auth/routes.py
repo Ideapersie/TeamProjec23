@@ -36,7 +36,7 @@ def invite():
     data = request.get_json(force=True)
     email = data['email']
     token = generate_signup_token(email, secret_key)
-    base_url = 'http://127.0.0.1:5000/api/menuitems' # Adjust when the frontend page is created
+    base_url = 'http://127.0.0.1:3000/auth/signup'  # Adjust when the frontend page is created
     
     send_invite(email, token, base_url)
     return jsonify({'message': f'Invitation sent to {email} successfully.'}), 200
