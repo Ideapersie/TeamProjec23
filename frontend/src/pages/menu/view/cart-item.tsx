@@ -46,10 +46,14 @@ export default function CartItem(props: Props) {
             <div>Loading</div>
             :
             <tr className="border-b">
-                <td className={styles.t_left}>Item_id = {props.id} </td>
-                <td className={styles.t_right}>Quantity = {props.quantity} </td>
+                {/* <pre>{JSON.stringify(data, undefined,2)}</pre> */}
+                <td className={`${styles.t_left}  font-semibold`}  >
+                    {data.name}
+                    <img className = {"rounded-lg "} src= {data.image} height = {"200"} width = {"200"} />  
+                </td>
+                <td className={styles.t_right } >{props.quantity} servings</td>
                 {/* Need to use the price from item ordered */}
-                <td className={styles.t_right}>Price = {data.price}</td>
+                <td className={`${styles.t_right} font-bold text-wahaca-navy`}>£{data.price}</td>
 
                 <td className="p-5 text-center">
                     <button className="default-button" onClick={() => handleDeleteItem(props.id)}>Delete</button>
