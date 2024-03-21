@@ -94,7 +94,7 @@ def signup():
 
     except Exception as e:
         message: str = e.args[0]
-        if message.find("already exists") is not -1:
+        if message.find("already exists") != -1:
             return jsonify({'message': "A customer with this email address already exists"}), 409
         else:
             return jsonify("An error occurred"), 500
