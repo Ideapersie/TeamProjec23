@@ -161,12 +161,12 @@ def login():
                             host=config.DATABASE_HOST)
                     cursor = conn.cursor()
 
-                    if len(occupied_tables) >= 25:
+                    if len(occupied_tables) >= 9:
                         return jsonify({'message': 'There are currently no free tables.'}), 401
                     
-                    unoccupied_table = random.randint(1, 25)
+                    unoccupied_table = random.randint(1, 9)
                     while unoccupied_table in occupied_tables:
-                        unoccupied_table = random.randint(1, 25)
+                        unoccupied_table = random.randint(1, 9)
                     occupied_tables.add(unoccupied_table)
                     print(occupied_tables) # Debug
 
