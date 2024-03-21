@@ -57,3 +57,31 @@ def add_notification():
     cursor.close()
     conn.close()
     return jsonify(message)
+
+@notification_bp.route('/api/deletenotification')
+def delete_notification():
+    """
+    An API endpoint to delete a notification.
+    """
+    notification = request.get_json(force = True)
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    staff_id = notification['staff_id']
+    message = notification['message']
+
+    cursor.execute(f'''SELECT * FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''')
+    existing_notif = cursor.fetchall()
+
+    if (existing_notif != None):
+        cursor.execute(f'''DELETE FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''')
+        message = {
+        'message' : 'Notification has been removed'
+        }
+    else:
+        message = {
+            'message' : 'Notification does not exist in database'
+        }
+    cursor.close()
+    conn.close()
+    return jsonify(message)
