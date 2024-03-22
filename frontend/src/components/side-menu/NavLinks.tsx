@@ -78,6 +78,14 @@ export default function NavLinks(): JSX.Element {
                     path: "/order/addlinkshere"
                 },
             ]
+        },
+        "Admin": {
+            links: [
+                {
+                    display: "View staff",
+                    path: "/admin/staff"
+                }
+            ]
         }
     };
 
