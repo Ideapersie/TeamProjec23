@@ -119,6 +119,10 @@ button {
   &:focus {
       outline: none;
   }
+
+  &:disabled {
+    opacity: 0.3;
+  }
 }
 
 .page-title {
