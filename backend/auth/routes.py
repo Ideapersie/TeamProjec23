@@ -16,8 +16,9 @@ from resources import config
 from auth.authentication import (
     generate_signup_token, validate_signup_token, generate_customer_token,
     generate_staff_token, generate_admin_token, send_invite, secret_key,
-    customer_waiters, occupied_tables
+    customer_waiters, occupied_tables, fetch_user_info
 )
+import json
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -157,6 +158,9 @@ def login():
                 customer_waiters.update({f'{staff_id}': []})
                 print(customer_waiters) # Debug
                 response.set_cookie('staff_id', f'{staff_id}', httponly=False, secure=True)
+                user_info = fetch_user_info('Waiter', staff_id)
+                print(f'USER_INFO COOKIE SET: {json.loads(user_info)}') # Debug
+                response.set_cookie('user_info', f'{user_info}', httponly=False, secure=True)
             elif type == 'customer':
                 try:
                     least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
@@ -192,6 +196,9 @@ def login():
                     print(e)
                     return jsonify({'message': 'There are currently no waiters that are logged in.'}), 400
                 response.set_cookie('customer_id', f'{customer_id}', httponly=False, secure=True)
+                user_info = fetch_user_info('Customer', customer_id)
+                print(f'USER_INFO COOKIE SET: {json.loads(user_info)}') # Debug
+                response.set_cookie('user_info', f'{user_info}', httponly=False, secure=True)
             
             return response
         else:

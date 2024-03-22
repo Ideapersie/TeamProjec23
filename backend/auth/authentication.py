@@ -9,6 +9,8 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from flask import request
+from menu.connection import get_db_connection
+import json
 
 customer_waiters = { # Dictionary to track which waiters can be assigned to customers
 }
@@ -246,3 +248,61 @@ def protect_customer_staff():
         return False
     else:
         return True
+    
+def fetch_user_info(type, id):
+    """
+    Fetches user information and encodes as a JSON object.
+
+    This can be decoded in frontend to preserve the original format the JSON was encoded with.
+
+    Args:
+        type: The type of user e.g. waiter, kitchen, or customer.
+        id: the id of the user in their respective database table.
+
+    Returns:
+        A JSON encoded object representing the user information.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Fetch waiter or kitchen information and format as JSON
+    if type == 'Waiter' or type == 'Kitchen':
+        cursor.execute("""
+                    SELECT email, admin, first_name, last_name
+                    FROM Staff
+                    WHERE staff_id = %s
+                    """, (id,))
+        data = cursor.fetchone()
+
+        user_data = {
+            'role': type,
+            'is_admin': data[1],
+            'profile': {
+                'id': id,
+                'first_name': data[2],
+                'last_name': data[3],
+                'email': data[0]
+            }
+        }
+        user_data_str = json.dumps(user_data)
+    # Fetch customer information and format as JSON
+    else:
+        cursor.execute("""
+                    SELECT email, first_name, last_name
+                    FROM Customer
+                    WHERE customer_id = %s
+                    """, (id,))
+        data = cursor.fetchone()
+        user_data = {
+            'role': type,
+            'is_admin': False,
+            'profile': {
+                'id': id,
+                'first_name': data[1],
+                'last_name': data[2],
+                'email': data[0]
+            }
+        }
+        user_data_str = json.dumps(user_data)
+    cursor.close()
+    conn.close()
+    return user_data_str
