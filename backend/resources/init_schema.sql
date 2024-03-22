@@ -8,12 +8,16 @@ CREATE TABLE Customer (
     table_number INTEGER NOT NULL
 );
 
+DROP TYPE IF EXISTS staff_role;
+CREATE TYPE staff_role AS ENUM('Waiter', 'Kitchen');
+
 DROP TABLE IF EXISTS Staff CASCADE;
 CREATE TABLE Staff (
     staff_id SERIAL PRIMARY KEY,
     email VARCHAR(320) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     admin BOOLEAN NOT NULL,
+    role staff_role NOT NULL DEFAULT 'Waiter',
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL
 );
