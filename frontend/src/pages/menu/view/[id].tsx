@@ -4,6 +4,8 @@ import {Ingredient, MenuItem} from "@/types";
 import styles from "./[id].module.css";
 import Link from "next/link";
 import { useState } from "react";
+import {CartButton} from "@/components/cart-button";
+import { CustomerMenuItem } from "@/components/menu/customer/CustomerMenuItem";
 
 /**
  * Adds to menu item type to mirror response from api.
@@ -34,7 +36,7 @@ export default function ItemPage(props: PageProps) {
     if (props.data === null) {
         return <>Item does not exist</>
     }
-
+    
     function handleAddToCart() {
         if (props.data === null) {
             return;
@@ -62,12 +64,13 @@ export default function ItemPage(props: PageProps) {
         sessionStorage.setItem("Cart", JSON.stringify(cart))
 
         setShowPopup(true);
-
         // Hide popup message after 2 seconds
         setTimeout(() => {
             setShowPopup(false);
         }, 2000);
 
+        const addToCartEvent = new CustomEvent("add-to-cart");
+        window.dispatchEvent(addToCartEvent);
     }
 
     return (
@@ -78,17 +81,12 @@ export default function ItemPage(props: PageProps) {
                         Go back
                     </button>
                 </div>
-                <Link href={"/menu/view/cart"}>
-                    <img className="hover:rounded-lg hover:border-2 border-slate-200" alt="cart"
-                         src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100"
-                         height="100">
-                    </img>
-                </Link>
+                <CartButton/>
             </div>
 
             <div className={"min-h-screen flex-col"}>
                 <div className={"flex gap-8 pb-8"}>
-                    <div className={"mt-5 mb-5 p-10 rounded-xl bg-white shadow-lg"} style={{height: 500, width: 600}}>
+                    <div className={"mb-5 p-5 rounded-xl bg-white shadow-lg"} style={{height: 450, width: 600}}>
                         <div style={{
                             height: "100%",
                             width: "100%",
@@ -145,7 +143,7 @@ export default function ItemPage(props: PageProps) {
                                 {props.data.ingredients.some(ingredient => ingredient.allergen) ? (
                                     props.data.ingredients.map((ingredient, index) => (
                                         ingredient.allergen && ingredient.allergen.trim() !== '' && (
-                                        <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
+                                            <li key={index}>{ingredient.allergen && <span>{ingredient.allergen}</span>}</li>
                                         )
                                     ))
                                 ) : (
@@ -157,25 +155,24 @@ export default function ItemPage(props: PageProps) {
                 <br></br>
                 <br></br>
                 <div>
-                    <h1 className = {"text-center font-semibold "}> Related Food Items: {props.data.type}</h1>
-
-                    <div className= "grid grid-cols-2 gap-6 ">
-                        {props.data.related.map((related,index) => (
-                            <div key={index} className = "grid grid-rows-2 text-center tracking-wide rounded-xl bg-white shadow-lg">
-                                {/* Makes the image centered */}
-                                <div className="flex justify-center items-center"> 
-                                {/* Clicking on the image, sends user to that item */}
-                                    <Link href={`/menu/view/${related.menuitem_id}`}>
-                                        <img src={related.image} width="400" height="400"/>
-                                    </Link>
-                                </div>
-                                <div className="flex flex-col justify-center items-center">
-                                    <h2 className = "text-xl font-semibold">{related.name}</h2>
-                                        <p>{ "£" + related.price}</p>
-                                        <p>{related.calories + " Cal"}</p>
-                                </div>
+                    <h1 className = {"text-lg text-center text-wahaca-navy"}> Related Food Items : 
+                        <span className = {"text-xl font-semibold text-wahaca-pink tracking-wider"}> {props.data.type}</span>
+                    </h1>
+                    
+                    {/*Displaying menu items*/}
+                    <div className={"grid grid-cols-3 gap-10"}>
+                        {props?.data?.related?.length ?
+                            props.data.related.slice().reverse().map(item => (
+                                <CustomerMenuItem
+                                    key={item.menuitem_id}
+                                    data={item}
+                                />
+                            ))
+                            :
+                            <div className={"bg-white shadow rounded-lg px-3 py-2 text-mg text-wahaca-navy font-bold"}>
+                                No items for this food type
                             </div>
-                        ))}
+                        }
                     </div>
                 </div>
             </div>

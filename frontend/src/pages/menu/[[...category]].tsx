@@ -5,6 +5,8 @@ import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
 import {env} from "../../../env.config";
 import PageTitle from "@/components/common/text/PageTitle";
+import {CartButton} from "@/components/cart-button";
+
 
 // Declaring expected prop types
 interface Props {
@@ -12,8 +14,10 @@ interface Props {
     category: string | null
 }
 
+
 // Page component - View Menu
 export default function ViewMenu(props: Props) {
+
     return <>
         <section>
             <div className={"mb-4"}>
@@ -32,10 +36,7 @@ export default function ViewMenu(props: Props) {
                         Call Waiter
                     </button>
 
-                    <Link href={"/menu/view/cart"}>
-                        <img className = "hover:rounded-lg hover:border-2 border-slate-200" alt="cart" 
-                        src="https://i.postimg.cc/kgQHTvcK/istockphoto-1204513100-612x612.jpg" width="100" height="100"></img> 
-                    </Link>
+                    <CartButton/>
                 </div>
 
                 <p className={"text-stone-400"}>

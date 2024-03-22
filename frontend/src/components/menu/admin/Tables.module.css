@@ -32,9 +32,9 @@
 .sidebar {
     position: absolute;
     top: 10%;
-    right: 23%;
+    right: 25%;
     height: 80%;
-    width: 40%;
+    width: 45%;
     background-color: var(--wahaca-light-blue);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
@@ -46,7 +46,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 90%;
+    width: 92%;
     height: 90%;
     background-color: white;
     display: flex;
@@ -96,5 +96,11 @@
 
 /* confirm button */
 .confirm {
+    font-size: 18px;
     background-color: var(--wahaca-blue);
+}
+
+.cancel {
+    font-size: 18px;
+    background-color: var(--wahaca-pink);
 }

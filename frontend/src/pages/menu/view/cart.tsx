@@ -3,8 +3,7 @@ import Link from "next/link";
 import styles from "./cart.module.css";
 import {BrowserCartObject} from "@/types";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
-import PageTitle from "@/components/common/text/PageTitle";
-import router from "next/router";
+import CartItem from "@/pages/menu/view/cart-item";
 
 interface Props {
     name: string
@@ -20,7 +19,9 @@ interface Props {
 export default function Cart(props: Props) {
 
     const [orderedItems, setOrderedItems] = useState<BrowserCartObject | null | undefined>(undefined);
+    const [showPopup, setShowPopup] = useState(false);
 
+    
     // On initial browser load...
     useEffect(() => {
         let cartItems = handleRetrieveFromCart(); // Get items in cart
@@ -77,38 +78,20 @@ export default function Cart(props: Props) {
             //Removes the order in browser storage after checkout. 
             sessionStorage.removeItem("Cart");
 
-            // Requires more testing, since it is not working as intended 
-            // if (response.status === 200) {
-            //     sessionStorage.removeItem("Cart");
-
-            // } else if (response.status === 400) {
-            //     alert("Item with this name already exists");
-
-            // } else {
-            //     alert("Something went wrong");
-            // }
-
         } catch (e) {
             console.error(e);
             alert('Order failed to send');
         }
-    }
-    
 
-    const handleDeleteItem = (menuitemId: number) => {
-
-        const cart = handleRetrieveFromCart();
-
-        if(menuitemId in cart){
-
-            // Makes sure to delete the item once there's 0 quantity
-            cart[menuitemId] > 1 ? cart[menuitemId] -= 1 : delete cart[menuitemId];
-
-            sessionStorage.setItem("Cart", JSON.stringify(cart));
-
-            // Update the state to reflect the changes
-            setOrderedItems(cart);
-        }
+        setShowPopup(true);
+        // Hide popup message after 2 seconds
+        setTimeout(() => {
+            setShowPopup(false);
+            // Refreshes the page, updating the cart to be empty
+            setTimeout(() => {
+                window.location.reload();
+            }, 0);
+        }, 1500);
     }
     
     return (
@@ -138,15 +121,12 @@ export default function Cart(props: Props) {
                                 </thead>
                                 <tbody>
                                 {Object.entries(orderedItems).map(([id, quantity]) => (
-                                    <tr key={id} className="border-b">
-                                        <td className={styles.t_left}>Item_id = {id} </td>
-                                        <td className={styles.t_right}>Quantity = {quantity} </td>
-                                        {/* Need to use the price from item ordered */}
-                                        <td className={styles.t_right}>Price = {"price"} </td> 
-                                        <td className="p-5 text-center">
-                                            <button className="default-button" onClick={() => handleDeleteItem(JSON.parse(id))}>Delete</button>
-                                        </td>
-                                    </tr>
+                                    <CartItem
+                                        key={id}
+                                        id={parseInt(id)}
+                                        quantity={quantity}
+                                        setOrderedItems={setOrderedItems}
+                                    />
                                 ))}
                                 </tbody>
                             </table>
@@ -159,11 +139,18 @@ export default function Cart(props: Props) {
                                 </div>
                             </li>
                             <li>
-                                <button onClick={handleSubmit} className="primary-button w-full" >
+                                <button onClick={ handleSubmit} className="primary-button w-full" >
                                     Proceed to checkout
                                 </button>
                             </li>
                         </ul>
+                        {showPopup && (
+                            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                                <div className="bg-gray-100 p-5 rounded-lg">
+                                    <p className="text-center text-xl font-bold text-wahaca-pink">Order Sent!</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

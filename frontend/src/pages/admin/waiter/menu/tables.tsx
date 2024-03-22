@@ -1,8 +1,9 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import styles from "@/components/menu/admin/Tables.module.css";
-import { SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import {Order} from "@/types";
+import { handleCancelOrder, handleStatusChange } from "@/components/menu/admin/OrderUtils";
 
 /**
  * View table numbers and the corresponding waiters assigned to them.
@@ -18,12 +19,11 @@ interface Props {
 export default function ViewTablesPage() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-
+    const [selectedTableId, setSelectedTableId] = useState<number | null>(null);
     const [darken, setDarken] = useState(false);
 
     const handleClickFetch = (tableNumber: number) => {
-        setSelectedItemId(tableNumber);
+        setSelectedTableId(tableNumber);
         setIsSidebarOpen(true);
         setDarken(!darken);
     };
@@ -32,41 +32,28 @@ export default function ViewTablesPage() {
         setIsSidebarOpen(false);
     };
 
-    const [items, setItems] = useState<OrderWithTable[]>([]);
+    const [orders, setOrders] = useState<Order[]>([]);
 
-    useEffect(() => {
-        fetchItems().then((data) => {
-            setItems(data);
-        }).catch((error) => {
-            console.error(error);
-        });
-    }, []);
+    {/* Fetch order information */}
+    {/* customer_id, customer_full_name, table_number, status, time_ordered, order_id, is_paid, staff_id, waiter_full_name */}
+    async function fetchItems(): Promise<Order[]> {
+        const response = await fetch('/api/fetch_table_waiter_order');
+        const data = await response.json();
 
-    interface OrderWithTable extends Order {
-        table_number: number;
-    }
-    
-    async function fetchItems(): Promise<OrderWithTable[]> {
-        try {
-            const responseOrder = await fetch("/api/fetchorders");
-            const responseTable = await fetch("/api/getTableOrder");
-            const dataOrder: Order[] = await responseOrder.json();
-            const dataTable: { order_id: number; table_number: number }[] = await responseTable.json();
-    
-            {/* Create a map from order_id to table_number for efficient lookup */} 
-            const tableMap = new Map(dataTable.map(({ order_id, table_number }) => [order_id, table_number]));
-    
-            {/* Join order and table information */}
-            const ordersWithTable: OrderWithTable[] = dataOrder.map(order => ({
-                ...order,
-                table_number: tableMap.get(order.order_id) || 0
-            }));
-    
-            return ordersWithTable;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
+        const orders: Order[] = data.map((item: any) => ({
+            customer_id: item.customer_id,
+            customer_full_name: item.customer_full_name,
+            table_number: item.table_number,
+            status: item.status,
+            time_ordered: item.time_ordered,
+            order_id: item.order_id,
+            is_paid: item.is_paid ? 'Paid' : 'Not Paid',
+            staff_id: item.staff_id,
+            waiter_full_name: item.waiter_full_name,
+        }));
+
+        setOrders(orders);
+        return orders;
     }
 
     /**
@@ -76,31 +63,31 @@ export default function ViewTablesPage() {
 
         <>
             <PageHeader>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"></link>    
-            <PageTitle>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></link>  
+                <PageTitle>
                     TABLES
                 </PageTitle>
             </PageHeader>
 
             {isSidebarOpen && <div className={styles.overlay}></div>}
 
+            {/* Display clickable table number tiles. Fetch and display order information on click.*/}
             <div className="grid grid-cols-3 gap-4">
                 {[...Array(9)].map((_, index) => (
                     <div
                         key={index}
                         className={styles.tableItem}
-                        onClick={() => handleClickFetch(index + 1)}
+                        onClick={() => {
+                            handleClickFetch(index + 1);
+                            fetchItems()
+                                .then((data) => setOrders(data))
+                                .catch((error) => console.error(error));
+                        }}
                     >
                         {index + 1}
                 </div>
                 ))}
             </div>
-            
-            {/* Button to fetch orders instead of refreshing page */}
-            <button onClick={() => fetchItems().then((data) => setItems(data)).catch((error) => console.error(error))}>
-                Fetch Orders
-            </button>
-
 
             {/* Open a sidebar to display table order information */}
             {isSidebarOpen && (
@@ -108,47 +95,57 @@ export default function ViewTablesPage() {
                     <button className={styles.close} onClick={handleCloseSidebar}>&#10006;</button>
                     <div className={styles.sidebarContent}>
                         <div className="mt-4">
-                            <p className={styles.tableNumber}>Table {selectedItemId}</p>
+                            <p className={styles.tableNumber}>Table {selectedTableId}</p>
                             <table className={styles.table}>
                                 <thead>
                                     <tr>
                                         <th>ORDER</th>
                                         <th>STATUS</th>
+                                        <th>PAID</th>
                                         <th>TIME</th>
                                         <th>WAITER</th>
-                                        <th>EDIT</th>
                                         <th>CONFIRM</th>
+                                        <th>CANCEL</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {/* Filter by selected table number */}
-                                    {items && items
-                                        .filter(order => order.table_number === selectedItemId)
+                                    {orders && orders
+                                        .filter(order => order.table_number === selectedTableId)
                                         .map(order => (
                                             <tr key={order.customer_id}>
                                                 <td>{order.order_id}</td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
-                                                        <i className="fas fa-clock"></i>
+                                                        <i className="fas fa-clock" title="Unconfirmed"></i>
                                                     )}
-                                                    {order.status !== 'Unconfirmed' && (
-                                                        <i className= "fas fa-check"></i>
+                                                    {order.status === 'Confirmed' && (
+                                                        <i className="fa-solid fa-check" title="Confirmed"></i>
                                                     )}
                                                 </td>
+                                                <td>{order.is_paid}</td>
                                                 <td>{new Date(order.time_ordered).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}</td>
-                                                <td>name</td>
-                                                <td>
-                                                    <button>
-                                                        <i className="fas fa-edit"></i>
-                                                    </button>
-                                                </td>
+                                                <td>{order.waiter_full_name}</td>
                                                 <td>
                                                     {order.status === 'Unconfirmed' && (
-                                                        <button className={styles.confirm}><i className="fas fa-check"></i></button>
+                                                        <button className={styles.confirm} onClick={() => {
+                                                            handleStatusChange(order.order_id, order.status);
+                                                            fetchItems();
+                                                        }}>
+                                                            <i className="fa-solid fa-check"></i></button>
                                                     )}
                                                     {order.status !== 'Unconfirmed' && (
-                                                        <i className= "fas fa-check"></i>
+                                                        <i className= "fa-solid fa-check" title="Confirmed"></i>
                                                     )}
+                                                </td>
+                                                <td>
+                                                    <button className={styles.cancel} onClick={() => {
+                                                        if (confirm("Are you sure you want to cancel this order?")) {
+                                                            handleCancelOrder(order.order_id);
+                                                            fetchItems();
+                                                        }
+                                                    }}><i className= "fa-solid fa-xmark" title="Cancel"></i></button>
+                                                    
                                                 </td>
                                             </tr>
                                         ))}

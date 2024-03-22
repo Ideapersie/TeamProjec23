@@ -11,6 +11,7 @@ The blueprint defines the following endpoints:
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
+from auth.authentication import customer_waiters
 from datetime import datetime, timedelta
 
 order_bp = Blueprint('order', __name__)
@@ -51,20 +52,21 @@ def delete_order():
     """
     An API endpoint to delete orders from the database.
     """
-    order_to_delete = request.json(force = True)
+    order_to_delete = request.get_json(force = True)
+    order_id = order_to_delete['order_id']
+
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(f'''
-                   SELECT order_id FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
+                   SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
                    ''')
     existing_order = cursor.fetchall()
 
     if(existing_order != None):
         cursor.execute(f'''
-                       DELETE FROM "Order" WHERE order_id = '{order_to_delete['order_id']}';
-                       ''')
-        cursor.execute(f'''
-                       DELETE FROM OrderMenu WHERE order_id = '{order_to_delete['order_id']}';
+                       DELETE FROM OrderMenu WHERE order_id = '{order_id}';
+                       DELETE FROM stafforder WHERE order_id = '{order_id}';
+                       DELETE FROM "Order" WHERE order_id = '{order_id}';
                        ''')
         message = {
             "message" : "Order has been successfully deleted."
@@ -178,7 +180,7 @@ def change_order_status():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    order_to_change = request.json(force = True)
+    order_to_change = request.get_json(force = True)
     order_id = order_to_change['order_id']
     status_change = order_to_change['status']
 
@@ -250,3 +252,37 @@ def fetch_customer_order():
                  'time_ordered': order[3],
                  'is_paid': order[4]})
     return jsonify(out), 200
+
+@order_bp.route('/api/fetch_table_waiter_order', methods=['GET'])
+def fetch_table_staff_order():
+    """
+    An API endpoint to fetch the customer, waiter, and order information associated with a table number.
+    
+    For the customer, this route fetches their full name and table number.
+    For the waiter, it fetches their full name and staff ID.
+    For the order, it fetches the order_id, is_paid attribute, status, and time ordered.
+
+    Returns:
+        This information as JSON and an HTTP code.
+    """
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Fetch order customer and waiter information
+    cursor.execute("""
+                   SELECT c.customer_id, c.first_name AS customer_first_name, c.last_name AS customer_last_name, 
+                          c.table_number, o.status, o.time_ordered, o.order_id, o.is_paid, s.staff_id, 
+                          s.first_name AS waiter_first_name, s.last_name AS waiter_last_name
+                   FROM Customer c
+                   JOIN "Order" o ON c.customer_id = o.customer_id
+                   JOIN StaffOrder so ON o.order_id = so.order_id
+                   JOIN Staff s ON so.staff_id = s.staff_id
+                   WHERE c.table_number != -1
+                   """)
+    data = cursor.fetchall()
+    # Convert fetched data to a list of dictionaries for processing
+    data_dicts = [{'customer_full_name': row[1] + ' ' + row[2], 'table_number': row[3],
+                  'status': row[4], 'time_ordered': row[5], 'order_id': row[6], 'is_paid': row[7],
+                  'staff_id': row[8], 'waiter_full_name': f"{row[9]} {row[10]}"}
+                  for row in data]
+    
+    return jsonify(data_dicts), 200
