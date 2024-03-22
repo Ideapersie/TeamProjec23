@@ -21,6 +21,7 @@ export default function Cart(props: Props) {
     const [orderedItems, setOrderedItems] = useState<BrowserCartObject | null | undefined>(undefined);
     const [showPopup, setShowPopup] = useState(false);
 
+    
     // On initial browser load...
     useEffect(() => {
         let cartItems = handleRetrieveFromCart(); // Get items in cart

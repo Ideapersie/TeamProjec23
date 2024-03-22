@@ -5,6 +5,7 @@ import styles from "./[id].module.css";
 import Link from "next/link";
 import { useState } from "react";
 import {CartButton} from "@/components/cart-button";
+import { CustomerMenuItem } from "@/components/menu/customer/CustomerMenuItem";
 
 /**
  * Adds to menu item type to mirror response from api.
@@ -154,25 +155,24 @@ export default function ItemPage(props: PageProps) {
                 <br></br>
                 <br></br>
                 <div>
-                    <h1 className = {"text-center font-semibold "}> Related Food Items: {props.data.type}</h1>
-
-                    <div className= "grid grid-cols-2 gap-6 ">
-                        {props.data.related.map((related,index) => (
-                            <div key={index} className = "grid grid-rows-2 text-center tracking-wide rounded-xl bg-white shadow-lg">
-                                {/* Makes the image centered */}
-                                <div className="flex justify-center items-center"> 
-                                {/* Clicking on the image, sends user to that item */}
-                                    <Link href={`/menu/view/${related.menuitem_id}`}>
-                                        <img src={related.image} width="400" height="400"/>
-                                    </Link>
-                                </div>
-                                <div className="flex flex-col justify-center items-center">
-                                    <h2 className = "text-xl font-semibold">{related.name}</h2>
-                                        <p>{ "£" + related.price}</p>
-                                        <p>{related.calories + " Cal"}</p>
-                                </div>
+                    <h1 className = {"text-lg text-center text-wahaca-navy"}> Related Food Items : 
+                        <span className = {"text-xl font-semibold text-wahaca-pink tracking-wider"}> {props.data.type}</span>
+                    </h1>
+                    
+                    {/*Displaying menu items*/}
+                    <div className={"grid grid-cols-3 gap-10"}>
+                        {props?.data?.related?.length ?
+                            props.data.related.slice().reverse().map(item => (
+                                <CustomerMenuItem
+                                    key={item.menuitem_id}
+                                    data={item}
+                                />
+                            ))
+                            :
+                            <div className={"bg-white shadow rounded-lg px-3 py-2 text-mg text-wahaca-navy font-bold"}>
+                                No items for this food type
                             </div>
-                        ))}
+                        }
                     </div>
                 </div>
             </div>
