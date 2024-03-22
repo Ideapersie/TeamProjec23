@@ -86,7 +86,7 @@ export default function ItemPage(props: PageProps) {
 
             <div className={"min-h-screen flex-col"}>
                 <div className={"flex gap-8 pb-8"}>
-                    <div className={"mt-5 mb-5 p-10 rounded-xl bg-white shadow-lg"} style={{height: 500, width: 600}}>
+                    <div className={"mb-5 p-5 rounded-xl bg-white shadow-lg"} style={{height: 450, width: 600}}>
                         <div style={{
                             height: "100%",
                             width: "100%",
