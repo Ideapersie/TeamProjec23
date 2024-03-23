@@ -22,15 +22,6 @@ class NoSessionError(Exception):
     """Raised when a valid session cookie is required but not found"""
 
 
-def logout() -> Response:
-    """Logs the current user out by deleting session cookie"""
-    res = make_response(jsonify({
-        'message': 'User logged out'
-    }))
-    res.delete_cookie('session')
-    return res
-
-
 class AuthSession:
     """A class for interacting with an open auth session"""
 
@@ -47,6 +38,14 @@ class AuthSession:
     def get_session_type(self) -> str:
         """Returns session type i.e. staff or customer"""
         return self.get_cookie()['session_type']
+
+    def is_staff_session(self) -> bool:
+        """Returns true if session type is staff"""
+        return self.get_session_type() == 'staff'
+
+    def is_customer_session(self) -> bool:
+        """Returns true if session type is customer"""
+        return self.get_session_type() == 'customer'
 
     def get_user(self) -> dict:
         """Returns dictionary contain all user info"""
