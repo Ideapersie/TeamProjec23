@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
 from test.test_urllib2 import add_ordered_mock_handlers
 from auth.authentication import customer_waiters
+import datetime
 
 notification_bp = Blueprint('notification', __name__)
 
@@ -71,10 +72,10 @@ def order_ready():
     try:
         order_id = request.json(force = True)
         
-        #use order id to get customer id
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        #use order id to get customer id
         cursor.execute(f'SELECT customer_id FROM "Order" WHERE order_id = {order_id}')
         cust_id = cursor.fetchall()
         
@@ -82,13 +83,29 @@ def order_ready():
         cursor.close()
         conn.close()
         
-        #finding staff_id to send the notification to
+        #finding staff_id assigned to the customer id
+        staff_id = None
         for staff, cust_list in customer_waiters.items():
             for id in cust_list:
                 if id == cust_id:
-                    staff_id = id
+                    staff_id = staff
         
-        message = f'Order {order_id} is ready to be delivered'
+        if staff_id is None:
+            return jsonify("No staff id was found"), 500
+        
+        #write message
+        message = f'Order {order_id} is ready to be delivered.'
+        
+        #compile notification data
+        notification = {
+            'staff_id': staff_id,
+            'message': message,
+            'time_sent': datetime.datetime.now()
+            }
+        
+        add_notification(notification)
+        
+        return jsonify("Notification has been sent."), 200
     
     except Exception as e:  #database could not be reached
         return jsonify("Something went wrong."), 500
