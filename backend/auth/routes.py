@@ -223,18 +223,17 @@ def login():
         return jsonify({'message': 'Email or password is invalid.'}), 401
     
 @auth_bp.route('/api/auth/logout', methods=['POST'])
+@auth_bp.route('/api/auth/logout')
 def logout():
     """
-    Logs the user out by deleting any cookies associated to the user.
+    Logs the user out by deleting any cookies associated to the user. On logout, information is also removed from the
+    customer_waiters and occupied_tables data structures.
 
-    These cookies are deleted by setting the expiration time to 0.
-    On logout, information is also removed from the customer_waiters and occupied_tables data structures.
     Returns:
         A JSON response and a HTTP code.
     """
-    # Fetch id cookies associated to user
-    customer_id = request.cookies.get('customer_id', 'None')
-    staff_id = request.cookies.get('staff_id', 'None')
+    return session_logout()
+
 
     # Remove any user presence in the customer_waiters and occupied_tables data structures
     if customer_id != 'None':
