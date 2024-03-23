@@ -7,7 +7,6 @@ from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
 from test.test_urllib2 import add_ordered_mock_handlers
 from auth.authentication import customer_waiters
-import datetime
 
 notification_bp = Blueprint('notification', __name__)
 
