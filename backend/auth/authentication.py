@@ -4,16 +4,17 @@ Auxiliary methods used in authentication routes.
 The module is concerned with token generation for sign-up and log-in.
 It also provides a method for sending sign-up invites to staff members using SendGrid.
 """
+import json
 from secrets import token_hex
+
+from flask import request
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from flask import request
-from menu.connection import get_db_connection
-import json
 
-customer_waiters = { # Dictionary to track which waiters can be assigned to customers
-}
+from menu.connection import get_db_connection
+
+customer_waiters = {} # Dictionary to track which waiters can be assigned to customers
 occupied_tables = set() # Set to track all occupied tables
 
 secret_key = token_hex(24) # Secret key used for signing tokens
@@ -51,7 +52,6 @@ def validate_signup_token(token, secret_key, salt='signup-salt'):
         SignatureExpired: If the token has expired.
     """
     serializer = URLSafeTimedSerializer(secret_key)
-
     try:
         serializer.loads(token, salt=salt, max_age=1800)
         return True
@@ -59,7 +59,7 @@ def validate_signup_token(token, secret_key, salt='signup-salt'):
         print('Token is invalid/expired.')
         return False
 
-def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'): # Adjust when the frontend page is created
+def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'):
     """
     Sends an sign-up invite through email to the specified email address.
 
@@ -75,8 +75,8 @@ def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'): # A
     Raises:
         Exception: If there is an error sending the email.
     """
+    # Define information to send in the message
     signup_link = f'{base_url}?token={token}'
-
     message = Mail(
         from_email='farrows-strewn-04@icloud.com',
         to_emails=email,
@@ -84,11 +84,12 @@ def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'): # A
         html_content=f'Please click on the link to complete your sign-up: <a href="{signup_link}">Sign Up</a>'
     )
 
+    # Send the message via SendGrid
     try:
         sg = SendGridAPIClient('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') # SendGrid API key
         sg.send(message)
     except Exception as e:
-        print(f'An error occured trying to send a SendGrid request: {e.message}')
+        print(f'ERROR: COULD NOT SEND VIA SENDGRID: {e.message}')
 
 def generate_customer_token(email, secret_key, salt='customer-salt', expiration=3600):
     """
@@ -213,8 +214,6 @@ def validate_admin_token(token, secret_key, salt='admin-salt'):
     except (BadSignature, SignatureExpired):
         return False
     
-# Protection methods
-    
 def protect_customer():
     """
     Integrated in routes to check whether the user has permission to access the route.
@@ -264,7 +263,7 @@ def fetch_user_info(type, id):
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Fetch waiter or kitchen information and format as JSON
+    # Fetch waiter or kitchen information and encode as JSON if user is a waiter or kitchen staff
     if type == 'Waiter' or type == 'Kitchen':
         cursor.execute("""
                     SELECT email, admin, first_name, last_name
@@ -272,7 +271,6 @@ def fetch_user_info(type, id):
                     WHERE staff_id = %s
                     """, (id,))
         data = cursor.fetchone()
-
         user_data = {
             'role': type,
             'is_admin': data[1],
@@ -284,7 +282,8 @@ def fetch_user_info(type, id):
             }
         }
         user_data_str = json.dumps(user_data)
-    # Fetch customer information and format as JSON
+
+    # Else fetch customer information and encode as JSON
     else:
         cursor.execute("""
                     SELECT email, first_name, last_name
@@ -305,4 +304,5 @@ def fetch_user_info(type, id):
         user_data_str = json.dumps(user_data)
     cursor.close()
     conn.close()
+
     return user_data_str

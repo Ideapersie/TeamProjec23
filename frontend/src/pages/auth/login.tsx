@@ -27,7 +27,7 @@ export default function LoginPage() {
 
         console.log("Payload:", payload);
 
-        const res = await fetch("/api/login", {
+        const res = await fetch("/api/auth/login", {
             method: 'POST',
             body: JSON.stringify(payload)
         });

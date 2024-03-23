@@ -28,7 +28,7 @@ export default function InvitePage() {
             email: formData.get("input-email")
         }
 
-        const res = await fetch("/api/invite", {
+        const res = await fetch("/api/auth/invite", {
             method: 'POST',
             body: JSON.stringify(payload)
         });

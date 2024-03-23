@@ -39,13 +39,13 @@ export default function SignupPage() {
             return;
         }
 
-        const res = await fetch("/api/signup", {
+        const res = await fetch("/api/auth/signup", {
             method: 'POST',
             body: JSON.stringify(payload)
         });
 
         if (res.status === 201) {
-            const res = await fetch("/api/login", {
+            const res = await fetch("/api/auth/login", {
                 method: 'POST',
                 body: JSON.stringify({
                     email: payload.email,
