@@ -8,6 +8,8 @@ The app defines the following endpoints:
     /api/auth/logout (POST): Logs a user out by deleting their cookies.
 """
 import random
+from datetime import datetime
+
 import jwt
 
 from flask import Blueprint, request, jsonify, abort, make_response
@@ -21,6 +23,8 @@ from auth.authentication import (
 )
 from menu.connection import get_db_connection
 from backend.resources import config
+from backend.auth.session import get_session
+from backend.auth.session import logout as session_logout
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -213,16 +217,15 @@ def login():
                 encoded_user_info = jwt.encode(user_info, config.JWT_SECRET, algorithm='HS256')
                 response.set_cookie('user_info', encoded_user_info, httponly=False, secure=True)
 
-            return response
-        
-        else:
-            print('ERROR: INVALID EMAIL/PASSWORD')
-            return jsonify({'message': 'Email or password is invalid.'}), 401
-    else:
-        print('ERROR: INVALID EMAIL/PASSWORD')
-        return jsonify({'message': 'Email or password is invalid.'}), 401
-    
-@auth_bp.route('/api/auth/logout', methods=['POST'])
+        return response
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'An error occurred'
+        }), 500
+
+
 @auth_bp.route('/api/auth/logout')
 def logout():
     """
@@ -235,40 +238,26 @@ def logout():
     return session_logout()
 
 
-    # Remove any user presence in the customer_waiters and occupied_tables data structures
-    if customer_id != 'None':
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-                       SELECT table_number
-                       FROM Customer
-                       WHERE customer_id = %s
-                       """, (customer_id,))
-        table_record = cursor.fetchone()
-        table_to_free = int(table_record[0])
-        occupied_tables.remove(table_to_free)
-        print(f'OCCUPIED TABLES: {occupied_tables}') # Debug
-        for key in customer_waiters:
-            if int(customer_id) in customer_waiters[key]:
-                customer_waiters[key].remove(int(customer_id))
-        print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
-        cursor.execute("""
-                       UPDATE Customer
-                       SET table_number = '-1'
-                       WHERE customer_id = %s
-                       """, (customer_id,))
-        conn.commit()
-        cursor.close()
-        conn.close()
-    elif staff_id != 'None':
-        del customer_waiters[f'{staff_id}']
-        print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
+@auth_bp.route('/api/auth/session')
+def current_session():
+    """Returns the current session"""
+    try:
+        session = get_session()  # Returns AuthSession (or None if user not logged in)
 
-    # Delete cookies by forcefully expiring them
-    print('SUCCESS: USER LOGGED OUT')
-    response = make_response(jsonify({'message': 'Logged out successfully'}), 200)
-    response.set_cookie('customer_id', '', expires=0, httponly=False, secure=True)
-    response.set_cookie('staff_id', '', expires=0, httponly=False, secure=True)
-    response.set_cookie('token', '', expires=0, httponly=False, secure=True)
+        # If user not logged in...
+        if session is None:
+            return jsonify({
+                'message': 'No session found'
+            }), 401
 
-    return response
+        # Otherwise return their decoded session
+        return jsonify({
+            'message': 'Fetched user session',
+            'session': session.get_cookie()
+        }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
