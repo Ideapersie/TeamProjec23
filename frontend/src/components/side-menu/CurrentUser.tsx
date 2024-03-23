@@ -21,7 +21,7 @@ export default function CurrentUser() {
     }, []);
 
     async function handleLogout() {
-        const res = await fetch('/api/logout', {
+        const res = await fetch('/api/auth/logout', {
             method: "POST"
         });
 
