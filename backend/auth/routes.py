@@ -1,17 +1,9 @@
 """
 A Flask blueprint defining API routes for authentication.
-
-The app defines the following endpoints:
-    /api/auth/invite (POST): Sends a staff sign-up invititation to an email address.
-    /api/auth/signup (POST): Creates either a customer account, or staff account if a token is given.
-    /api/auth/login (POST): Confirms whether email/password are authentic and sets cookies.
-    /api/auth/logout (POST): Logs a user out by deleting their cookies.
 """
-import json
 import random
 
 from flask import Blueprint, jsonify, abort, make_response, request
-import psycopg2
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from auth.authentication import (
@@ -28,11 +20,11 @@ def invite():
     """
     Sends a staff sign-up invitation to the specified email address.
 
-    The email is a link to the sign-up page containing a token embedding which authorises the user to sign-up as staff.
-    The route expects a JSON payload containing the email address of the user.
+    The email is a link to the sign-up page containing a token embedding which authorises
+    the user to sign-up as staff.
 
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
     """
     # Fetch and set info to go into the SendGrid request
     data = request.get_json(force=True)
@@ -51,11 +43,11 @@ def signup():
     """
     Registers a user account, which can be either a customer or a staff user.
 
-    This route expects a JSON payload containing the email, password, first_name, last_name, and optionally the token of the user to add.
-    A customer is registered if a token is not provided i.e. customers don't require sign-up authentication.
+    A customer is registered if a token is not provided i.e. customers don't require sign-up
+    authentication.
 
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
 
     Raises:
         KeyError: If the token is not provided.
@@ -107,11 +99,11 @@ def login():
     """
     Confirms whether email/password are authentic.
 
-    If email/password are authentic, cookies are set includng a type token, user information, and user id.
-    This type token cookie can be used to deny a user access to some routes.
+    If email/password are authentic, cookies are set includng a type token,user information,
+    and user id.
 
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
     """
     # Fetch email and password from the request payload
     data = request.get_json(force=True)
@@ -220,10 +212,11 @@ def logout():
     """
     Logs the user out by deleting any cookies associated to the user.
 
-    These cookies are deleted by setting the expiration time to 0.
-    On logout, information is also removed from the customer_waiters and occupied_tables data structures.
+    On logout, information is also removed from the customer_waiters and occupied_tables
+    data structures.
+
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
     """
     # Fetch id cookies associated to user
     customer_id = request.cookies.get('customer_id', 'None')

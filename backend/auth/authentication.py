@@ -19,18 +19,17 @@ occupied_tables = set() # Set to track all occupied tables
 
 secret_key = token_hex(24) # Secret key used for signing tokens
 
-def generate_signup_token(email, secret_key, salt='signup-salt', expiration=1800):
+def generate_signup_token(email, secret_key, salt='signup-salt'):
     """
     Generates a sign-up token for the given email address using the provided secret key.
 
     Args:
-        email: The email address for which the sign-up token is generated for.
-        secret_key: The secret key used to sign the token.
-        salt: A value used to add additional security to the token, defaults to 'signup-salt'.
-        expiration: The expiration time of the token in seconds, defaults to 1800 (30 minutes).
+        email (str): The email address for which the sign-up token is generated for.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): A value used to add additional security to the token, defaults to 'signup-salt'.
 
     Returns:
-        The generated sign-up token.
+        str: The generated sign-up token.
     """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
@@ -40,12 +39,12 @@ def validate_signup_token(token, secret_key, salt='signup-salt'):
     Validates a sign-up token by checking if it has been tampered with or expired.
 
     Args:
-        token: The sign-up token to validate.
-        secret_key: The secret key used to sign the token.
-        salt: The salt used in the token signing process, defaults to 'signup-salt'.
+        token (str): The sign-up token to validate.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): The salt used in the token signing process, defaults to 'signup-salt'.
 
     Returns:
-        True if the token is valid, false otherwise.
+        bool: True if the token is valid, false otherwise.
 
     Raises:
         BadSignature: If the token has been tampered with.
@@ -63,14 +62,14 @@ def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'):
     """
     Sends an sign-up invite through email to the specified email address.
 
-    This is specifically used for sending sign-up invites to staff members.
-    On clicking the link, the user will be redirected to the sign-up page.
-    If a customer was to access this page, they would fail to register an account as they do not hold the token.
+    On clicking the link in the email, the user will be redirected to the sign-up page.
+    If a customer was to access this page, they would fail to register an account as they
+    do not hold the token.
     
     Args:
-        email: The recipient's email address.
-        token: The token used for authentication.
-        base_url: Where the user is redirected to after clicking the email link.
+        email (str): The recipient's email address.
+        token (str): The token used for authentication.
+        base_url (str, optional): Where the user is redirected to after clicking the email link.
 
     Raises:
         Exception: If there is an error sending the email.
@@ -91,20 +90,19 @@ def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'):
     except Exception as e:
         print(f'ERROR: COULD NOT SEND VIA SENDGRID: {e.message}')
 
-def generate_customer_token(email, secret_key, salt='customer-salt', expiration=3600):
+def generate_customer_token(email, secret_key, salt='customer-salt'):
     """
     Generates a session token for a customer user with a dedicated salt.
 
     The salt will be used in authenticating whether the session token decrypts to a customer.
 
     Args:
-        email: The email address for which the session token is generated for.
-        secret_key: The secret key used to sign the token.
-        salt: Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'customer-salt'.
-        expiration: The expiration time of the token in seconds, defaults to 3600 (60 minutes).
+        email (str): The email address for which the session token is generated for.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'customer-salt'.
 
     Returns:
-        The generated session token.
+        str: The generated session token.
     """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
@@ -114,12 +112,12 @@ def validate_customer_token(token, secret_key, salt='customer-salt'):
     Validates a session token by checking if it was generated for a customer.
 
     Args:
-        token: The session token to validate.
-        secret_key: The secret key used to sign the token.
-        salt: The salt used in the token signing process, defaults to 'customer-salt'.
+        token (str): The session token to validate.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): The salt used in the token signing process, defaults to 'customer-salt'.
 
     Returns:
-        True if the token is valid, false otherwise.
+        bool: True if the token is valid, false otherwise.
 
     Raises:
         BadSignature: If the token has been tampered with.
@@ -132,20 +130,19 @@ def validate_customer_token(token, secret_key, salt='customer-salt'):
     except (BadSignature, SignatureExpired):
         return False
     
-def generate_staff_token(email, secret_key, salt='staff-salt', expiration=3600):
+def generate_staff_token(email, secret_key, salt='staff-salt'):
     """
     Generates a session token for a staff user with a dedicated salt.
 
     The salt will be used in authenticating whether the session token decrypts to a staff.
 
     Args:
-        email: The email address for which the session token is generated for.
-        secret_key: The secret key used to sign the token.
-        salt: Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'staff-salt'.
-        expiration: The expiration time of the token in seconds, defaults to 3600 (60 minutes).
+        email (str): The email address for which the session token is generated for.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'staff-salt'.
 
     Returns:
-        The generated session token.
+        str: The generated session token.
     """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
@@ -155,12 +152,12 @@ def validate_staff_token(token, secret_key, salt='staff-salt'):
     Validates a session token by checking if it was generated for a staff.
 
     Args:
-        token: The session token to validate.
-        secret_key: The secret key used to sign the token.
-        salt: The salt used in the token signing process, defaults to 'staff-salt'.
+        token (str): The session token to validate.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): The salt used in the token signing process, defaults to 'staff-salt'.
 
     Returns:
-        True if the token is valid, false otherwise.
+        bool: True if the token is valid, false otherwise.
 
     Raises:
         BadSignature: If the token has been tampered with.
@@ -173,20 +170,19 @@ def validate_staff_token(token, secret_key, salt='staff-salt'):
     except (BadSignature, SignatureExpired):
         return False
     
-def generate_admin_token(email, secret_key, salt='admin-salt', expiration=3600):
+def generate_admin_token(email, secret_key, salt='admin-salt'):
     """
     Generates a session token for an admin user with a dedicated salt.
 
     The salt will be used in authenticating whether the session token decrypts to an admin.
 
     Args:
-        email: The email address for which the session token is generated for.
-        secret_key: The secret key used to sign the token.
-        salt: Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'admin-salt'.
-        expiration: The expiration time of the token in seconds, defaults to 3600 (60 minutes).
+        email (str): The email address for which the session token is generated for.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): Ensures that an token generated with a specific salt can only be decrypted using that same salt, defaults to 'admin-salt'.
 
     Returns:
-        The generated session token.
+        str: The generated session token.
     """
     serializer = URLSafeTimedSerializer(secret_key)
     return serializer.dumps(email, salt=salt)
@@ -196,12 +192,12 @@ def validate_admin_token(token, secret_key, salt='admin-salt'):
     Validates a session token by checking if it was generated for an admin.
 
     Args:
-        token: The session token to validate.
-        secret_key: The secret key used to sign the token.
-        salt: The salt used in the token signing process, defaults to 'admin-salt'.
+        token (str): The session token to validate.
+        secret_key (str): The secret key used to sign the token.
+        salt (str, optional): The salt used in the token signing process, defaults to 'admin-salt'.
 
     Returns:
-        True if the token is valid, false otherwise.
+        bool: True if the token is valid, false otherwise.
 
     Raises:
         BadSignature: If the token has been tampered with.
@@ -218,11 +214,10 @@ def protect_customer():
     """
     Integrated in routes to check whether the user has permission to access the route.
 
-    The user accessing this route must have a cookie associated with them.
-    The user is authorised if they are either an admin or a staff.
+    The user is authorised if they are either an admin or a staff (determined by cookie).
 
     Returns:
-        True if user is authorised, False otherwise.
+        bool: True if user is authorised, False otherwise.
     """
     if not request.cookies.get('token'):
         return False
@@ -235,11 +230,10 @@ def protect_customer_staff():
     """
     Integrated in routes to check whether the user has permission to access the route.
 
-    The user accessing this route must have a cookie associated with them.
-    The user is authorised if they are an admin.
+    The user is authorised if they are an admin (determined by cookie).
 
     Returns:
-        True if user is authorised, False otherwise.
+        bool: True if user is authorised, False otherwise.
     """
     if not request.cookies.get('token'):
         return False
@@ -255,11 +249,11 @@ def fetch_user_info(type, id):
     This can be decoded in frontend to preserve the original format the JSON was encoded with.
 
     Args:
-        type: The type of user e.g. waiter, kitchen, or customer.
-        id: the id of the user in their respective database table.
+        type (str): The type of user e.g. waiter, kitchen, or customer.
+        id (int): the id of the user in their respective database table.
 
     Returns:
-        A JSON encoded object representing the user information.
+        str: A JSON encoded object representing the user information.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
