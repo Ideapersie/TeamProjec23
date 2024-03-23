@@ -164,6 +164,9 @@ def login():
         if check_password_hash(password_hash, password):
             response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
             response.set_cookie('token', token, httponly=False, secure=True)
+
+            user_info = None
+
             # Map customers to waiters on login
             # Set appropriate cookies for staff and customer users
             if type == 'staff':
@@ -206,8 +209,9 @@ def login():
                 response.set_cookie('customer_id', f'{customer_id}', httponly=False, secure=True)
                 user_info = fetch_user_info('Customer', customer_id)
 
-            encoded_user_info = jwt.encode(user_info, config.JWT_SECRET, algorithm='HS256')
-            response.set_cookie('user_info', encoded_user_info, httponly=False, secure=True)
+            if user_info:
+                encoded_user_info = jwt.encode(user_info, config.JWT_SECRET, algorithm='HS256')
+                response.set_cookie('user_info', encoded_user_info, httponly=False, secure=True)
 
             return response
         
