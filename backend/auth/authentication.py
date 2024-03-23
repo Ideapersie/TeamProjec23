@@ -257,7 +257,8 @@ def fetch_user_info(type, id):
     """
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Fetch waiter or kitchen information and encode as JSON if user is a waiter or kitchen staff
+
+    # Fetch waiter or kitchen information and format as JSON
     if type == 'Waiter' or type == 'Kitchen':
         cursor.execute("""
                     SELECT email, admin, first_name, last_name
@@ -275,7 +276,6 @@ def fetch_user_info(type, id):
                 'email': data[0]
             }
         }
-        user_data_str = json.dumps(user_data)
 
     # Else fetch customer information and encode as JSON
     else:
@@ -295,8 +295,7 @@ def fetch_user_info(type, id):
                 'email': data[0]
             }
         }
-        user_data_str = json.dumps(user_data)
     cursor.close()
     conn.close()
 
-    return user_data_str
+    return user_data

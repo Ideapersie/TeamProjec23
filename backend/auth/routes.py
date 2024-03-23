@@ -2,6 +2,7 @@
 A Flask blueprint defining API routes for authentication.
 """
 import random
+import jwt
 
 from flask import Blueprint, jsonify, abort, make_response, request
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -12,6 +13,7 @@ from auth.authentication import (
     customer_waiters, occupied_tables, secret_key
 )
 from menu.connection import get_db_connection
+from backend.resources import config
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -155,6 +157,9 @@ def login():
         if check_password_hash(password_hash, password):
             response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
             response.set_cookie('token', token, httponly=False, secure=True)
+
+            user_info = None
+
             # Map customers to waiters on login
             # Set appropriate cookies for staff and customer users
             if type == 'staff':
@@ -162,7 +167,7 @@ def login():
                 print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
                 response.set_cookie('staff_id', f'{staff_id}', httponly=False, secure=True)
                 user_info = fetch_user_info('Waiter', staff_id)
-                response.set_cookie('user_info', f'{user_info}', httponly=False, secure=True)
+
             # Add customer to a table on login
             elif type == 'customer':
                 try:
@@ -196,8 +201,11 @@ def login():
                 
                 response.set_cookie('customer_id', f'{customer_id}', httponly=False, secure=True)
                 user_info = fetch_user_info('Customer', customer_id)
-                response.set_cookie('user_info', f'{user_info}', httponly=False, secure=True)
-            
+
+            if user_info:
+                encoded_user_info = jwt.encode(user_info, config.JWT_SECRET, algorithm='HS256')
+                response.set_cookie('user_info', encoded_user_info, httponly=False, secure=True)
+
             return response
         
         else:

@@ -1,20 +1,20 @@
 import UserProfileIcon from "@/components/common/icons/UserCircle";
-import {WavesWebShape} from "@/components/common/webshapes/Waves";
 import React, {useEffect, useState} from "react";
-import {Session} from "@/components/auth/session";
 import {useRouter} from "next/router";
+import {AuthSessionResponse, SessionJWT} from "@/pages/api/auth/session";
+import Link from "next/link";
 
 /**
  * A component that displays the user currently logged in
  */
 export default function CurrentUser() {
 
-    const [session, setSession] = useState<Session | undefined | null>(undefined);
+    const [session, setSession] = useState<SessionJWT | undefined | null>(undefined);
     const router = useRouter();
 
     useEffect(() => {
         fetch('/api/auth/session')
-            .then(res => res.json())
+            .then(res => res.json() as Promise<AuthSessionResponse>)
             .then(data => {
                 setSession(data.session);
             });
@@ -31,20 +31,40 @@ export default function CurrentUser() {
     }
 
     return (
-        <div className={"bg-wahaca-teal px-5 py-3 h-16 text-sm mt-auto fill-white text-sky-100 flex gap-2 items-center current-user-bg relative"}
+        <div className={"bg-wahaca-blue px-5 py-3 h-16 text-sm mt-auto fill-white text-sky-100 flex gap-3 items-center current-user-bg relative"}
              role={"button"}
              onClick={handleLogout}>
-            <UserProfileIcon />
+            <div className={`relative flex flex-col items-center ${session ? "-mt-1" : ""}`}>
+                <UserProfileIcon/>
+                {
+                    session &&
+                        <span className={"absolute bottom-0 -mb-3"}>
+                            <span className={"bg-wahaca-yellow text-wahaca-navy font-bold rounded"}
+                                  style={{fontSize: "0.6rem", padding: "1px 3px"}}>
+                                {session?.role}
+                            </span>
+                        </span>
+                }
+            </div>
 
             {session === undefined ?
                 <span>Loading...</span>
                 : session === null ?
-                    <span>No session</span>
+                    <div className={"flex flex-col"}>
+                        <span className={"text-white font-bold"}>No session</span>
+                        <Link href={"/auth/login"}
+                              className={"text-xs text-wahaca-light-blue"}
+                            >
+                            Log in
+                        </Link>
+                    </div>
                     :
                     <span>
-                        <strong className={"text-white font-l"}>{session.firstName} {session.lastName}</strong>
-                        <div className={"text-xs text-white"}>
-                            {session.email}
+                        <div className={"text-wahaca-white font-bold flex gap-2 items-center"}>
+                            <span>{session.profile.first_name} {session.profile.last_name}</span>
+                        </div>
+                        <div className={"text-xs text-wahaca-light-blue"}>
+                            {session.profile.email}
                         </div>
                     </span>
             }
