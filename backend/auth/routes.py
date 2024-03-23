@@ -107,115 +107,150 @@ def signup():
         else:
             return jsonify("An error occurred"), 500
 
-@auth_bp.route('/api/auth/login', methods=['POST'])
-def login():
+
+@auth_bp.route('/api/auth/<string:mode>/login', methods=['POST'])
+def login(mode: str):
     """
     Confirms whether email/password are authentic.
 
-    If email/password are authentic, cookies are set includng a type token, user information, and user id.
+    If email/password are authentic, cookies are set including a type token, user information, and user id.
     This type token cookie can be used to deny a user access to some routes.
 
     Returns:
         A JSON response and a HTTP code.
     """
-    # Fetch email and password from the request payload
-    data = request.get_json(force=True)
-    email = data['email']
-    password = data['password']
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    # Generate type tokens for admin and staff users
     try:
-        cursor.execute("""
-                       SELECT *
-                       FROM Staff
-                       WHERE email = %s
-                       """, (email,))
-        data = cursor.fetchall()
-        staff_id = data[0][0]
-        password_hash = data[0][2]
-        admin = data[0][3]
-        if admin:
-            type = 'admin'
-            token = generate_admin_token(email, secret_key)
+        # Check valid login mode specified i.e. customer or staff
+        if mode not in ['customer', 'staff']:
+            return jsonify({
+                'message': 'Invalid mode specified. Please use either /api/auth/customer/login or /api/auth/staff/login'
+            }), 400
+
+        # Fetch email and password from the request payload
+        data = request.get_json(force=True)
+        email = data['email']
+        password = data['password']
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Create session object
+        session = {
+            "last_login": datetime.now().timestamp(),
+            "session_type": mode,
+            "user": {}
+        }
+
+        # Staff login -----------------------------------------------------------------------------
+        if mode == 'staff':
+            # Get staff data from database
+            cursor.execute("""
+                SELECT staff_id, first_name, last_name, email, password, role, admin
+                FROM Staff
+                WHERE email = %s
+            """, (email,))
+
+            staff_data = cursor.fetchone()
+
+            # If no matching email found in staff table...
+            if staff_data is None:
+                return jsonify("No staff exists with that email"), 401
+
+            [staff_id, first_name, last_name, email, password_hash, role, admin] = staff_data
+
+            # If invalid password given
+            if not check_password_hash(password_hash, password):
+                return jsonify("Invalid password provided"), 401
+
+            # Add staff user data to session object
+            session['user']["id"] = staff_id
+            session['user']["role"] = role
+            session['user']["is_admin"] = admin
+            session['user']["first_name"] = first_name
+            session['user']["last_name"] = last_name
+            session['user']["email"] = email
+
+            # Add staff user to customer_waiters map
+            customer_waiters[staff_id] = []
+
+        # Customer login --------------------------------------------------------------------------
         else:
-            type = 'staff'
-            token = generate_staff_token(email, secret_key)
+            # Get customer data from database
+            cursor.execute("""
+                SELECT customer_id, first_name, last_name, email, password, table_number
+                FROM customer
+                WHERE email = %s
+            """, (email,))
 
-    # Generate type tokens for customers
-    except:
-        cursor.execute("""
-                       SELECT *
-                       FROM Customer
-                       WHERE email = %s
-                       """, (email,))
-        data = cursor.fetchall()
-        if data:
-            customer_id = data[0][0]
-            password_hash = data[0][2]
-            type = 'customer'
-            token = generate_customer_token(email, secret_key)
-        else:
-            return jsonify({'message': 'Something went wrong'}), 401
+            customer_data = cursor.fetchone()
 
-    cursor.close()
-    conn.close()
+            # If no matching email found in customer table...
+            if customer_data is None:
+                return jsonify("No customer exists with this email"), 401
 
-    # Confirm the password given by the user matches their decrypted password, and set cookies
-    if data:
-        if check_password_hash(password_hash, password):
-            response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
-            response.set_cookie('token', token, httponly=False, secure=True)
+            [customer_id, first_name, last_name, email, password_hash, table_number] = customer_data
 
-            user_info = None
+            if not check_password_hash(password_hash, password):
+                return jsonify("Invalid password provided"), 401
 
-            # Map customers to waiters on login
-            # Set appropriate cookies for staff and customer users
-            if type == 'staff':
-                customer_waiters.update({f'{staff_id}': []})
-                print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
-                response.set_cookie('staff_id', f'{staff_id}', httponly=False, secure=True)
-                user_info = fetch_user_info('Waiter', staff_id)
+            # Add customer user data to session object
+            session['user']["id"] = customer_id
+            session['user']["first_name"] = first_name
+            session['user']["last_name"] = last_name
+            session['user']["email"] = email
 
-            # Add customer to a table on login
-            elif type == 'customer':
-                try:
-                    least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
-                    customer_waiters[least_occupied_waiter].append(customer_id)
-                    print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
-                    conn = get_db_connection()
-                    cursor = conn.cursor()
-                    if len(occupied_tables) >= 25:
-                        print('ERROR: NO FREE TABLES')
-                        return jsonify({'message': 'There are currently no free tables'}), 409
+            # TODO: Look into this section
+            try:
+                least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
+                customer_waiters[least_occupied_waiter].append(customer_id)
+
+                print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
+
+                if len(occupied_tables) >= 25:
+                    print('ERROR: NO FREE TABLES')
+                    return jsonify({'message': 'There are currently no free tables'}), 409
+
+                unoccupied_table = random.randint(1, 25)
+                while unoccupied_table in occupied_tables:
                     unoccupied_table = random.randint(1, 25)
-                    while unoccupied_table in occupied_tables:
-                        unoccupied_table = random.randint(1, 25)
-                    occupied_tables.add(unoccupied_table)
-                    print(f'OCCUPIED TABLES: {occupied_tables}') # Debug
-                    cursor.execute("""
-                                   UPDATE Customer
-                                   SET table_number = %s
-                                   WHERE customer_id = %s
-                                   """, (unoccupied_table, customer_id))
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
 
-                # Handle case if no waiters are logged in (can't assign customer to waiter)
-                except Exception:
-                    print(f'ERROR: NO WAITERS ARE LOGGED IN, ' +
-                           'LOG INTO A WAITER ACCOUNT FIRST')
-                    return jsonify({'message': 'There are currently no waiters that are logged in'}), 400
-                
-                response.set_cookie('customer_id', f'{customer_id}', httponly=False, secure=True)
-                user_info = fetch_user_info('Customer', customer_id)
+                occupied_tables.add(unoccupied_table)
+                print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
 
-            if user_info:
-                encoded_user_info = jwt.encode(user_info, config.JWT_SECRET, algorithm='HS256')
-                response.set_cookie('user_info', encoded_user_info, httponly=False, secure=True)
+                conn = get_db_connection()
+                cursor = conn.cursor()
+                cursor.execute("""
+                               UPDATE Customer
+                               SET table_number = %s
+                               WHERE customer_id = %s
+                               """, (unoccupied_table, customer_id))
+
+                conn.commit()
+                cursor.close()
+                conn.close()
+
+            # Handle case if no waiters are logged in (can't assign customer to waiter)
+            except Exception as e:
+                print(e)
+                print(f'ERROR: NO WAITERS ARE LOGGED IN, ' +
+                      'LOG INTO A WAITER ACCOUNT FIRST')
+                return jsonify({'message': 'There are currently no waiters that are logged in'}), 400
+
+        # Encode session into JWT
+        encoded_user_info = jwt.encode(session, config.JWT_SECRET, algorithm='HS256')
+
+        # Preparing response
+        response = make_response(
+            jsonify({
+                'message': f'Logged into {email} successfully.',
+                'type': mode,
+                'session': session
+            }), 200
+        )
+
+        # Store JWT in browser as cookie
+        response.set_cookie('session', encoded_user_info, httponly=False, secure=True)
 
         return response
 
