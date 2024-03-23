@@ -5,6 +5,8 @@ The blueprint defines the following endpoints:
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
+from test.test_urllib2 import add_ordered_mock_handlers
+from auth.authentication import customer_waiters
 
 notification_bp = Blueprint('notification', __name__)
 
@@ -57,3 +59,36 @@ def add_notification():
     cursor.close()
     conn.close()
     return jsonify(message)
+
+@notification_bp.route('/api/orderReady')
+def order_ready():
+    """
+    An API endpoint to notify a waiter a specific customers order is ready
+
+    Returns:
+        A JSON statement indicating if a notification has been sent successfully.
+    """
+    try:
+        order_id = request.json(force = True)
+        
+        #use order id to get customer id
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute(f'SELECT customer_id FROM "Order" WHERE order_id = {order_id}')
+        cust_id = cursor.fetchall()
+        
+        #close connection
+        cursor.close()
+        conn.close()
+        
+        #finding staff_id to send the notification to
+        for staff, cust_list in customer_waiters.items():
+            for id in cust_list:
+                if id == cust_id:
+                    staff_id = id
+        
+        message = f'Order {order_id} is ready to be delivered'
+    
+    except Exception as e:  #database could not be reached
+        return jsonify("Something went wrong."), 500
