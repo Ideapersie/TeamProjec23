@@ -8,23 +8,15 @@ The app defines the following endpoints:
     /api/auth/logout (POST): Logs a user out by deleting their cookies.
 """
 import random
-from datetime import datetime
-
 import jwt
 
+from datetime import datetime
 from flask import Blueprint, request, jsonify, abort, make_response
-import psycopg2
 from werkzeug.security import check_password_hash, generate_password_hash
-
-from auth.authentication import (
-    generate_signup_token, validate_signup_token, generate_customer_token,
-    generate_staff_token, generate_admin_token, send_invite, fetch_user_info,
-    customer_waiters, occupied_tables, secret_key
-)
-from menu.connection import get_db_connection
+from backend.auth.authentication import generate_signup_token, validate_signup_token, send_invite, customer_waiters, occupied_tables, secret_key
+from backend.menu.connection import get_db_connection
 from backend.resources import config
-from backend.auth.session import get_session
-from backend.auth.session import logout as session_logout
+from backend.auth.session import get_session, AuthSession
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -270,7 +262,66 @@ def logout():
     Returns:
         A JSON response and a HTTP code.
     """
-    return session_logout()
+
+    try:
+        session = AuthSession()
+
+        # Customer
+        if session.is_customer_session():
+
+            customer_id = session.get_user_id()
+
+            conn = get_db_connection()
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT table_number
+                FROM Customer
+                WHERE customer_id = %s
+            """, (customer_id,))
+
+            table_record = cursor.fetchone()
+            table_to_free = int(table_record[0])
+            occupied_tables.remove(table_to_free)
+
+            for key in customer_waiters:
+                if int(customer_id) in customer_waiters[key]:
+                    customer_waiters[key].remove(int(customer_id))
+
+            cursor.execute("""
+                UPDATE Customer
+                SET table_number = '-1'
+                WHERE customer_id = %s
+            """, (customer_id,))
+
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+        # Staff logout
+        elif session.is_staff_session():
+            staff_id = session.get_user_id()
+            del customer_waiters[staff_id]
+
+        print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
+        print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
+
+        res = make_response(jsonify({
+            'message': 'User logged out',
+            'type': session.get_session_type()
+        }))
+
+        # Delete JWT session token cookie
+        res.delete_cookie('session')
+
+        return res
+
+    # Any unhandled exceptions
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': e
+        }), 500
 
 
 @auth_bp.route('/api/auth/session')
