@@ -6,6 +6,8 @@ The blueprint defines the following endpoints:
 - /api/addnotification (POST): Adds a notification to the database.
 - /api/deletenotification (POST): Deletes a notification from the database.
 """
+from datetime import datetime
+
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
 
@@ -38,28 +40,50 @@ def fetch_unseen_notification():
     conn.close()
     return jsonify(message)
 
+
 @notification_bp.route('/api/addnotification', methods=['POST'])
 def add_notification():
     """
     An API endpoint to add a notification to the database.
     """
-    notification = request.get_json(force = True)
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    staff_id = notification['staff_id']
-    message = notification['message']
-    time_sent = notification['time_sent']
+    try:
+        data = request.get_json(force=True)
 
-    cursor.execute(f'''INSERT INTO "Notification"(staff_id, message, seen, time_sent)
-                   VALUES ('{staff_id}', '{message}', 'false', '{time_sent}');''') #inserts the notification into the database
-    
-    message = {
-        'message' : 'Notification added.'
-    }
-    cursor.close()
-    conn.close()
-    return jsonify(message)
+        staff_id = data['staff_id']
+        message = data['message']
+        time_sent = datetime.now()
+
+        # Inserts the notification into the database
+        cursor.execute('''
+            INSERT INTO "Notification"(staff_id, message, seen, time_sent)
+            VALUES (%s, %s, %s, %s)
+            RETURNING notification_id
+        ''', (staff_id, message, False, time_sent))
+
+        notification_id = cursor.fetchone()[0]
+
+        conn.commit()  # Commit database changes
+
+        return jsonify({
+            'message': 'Notification added.',
+            'notification_id': notification_id
+        }), 200
+
+    # Any unhandled exceptions
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+
+    finally:
+        # Ensures connection is always closed, even if exception occurs
+        cursor.close()
+        conn.close()
 
 @notification_bp.route('/api/deletenotification', methods=['POST'])
 def delete_notification():
