@@ -6,6 +6,7 @@ import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilter
 import {env} from "../../../env.config";
 import PageTitle from "@/components/common/text/PageTitle";
 import {CartButton} from "@/components/cart-button";
+import { CallWaiterButton } from "@/components/call-button";
 
 
 // Declaring expected prop types
@@ -30,11 +31,7 @@ export default function ViewMenu(props: Props) {
                     <div className="flex-grow flex justify-center">
                         <PageTitle>MENU</PageTitle>
                     </div>
-                    <button
-                        className="bg-wahaca-blue hover:bg-wahaca-teal text-white font-bold py-2 px-4 rounded-lg transition-colors ease-in-out mr-4" 
-                        onClick={() => alert('The waiter has been called!')}>
-                        Call Waiter
-                    </button>
+                    <CallWaiterButton/>   
 
                     <CartButton/>
                 </div>
