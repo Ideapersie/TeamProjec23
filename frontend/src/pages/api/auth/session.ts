@@ -1,5 +1,5 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {userInfoCookieName} from "@/components/auth/helpers";
+import {sessionCookieName} from "@/components/auth/helpers";
 import jwt from 'jsonwebtoken';
 import {env} from "../../../../env.config";
 
@@ -7,10 +7,12 @@ import {env} from "../../../../env.config";
  * A type for the data stored in the decoded jwt session cookie.
  */
 export interface SessionJWT {
-    role: "Waiter" | "Kitchen" | "Customer";
-    is_admin: boolean,
-    profile: {
+    last_login: number,
+    session_type: "customer" | "staff",
+    user: {
         id: number,
+        role?: "Waiter" | "Kitchen";
+        is_admin?: boolean,
         first_name: string,
         last_name: string,
         email: string
@@ -45,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     // Get session jwt cookie
-    const cookieString = req.cookies[userInfoCookieName];
+    const cookieString = req.cookies[sessionCookieName];
 
     // If cookie not found...
     if (!cookieString) {

@@ -4,16 +4,13 @@ A Flask blueprint defining API routes for authentication.
 import random
 import jwt
 
-from flask import Blueprint, jsonify, abort, make_response, request
+from datetime import datetime
+from flask import Blueprint, request, jsonify, abort, make_response
 from werkzeug.security import check_password_hash, generate_password_hash
-
-from auth.authentication import (
-    generate_signup_token, validate_signup_token, generate_customer_token,
-    generate_staff_token, generate_admin_token, send_invite, fetch_user_info,
-    customer_waiters, occupied_tables, secret_key
-)
-from menu.connection import get_db_connection
+from backend.auth.authentication import generate_signup_token, validate_signup_token, send_invite, customer_waiters, occupied_tables, secret_key
+from backend.menu.connection import get_db_connection
 from backend.resources import config
+from backend.auth.session import get_session, AuthSession
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -22,8 +19,8 @@ def invite():
     """
     Sends a staff sign-up invitation to the specified email address.
 
-    The email is a link to the sign-up page containing a token embedding which authorises
-    the user to sign-up as staff.
+    The email is a link to the sign-up page containing a token embedding which authorises the user to sign-up as staff.
+    The route expects a JSON payload containing the email address of the user.
 
     Returns:
         str: A JSON response and a HTTP code.
@@ -32,7 +29,7 @@ def invite():
     data = request.get_json(force=True)
     email = data['email']
     token = generate_signup_token(email, secret_key)
-    base_url = 'http://127.0.0.1:3000/auth/signup'
+    base_url = 'http://127.0.0.1:3000/auth/staff/signup'
     
     # Send a SendGrid request
     send_invite(email, token, base_url)
@@ -45,8 +42,8 @@ def signup():
     """
     Registers a user account, which can be either a customer or a staff user.
 
-    A customer is registered if a token is not provided i.e. customers don't require sign-up
-    authentication.
+    This route expects a JSON payload containing the email, password, first_name, last_name, and optionally the token of the user to add.
+    A customer is registered if a token is not provided i.e. customers don't require sign-up authentication.
 
     Returns:
         str: A JSON response and a HTTP code.
@@ -96,174 +93,250 @@ def signup():
         else:
             return jsonify("An error occurred"), 500
 
-@auth_bp.route('/api/auth/login', methods=['POST'])
-def login():
+
+@auth_bp.route('/api/auth/<string:mode>/login', methods=['POST'])
+def login(mode: str):
     """
     Confirms whether email/password are authentic.
 
-    If email/password are authentic, cookies are set includng a type token,user information,
-    and user id.
+    If email/password are authentic, cookies are set including a type token, user information, and user id.
+    This type token cookie can be used to deny a user access to some routes.
 
     Returns:
         str: A JSON response and a HTTP code.
     """
-    # Fetch email and password from the request payload
-    data = request.get_json(force=True)
-    email = data['email']
-    password = data['password']
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Generate type tokens for admin and staff users
     try:
-        cursor.execute("""
-                       SELECT *
-                       FROM Staff
-                       WHERE email = %s
-                       """, (email,))
-        data = cursor.fetchall()
-        staff_id = data[0][0]
-        password_hash = data[0][2]
-        admin = data[0][3]
-        if admin:
-            type = 'admin'
-            token = generate_admin_token(email, secret_key)
-        else:
-            type = 'staff'
-            token = generate_staff_token(email, secret_key)
+        # Check valid login mode specified i.e. customer or staff
+        if mode not in ['customer', 'staff']:
+            return jsonify({
+                'message': 'Invalid mode specified. Please use either /api/auth/customer/login or /api/auth/staff/login'
+            }), 400
 
-    # Generate type tokens for customers
-    except:
-        cursor.execute("""
-                       SELECT *
-                       FROM Customer
-                       WHERE email = %s
-                       """, (email,))
-        data = cursor.fetchall()
-        if data:
-            customer_id = data[0][0]
-            password_hash = data[0][2]
-            type = 'customer'
-            token = generate_customer_token(email, secret_key)
-        else:
-            return jsonify({'message': 'Something went wrong'}), 401
+        # Fetch email and password from the request payload
+        data = request.get_json(force=True)
+        email = data['email']
+        password = data['password']
 
-    cursor.close()
-    conn.close()
+        # Create session object
+        session = {
+            "last_login": datetime.now().timestamp(),
+            "session_type": mode,
+            "user": {}
+        }
 
-    # Confirm the password given by the user matches their decrypted password, and set cookies
-    if data:
-        if check_password_hash(password_hash, password):
-            response = make_response(jsonify({'message': f'Logged into {email} successfully.', 'type': type}), 200)
-            response.set_cookie('token', token, httponly=False, secure=True)
+        if mode == 'staff':  # Staff login --------------------------------------------------------
 
-            user_info = None
+            # Get staff data from database
+            cursor.execute("""
+                SELECT staff_id, first_name, last_name, email, password, role, admin
+                FROM Staff
+                WHERE email = %s
+            """, (email,))
 
-            # Map customers to waiters on login
-            # Set appropriate cookies for staff and customer users
-            if type == 'staff':
-                customer_waiters.update({f'{staff_id}': []})
-                print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
-                response.set_cookie('staff_id', f'{staff_id}', httponly=False, secure=True)
-                user_info = fetch_user_info('Waiter', staff_id)
+            staff_data = cursor.fetchone()
 
-            # Add customer to a table on login
-            elif type == 'customer':
-                try:
-                    least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
-                    customer_waiters[least_occupied_waiter].append(customer_id)
-                    print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
-                    conn = get_db_connection()
-                    cursor = conn.cursor()
-                    if len(occupied_tables) >= 25:
-                        print('ERROR: NO FREE TABLES')
-                        return jsonify({'message': 'There are currently no free tables'}), 409
-                    unoccupied_table = random.randint(1, 25)
-                    while unoccupied_table in occupied_tables:
-                        unoccupied_table = random.randint(1, 25)
-                    occupied_tables.add(unoccupied_table)
-                    print(f'OCCUPIED TABLES: {occupied_tables}') # Debug
-                    cursor.execute("""
-                                   UPDATE Customer
-                                   SET table_number = %s
-                                   WHERE customer_id = %s
-                                   """, (unoccupied_table, customer_id))
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
+            # If no matching email found in staff table...
+            if staff_data is None:
+                return jsonify("No staff exists with that email"), 401
 
-                # Handle case if no waiters are logged in (can't assign customer to waiter)
-                except Exception:
-                    print(f'ERROR: NO WAITERS ARE LOGGED IN, ' +
-                           'LOG INTO A WAITER ACCOUNT FIRST')
-                    return jsonify({'message': 'There are currently no waiters that are logged in'}), 400
-                
-                response.set_cookie('customer_id', f'{customer_id}', httponly=False, secure=True)
-                user_info = fetch_user_info('Customer', customer_id)
+            [staff_id, first_name, last_name, email, password_hash, role, admin] = staff_data
 
-            if user_info:
-                encoded_user_info = jwt.encode(user_info, config.JWT_SECRET, algorithm='HS256')
-                response.set_cookie('user_info', encoded_user_info, httponly=False, secure=True)
+            # If invalid password given
+            if not check_password_hash(password_hash, password):
+                return jsonify("Invalid password provided"), 401
 
-            return response
-        
-        else:
-            print('ERROR: INVALID EMAIL/PASSWORD')
-            return jsonify({'message': 'Email or password is invalid.'}), 401
-    else:
-        print('ERROR: INVALID EMAIL/PASSWORD')
-        return jsonify({'message': 'Email or password is invalid.'}), 401
-    
-@auth_bp.route('/api/auth/logout', methods=['POST'])
+            # Add staff user data to session object
+            session['user']["id"] = staff_id
+            session['user']["role"] = role
+            session['user']["is_admin"] = admin
+            session['user']["first_name"] = first_name
+            session['user']["last_name"] = last_name
+            session['user']["email"] = email
+
+            # Add staff user to customer_waiters map
+            customer_waiters[staff_id] = []
+
+        else:  # Customer login -------------------------------------------------------------------
+
+            # Prevent customer login, if no waiter currently signed in
+            if len(dict.keys(customer_waiters)) < 1:
+                print('LOG INTO A WAITER ACCOUNT FIRST')
+                return jsonify({"message": "No waiters currently logged in!"}), 409
+
+            # Prevent customer login, if no free tables
+            if len(occupied_tables) >= 25:
+                print('ERROR: NO FREE TABLES')
+                return jsonify({'message': 'There are currently no free tables'}), 409
+
+            # Get customer data from database
+            cursor.execute("""
+                SELECT customer_id, first_name, last_name, email, password, table_number
+                FROM customer
+                WHERE email = %s
+            """, (email,))
+
+            customer_data = cursor.fetchone()
+
+            # If no matching email found in customer table...
+            if customer_data is None:
+                return jsonify("No customer exists with this email"), 401
+
+            [customer_id, first_name, last_name, email, password_hash, table_number] = customer_data
+
+            # Authenticate with password
+            if not check_password_hash(password_hash, password):
+                return jsonify("Invalid password provided"), 401
+
+            # Add customer user data to session object
+            session['user']["id"] = customer_id
+            session['user']["first_name"] = first_name
+            session['user']["last_name"] = last_name
+            session['user']["email"] = email
+
+            # Assign customer/user to the least occupied waiter
+            least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
+            customer_waiters[least_occupied_waiter].append(customer_id)
+            print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
+
+            # Assigned customer/user to an unoccupied table
+            unoccupied_table = random.randint(1, 25)
+            while unoccupied_table in occupied_tables:
+                unoccupied_table = random.randint(1, 25)
+            occupied_tables.add(unoccupied_table)
+            print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
+
+            # TODO: Do we need to store table number in customer table
+            cursor.execute("""
+                UPDATE Customer
+                SET table_number = %s
+                WHERE customer_id = %s
+            """, (unoccupied_table, customer_id))
+            conn.commit()
+
+        # Encode session into JWT
+        encoded_user_info = jwt.encode(session, config.JWT_SECRET, algorithm='HS256')
+
+        # Preparing response
+        response = make_response(
+            jsonify({
+                'message': f'Logged into {email} successfully.',
+                'type': mode,
+                'session': session
+            }), 200
+        )
+
+        # Store JWT in browser as cookie
+        response.set_cookie('session', encoded_user_info, httponly=False, secure=True)
+
+        return response
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'An error occurred'
+        }), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+
+@auth_bp.route('/api/auth/logout')
 def logout():
     """
-    Logs the user out by deleting any cookies associated to the user.
-
-    On logout, information is also removed from the customer_waiters and occupied_tables
-    data structures.
+    Logs the user out by deleting any cookies associated to the user. On logout, information is also removed from the
+    customer_waiters and occupied_tables data structures.
 
     Returns:
         str: A JSON response and a HTTP code.
     """
-    # Fetch id cookies associated to user
-    customer_id = request.cookies.get('customer_id', 'None')
-    staff_id = request.cookies.get('staff_id', 'None')
 
-    # Remove any user presence in the customer_waiters and occupied_tables data structures
-    if customer_id != 'None':
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("""
-                       SELECT table_number
-                       FROM Customer
-                       WHERE customer_id = %s
-                       """, (customer_id,))
-        table_record = cursor.fetchone()
-        table_to_free = int(table_record[0])
-        occupied_tables.remove(table_to_free)
-        print(f'OCCUPIED TABLES: {occupied_tables}') # Debug
-        for key in customer_waiters:
-            if int(customer_id) in customer_waiters[key]:
-                customer_waiters[key].remove(int(customer_id))
-        print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
-        cursor.execute("""
-                       UPDATE Customer
-                       SET table_number = '-1'
-                       WHERE customer_id = %s
-                       """, (customer_id,))
-        conn.commit()
-        cursor.close()
-        conn.close()
-    elif staff_id != 'None':
-        del customer_waiters[f'{staff_id}']
-        print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}') # Debug
+    try:
+        session = AuthSession()
 
-    # Delete cookies by forcefully expiring them
-    print('SUCCESS: USER LOGGED OUT')
-    response = make_response(jsonify({'message': 'Logged out successfully'}), 200)
-    response.set_cookie('customer_id', '', expires=0, httponly=False, secure=True)
-    response.set_cookie('staff_id', '', expires=0, httponly=False, secure=True)
-    response.set_cookie('token', '', expires=0, httponly=False, secure=True)
+        # Customer
+        if session.is_customer_session():
 
-    return response
+            customer_id = session.get_user_id()
+
+            conn = get_db_connection()
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT table_number
+                FROM Customer
+                WHERE customer_id = %s
+            """, (customer_id,))
+
+            table_record = cursor.fetchone()
+            table_to_free = int(table_record[0])
+            occupied_tables.remove(table_to_free)
+
+            for key in customer_waiters:
+                if int(customer_id) in customer_waiters[key]:
+                    customer_waiters[key].remove(int(customer_id))
+
+            cursor.execute("""
+                UPDATE Customer
+                SET table_number = '-1'
+                WHERE customer_id = %s
+            """, (customer_id,))
+
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+        # Staff logout
+        elif session.is_staff_session():
+            staff_id = session.get_user_id()
+            customer_waiters.pop(staff_id, None)
+
+        print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
+        print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
+
+        res = make_response(jsonify({
+            'message': 'User logged out',
+            'type': session.get_session_type()
+        }))
+
+        # Delete JWT session token cookie
+        res.delete_cookie('session')
+
+        return res
+
+    # Any unhandled exceptions
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+
+
+@auth_bp.route('/api/auth/session')
+def current_session():
+    """Returns the current session"""
+    try:
+        session = get_session()  # Returns AuthSession (or None if user not logged in)
+
+        # If user not logged in...
+        if session is None:
+            return jsonify({
+                'message': 'No session found'
+            }), 401
+
+        # Otherwise return their decoded session
+        return jsonify({
+            'message': 'Fetched user session',
+            'session': session.json()
+        }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
