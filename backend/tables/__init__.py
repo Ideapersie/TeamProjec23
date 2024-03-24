@@ -1,5 +1,5 @@
-from backend.auth.authentication import customer_waiters
-from backend.menu.connection import get_db_connection
+from auth.authentication import customer_waiters
+from menu.connection import get_db_connection
 
 
 def get_waiter_tables(staff_id) -> list[int]:

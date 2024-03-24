@@ -7,10 +7,10 @@ import jwt
 from datetime import datetime
 from flask import Blueprint, request, jsonify, abort, make_response
 from werkzeug.security import check_password_hash, generate_password_hash
-from backend.auth.authentication import generate_signup_token, validate_signup_token, send_invite, customer_waiters, occupied_tables, secret_key
-from backend.menu.connection import get_db_connection
-from backend.resources import config
-from backend.auth.session import get_session, AuthSession
+from auth.authentication import generate_signup_token, validate_signup_token, send_invite, customer_waiters, occupied_tables, secret_key
+from menu.connection import get_db_connection
+from resources import config
+from auth.session import get_session, AuthSession
 
 auth_bp = Blueprint('auth', __name__)
 

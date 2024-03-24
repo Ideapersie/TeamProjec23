@@ -1,8 +1,8 @@
 import jwt
 
 from flask import request
-from backend.resources import config
-from backend.tables import get_customer_table_number, get_waiter_tables
+from resources import config
+from tables import get_customer_table_number, get_waiter_tables
 
 
 def get_decoded_session_from_cookie() -> dict | None:
