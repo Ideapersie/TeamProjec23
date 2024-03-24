@@ -114,6 +114,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             }
         }
 
+        if (session.user.is_admin) {
+            links["Admin controls"] = {
+                links: [
+                    {
+                        display: "View staff",
+                        path: "/admin/staff"
+                    }
+                ]
+            }
+        }
+
         res.status(200).json({
             message: 'Successfully fetched links!',
             links
