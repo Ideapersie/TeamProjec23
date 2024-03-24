@@ -112,6 +112,9 @@ def login(mode: str):
         A JSON response and a HTTP code.
     """
 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
     try:
         # Check valid login mode specified i.e. customer or staff
         if mode not in ['customer', 'staff']:
@@ -124,9 +127,6 @@ def login(mode: str):
         email = data['email']
         password = data['password']
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
         # Create session object
         session = {
             "last_login": datetime.now().timestamp(),
@@ -134,8 +134,8 @@ def login(mode: str):
             "user": {}
         }
 
-        # Staff login -----------------------------------------------------------------------------
-        if mode == 'staff':
+        if mode == 'staff':  # Staff login --------------------------------------------------------
+
             # Get staff data from database
             cursor.execute("""
                 SELECT staff_id, first_name, last_name, email, password, role, admin
@@ -166,8 +166,18 @@ def login(mode: str):
             # Add staff user to customer_waiters map
             customer_waiters[staff_id] = []
 
-        # Customer login --------------------------------------------------------------------------
-        else:
+        else:  # Customer login -------------------------------------------------------------------
+
+            # Prevent customer login, if no waiter currently signed in
+            if len(dict.keys(customer_waiters)) < 1:
+                print('LOG INTO A WAITER ACCOUNT FIRST')
+                return jsonify({"message": "No waiters currently logged in!"}), 409
+
+            # Prevent customer login, if no free tables
+            if len(occupied_tables) >= 25:
+                print('ERROR: NO FREE TABLES')
+                return jsonify({'message': 'There are currently no free tables'}), 409
+
             # Get customer data from database
             cursor.execute("""
                 SELECT customer_id, first_name, last_name, email, password, table_number
@@ -183,6 +193,7 @@ def login(mode: str):
 
             [customer_id, first_name, last_name, email, password_hash, table_number] = customer_data
 
+            # Authenticate with password
             if not check_password_hash(password_hash, password):
                 return jsonify("Invalid password provided"), 401
 
@@ -192,42 +203,25 @@ def login(mode: str):
             session['user']["last_name"] = last_name
             session['user']["email"] = email
 
-            # TODO: Look into this section
-            try:
-                least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
-                customer_waiters[least_occupied_waiter].append(customer_id)
+            # Assign customer/user to the least occupied waiter
+            least_occupied_waiter = min(customer_waiters, key=lambda k: len(customer_waiters[k]))
+            customer_waiters[least_occupied_waiter].append(customer_id)
+            print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
 
-                print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
-
-                if len(occupied_tables) >= 25:
-                    print('ERROR: NO FREE TABLES')
-                    return jsonify({'message': 'There are currently no free tables'}), 409
-
+            # Assigned customer/user to an unoccupied table
+            unoccupied_table = random.randint(1, 25)
+            while unoccupied_table in occupied_tables:
                 unoccupied_table = random.randint(1, 25)
-                while unoccupied_table in occupied_tables:
-                    unoccupied_table = random.randint(1, 25)
+            occupied_tables.add(unoccupied_table)
+            print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
 
-                occupied_tables.add(unoccupied_table)
-                print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
-
-                conn = get_db_connection()
-                cursor = conn.cursor()
-                cursor.execute("""
-                               UPDATE Customer
-                               SET table_number = %s
-                               WHERE customer_id = %s
-                               """, (unoccupied_table, customer_id))
-
-                conn.commit()
-                cursor.close()
-                conn.close()
-
-            # Handle case if no waiters are logged in (can't assign customer to waiter)
-            except Exception as e:
-                print(e)
-                print(f'ERROR: NO WAITERS ARE LOGGED IN, ' +
-                      'LOG INTO A WAITER ACCOUNT FIRST')
-                return jsonify({'message': 'There are currently no waiters that are logged in'}), 400
+            # TODO: Do we need to store table number in customer table
+            cursor.execute("""
+                UPDATE Customer
+                SET table_number = %s
+                WHERE customer_id = %s
+            """, (unoccupied_table, customer_id))
+            conn.commit()
 
         # Encode session into JWT
         encoded_user_info = jwt.encode(session, config.JWT_SECRET, algorithm='HS256')
@@ -251,6 +245,11 @@ def login(mode: str):
         return jsonify({
             'message': 'An error occurred'
         }), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
 
 
 @auth_bp.route('/api/auth/logout')
@@ -301,7 +300,7 @@ def logout():
         # Staff logout
         elif session.is_staff_session():
             staff_id = session.get_user_id()
-            del customer_waiters[staff_id]
+            customer_waiters.pop(staff_id, None)
 
         print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
         print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
@@ -320,7 +319,7 @@ def logout():
     except Exception as e:
         print(e)
         return jsonify({
-            'message': e
+            'message': 'Something went wrong'
         }), 500
 
 
@@ -339,7 +338,7 @@ def current_session():
         # Otherwise return their decoded session
         return jsonify({
             'message': 'Fetched user session',
-            'session': session.get_cookie()
+            'session': session.json()
         }), 200
 
     except Exception as e:
