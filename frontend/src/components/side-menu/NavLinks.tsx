@@ -30,8 +30,8 @@ export default function NavLinks(): JSX.Element {
             {
                 links &&
                     Object.entries(links).map(([groupName, navGroup], index, array) => (
-                        <div className="bg-wahaca-light-blue p-4 mb-4" key={groupName}>
-                            <div className="bg-white p-4">
+                        <div className="bg-wahaca-light-blue p-3 rounded-sm mb-4" key={groupName}>
+                            <div className="bg-white p-3">
                                 <h4 className="text-xl text-wahaca-navy">
                                     {groupName}
                                 </h4>
