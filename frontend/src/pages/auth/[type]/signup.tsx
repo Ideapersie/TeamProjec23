@@ -69,7 +69,7 @@ export default function SignupPage() {
                 <PageTitle>SIGN UP</PageTitle>
                 <PageSubtitle>
                     Register with your email and password below, or <Link
-                    href={"/auth/login"}
+                    href={"/auth/customer/login"}
                     className={"underline text-wahaca-blue"}
                 >log in</Link> if you already have an account
                 </PageSubtitle>
