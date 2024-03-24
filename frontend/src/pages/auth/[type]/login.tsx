@@ -49,12 +49,22 @@ export default function LoginPage(props: PageProps) {
 
     return (
         <div className={"bg-wahaca-yellow min-h-screen flex"}>
-            <div className={"bg-white rounded-xl shadow p-10 m-auto"}>
-                <PageTitle>LOGIN ({props.loginType})</PageTitle>
-                <PageSubtitle>Enter your email and password below to login, or <Link
-                    href={"/auth/signup"}
-                    className={"underline text-wahaca-blue"}
-                >create an account</Link> here.</PageSubtitle>
+            <div className={"bg-white rounded-xl shadow p-10 m-auto w-full max-w-2xl"}>
+                <PageTitle>LOGIN <Link href={`/auth/${props.loginType === "staff" ? "customer" : "staff"}/login`}
+                                       className={"text-wahaca-light-navy hover:text-wahaca-blue"}
+                >
+                    - {props.loginType}
+                </Link></PageTitle>
+                {props.loginType === "customer" ?
+                    <PageSubtitle>Enter your {props.loginType} login details below, or <Link
+                            href={`/auth/${props.loginType}/signup`}
+                            className={"underline text-wahaca-blue"}
+                        >
+                        create an account</Link> here.
+                    </PageSubtitle>
+                    :
+                    <PageSubtitle>Enter your staff login details below</PageSubtitle>
+                }
                 <hr/>
 
                 <form onSubmit={handleLogin} className={"flex flex-col gap-3 mt-5"}>
