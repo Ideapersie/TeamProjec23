@@ -8,7 +8,7 @@ CREATE TABLE Customer (
     table_number INTEGER NOT NULL
 );
 
-DROP TYPE IF EXISTS staff_role;
+DROP TYPE IF EXISTS staff_role CASCADE;
 CREATE TYPE staff_role AS ENUM('Waiter', 'Kitchen');
 
 DROP TABLE IF EXISTS Staff CASCADE;
