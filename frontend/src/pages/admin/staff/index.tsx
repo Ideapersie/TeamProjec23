@@ -24,7 +24,7 @@ export default function ViewStaffPage(props: Props) {
             'email': form.get('input-email')
         }
 
-        const response = await fetch('/api/invite', {
+        const response = await fetch('/api/auth/invite', {
             method: "POST",
             body: JSON.stringify(payload)
         });

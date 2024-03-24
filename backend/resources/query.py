@@ -46,25 +46,25 @@ def insert_default_users(conn):
     cursor.execute("""
         INSERT INTO Staff(email, password, admin, first_name, last_name)
         VALUES(%s, %s, %s, %s, %s)
-    """, ("admin@example.com", generate_password_hash("admin"), True, "Admin", "Example"))
+    """, ("admin@example.com", generate_password_hash("admin"), True, "Admin", "Role"))
 
     # Example waiter (not admin)
     cursor.execute("""
         INSERT INTO Staff(email, password, admin, first_name, last_name, role)
         VALUES(%s, %s, %s, %s, %s, %s)
-    """, ("waiter@example.com", generate_password_hash("waiter"), False, "Waiter", "Example", "Waiter"))
+    """, ("waiter@example.com", generate_password_hash("waiter"), False, "Waiter", "Role", "Waiter"))
 
     # Example kitchen staff (not admin)
     cursor.execute("""
         INSERT INTO Staff(email, password, admin, first_name, last_name, role)
         VALUES(%s, %s, %s, %s, %s, %s)
-    """, ("kitchen@example.com", generate_password_hash("kitchen"), False, "Kitchen", "Example", "Kitchen"))
+    """, ("kitchen@example.com", generate_password_hash("kitchen"), False, "Kitchen", "Role", "Kitchen"))
 
     # Example customer
     cursor.execute("""
         INSERT INTO customer(email, password, first_name, last_name, table_number)
         VALUES(%s, %s, %s, %s, %s)
-    """, ("customer@example.com", generate_password_hash("customer"), "Customer", "Example", -1))
+    """, ("customer@example.com", generate_password_hash("customer"), "Customer", "Role", -1))
 
     conn.commit()
 
