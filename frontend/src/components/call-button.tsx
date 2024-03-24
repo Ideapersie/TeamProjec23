@@ -1,3 +1,5 @@
+import {useEffect, useState} from "react";
+
 /**
  * Renders a button for a customer to summon a waiter.
  *
@@ -5,6 +7,17 @@
  * @author Alvis Wang (zkac380@live.rhul.ac.uk)
  */
 export function CallWaiterButton(){
+
+    const [waiterCalled, setWaiterCalled] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (waiterCalled) {
+            // Re-enables ability to call waiter after 5 seconds
+            setTimeout(() => {
+                setWaiterCalled(false);
+            }, 5000);
+        }
+    }, [waiterCalled]);
 
     async function handleCallWaiter() {
 
@@ -20,14 +33,14 @@ export function CallWaiterButton(){
                 method: 'POST',
                 body: JSON.stringify(payload)
             });
+            
+            // If success, alter the customer that the waiter has been called
+            if (response.status === 200) {
+                setWaiterCalled(true);
 
-            const data = await response.json(); // Get response body
-
-            // Alert the user that the waiter has been called
-            if (response.ok) {
-                alert("The waiter has been called!");
+            // Else...
             } else {
-                throw new Error(data.message || "An error occurred");
+                alert("Failed to call the waiter")
             }
 
         } catch (error) {
@@ -41,8 +54,9 @@ export function CallWaiterButton(){
         <button
             className="bg-wahaca-blue hover:bg-wahaca-teal text-white font-bold py-2 px-4 rounded-lg transition-colors ease-in-out mr-4"
             onClick={handleCallWaiter}
+            disabled={waiterCalled}
         >
-            Call Waiter
+            {waiterCalled ? "Waiter called" : "Call Waiter"}
         </button>
     );
 }
