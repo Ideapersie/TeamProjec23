@@ -20,6 +20,7 @@ export default function Cart(props: Props) {
 
     const [orderedItems, setOrderedItems] = useState<BrowserCartObject | null | undefined>(undefined);
     const [showPopup, setShowPopup] = useState(false);
+    const [subtotal, setSubtotal] = useState<{[id: number]: number}>({});
 
     
     // On initial browser load...
@@ -126,6 +127,8 @@ export default function Cart(props: Props) {
                                         id={parseInt(id)}
                                         quantity={quantity}
                                         setOrderedItems={setOrderedItems}
+                                        subtotal={subtotal}
+                                        setSubtotal={setSubtotal}
                                     />
                                 ))}
                                 </tbody>
@@ -134,8 +137,8 @@ export default function Cart(props: Props) {
                     <div className="card p-5">
                         <ul>
                             <li>
-                                <div className="pb-3 text-xl">
-                                    Subtotal: £ 
+                                <div className="pb-3 text-xl" style={{fontFamily: "sans-serif"}}>
+                                    Subtotal: £{Object.values(subtotal).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)}
                                 </div>
                             </li>
                             <li>
