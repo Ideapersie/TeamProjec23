@@ -27,8 +27,8 @@ export function middleware(request: NextRequest) {
 
     // If not logged in and not on /auth route, redirect to /auth/login route.
     if (!isAuthenticated && !request.nextUrl.pathname.startsWith("/auth")) {
-        console.log("Middleware: REDIRECT to /auth/login");
-        return NextResponse.redirect(new URL('/auth/login', request.url));
+        console.log("Middleware: REDIRECT to /auth/customer/login");
+        return NextResponse.redirect(new URL('/auth/customer/login', request.url));
     }
 
 
