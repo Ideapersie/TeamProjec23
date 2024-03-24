@@ -100,7 +100,7 @@ export default function ItemPage(props: PageProps) {
                     <div className={"flex flex-col gap-5 pt-10"}>
                         <div className={styles.name}>{props.data.name}</div>
                         <div className={styles.description}>{props.data.description}</div>
-                        <div className={styles.price}>Price: £{props.data.price}</div>
+                        <div className={styles.price}>Price: £{parseFloat(props.data.price).toFixed(2)}</div>
                         <div className={styles.calories}>Calories: {props.data.calories} Cal</div>
                         <div>
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
