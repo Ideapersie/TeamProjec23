@@ -22,8 +22,9 @@ export default function MainLayout({ children }: any): React.ReactNode {
         <div className={`min-h-screen ${inter.className}`}>
 
             {/*Left panel / side menu*/}
-            <nav className={"fixed bg-white border-r border-r-sky-900 border-opacity-10 h-screen left-panel flex flex-col"} style={{width: SIDE_MENU_WIDTH}}>
-                <div className={"p-5"}>
+            <nav className={"fixed bg-white border-r border-r-sky-900 border-opacity-10 h-screen left-panel"}
+                 style={{width: SIDE_MENU_WIDTH}}>
+                <div className={"p-5 z-10 relative"}>
                     {/*Logo*/}
                     <Link href={"/"}>
                         <div className={"relative h-16 mb-3  bg-white"}>
@@ -35,8 +36,19 @@ export default function MainLayout({ children }: any): React.ReactNode {
                     <NavLinks/>
                 </div>
 
-                {/*Displays the user that is currently logged in*/}
-                <CurrentUser/>
+                <div className={"overflow-hidden absolute bottom-0 w-full"}>
+                    <div className={"h-96 relative text-right -mr-10 -mb-10"}>
+                        <Image src={"/wahaca-trees.svg"}
+                               alt={"Wahaca trees"}
+                               fill={true}
+                               objectFit={"cover"}
+                               objectPosition={"right"}
+                        />
+                    </div>
+
+                    {/*Displays the user that is currently logged in*/}
+                    <CurrentUser/>
+                </div>
             </nav>
 
             {/*Right panel / page contents*/}

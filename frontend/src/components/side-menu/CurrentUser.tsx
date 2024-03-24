@@ -29,7 +29,7 @@ export default function CurrentUser() {
     }
 
     return (
-        <div className={"bg-wahaca-blue px-5 py-3 h-16 text-sm mt-auto fill-white text-sky-100 flex gap-3 items-center current-user-bg relative"}
+        <div className={"bg-wahaca-blue px-5 py-3 h-16 text-sm fill-white text-sky-100 flex gap-3 items-center current-user-bg relative"}
              role={"button"}
              onClick={handleLogout}>
             <div className={`relative flex flex-col items-center ${session?.user.role ? "-mt-1" : ""}`}>
