@@ -32,6 +32,11 @@ export type Order = {
     waiter_full_name: string,   
 }
 
+export type Notification = {
+    staff_id: number,
+    message: string,
+    time_sent: string,
+}
 /**
  * Represents a CartItem in the browser, where the key is the menuitem_id, and the value is its quantity.
  */
