@@ -6,10 +6,6 @@ export function CartButton() {
 
     const [cartCount, setCartCount] = useState<number>(0);
 
-    function incrementCart() {
-        setCartCount(cartCount + 1);
-    }
-
     useEffect(() => {
         const cartString = sessionStorage.getItem('Cart');
 
@@ -20,9 +16,9 @@ export function CartButton() {
         }
 
         window.addEventListener("add-to-cart", () => {
-            console.log("Received event:", cartCount);
-            incrementCart();
-        })
+            console.log("test");
+            setCartCount((old) => old + 1);
+        });
     }, []);
 
 
