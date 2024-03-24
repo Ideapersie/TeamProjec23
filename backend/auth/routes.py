@@ -259,42 +259,47 @@ def logout():
     try:
         session = AuthSession()
 
-        # Customer
-        if session.is_customer_session():
+        try:
+            # Customer
+            if session.is_customer_session():
 
-            customer_id = session.get_user_id()
+                customer_id = session.get_user_id()
 
-            conn = get_db_connection()
-            cursor = conn.cursor()
+                conn = get_db_connection()
+                cursor = conn.cursor()
 
-            cursor.execute("""
-                SELECT table_number
-                FROM Customer
-                WHERE customer_id = %s
-            """, (customer_id,))
+                cursor.execute("""
+                            SELECT table_number
+                            FROM Customer
+                            WHERE customer_id = %s
+                        """, (customer_id,))
 
-            table_record = cursor.fetchone()
-            table_to_free = int(table_record[0])
-            occupied_tables.remove(table_to_free)
+                table_record = cursor.fetchone()
+                table_to_free = int(table_record[0])
+                occupied_tables.remove(table_to_free)
 
-            for key in customer_waiters:
-                if int(customer_id) in customer_waiters[key]:
-                    customer_waiters[key].remove(int(customer_id))
+                for key in customer_waiters:
+                    if int(customer_id) in customer_waiters[key]:
+                        customer_waiters[key].remove(int(customer_id))
 
-            cursor.execute("""
-                UPDATE Customer
-                SET table_number = '-1'
-                WHERE customer_id = %s
-            """, (customer_id,))
+                cursor.execute("""
+                            UPDATE Customer
+                            SET table_number = '-1'
+                            WHERE customer_id = %s
+                        """, (customer_id,))
 
-            conn.commit()
-            cursor.close()
-            conn.close()
+                conn.commit()
+                cursor.close()
+                conn.close()
 
-        # Staff logout
-        elif session.is_staff_session():
-            staff_id = session.get_user_id()
-            customer_waiters.pop(staff_id, None)
+            # Staff logout
+            elif session.is_staff_session():
+                staff_id = session.get_user_id()
+                customer_waiters.pop(staff_id, None)
+
+        except Exception as e:
+            print(e)
+            print("Failed to clear from table system")
 
         print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
         print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
