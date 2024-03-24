@@ -130,9 +130,7 @@ export default function ViewTablesPage() {
                                                     {order.status === 'Unconfirmed' && (
                                                         <button className={styles.confirm} onClick={() => {
                                                             handleStatusChange(order.order_id, order.status);
-                                                            fetchItems()
-                                                                .then((data) => setOrders(data))
-                                                                .catch((error) => console.error(error));
+                                                            fetchItems();
                                                         }}>
                                                             <i className="fa-solid fa-check"></i></button>
                                                     )}
@@ -144,11 +142,10 @@ export default function ViewTablesPage() {
                                                     <button className={styles.cancel} onClick={() => {
                                                         if (confirm("Are you sure you want to cancel this order?")) {
                                                             handleCancelOrder(order.order_id);
-                                                            fetchItems()
-                                                                .then((data) => setOrders(data))
-                                                                .catch((error) => console.error(error));
+                                                            fetchItems();
                                                         }
                                                     }}><i className= "fa-solid fa-xmark" title="Cancel"></i></button>
+                                                    
                                                 </td>
                                             </tr>
                                         ))}
