@@ -1,40 +1,41 @@
-import React from "react";
-
+/**
+ * Renders a button for a customer to summon a waiter.
+ *
+ * @constructor
+ * @author Alvis Wang (zkac380@live.rhul.ac.uk)
+ */
 export function CallWaiterButton(){
-    const handleCallWaiter = async () => {
-        // Define the notification details
-        const notification = {
-            staff_id: 1, 
-            message: 'Table 1 is calling', 
-            time_sent: new Date().toUTCString(), 
+
+    async function handleCallWaiter() {
+
+        // Define the notification payload
+        const payload = {
+            staff_id: 1,
+            message: 'Table 1 is calling'
         };
 
         // Try sending the notification to the backend
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/addnotification', {
+            const response = await fetch('/api/addnotification', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(notification),
-                mode: 'no-cors'
+                body: JSON.stringify(payload)
             });
 
-            // Convert the response to JSON
-            const responseData = await response.json();
+            const data = await response.json(); // Get response body
 
             // Alert the user that the waiter has been called
             if (response.ok) {
                 alert("The waiter has been called!");
             } else {
-                throw new Error(responseData.message || "An error occurred");
+                throw new Error(data.message || "An error occurred");
             }
+
         } catch (error) {
             // Log the error and inform the user
             console.error(error);
             alert("Failed to call the waiter. Please try again.");
         }
-    };
+    }
 
     return (
         <button
