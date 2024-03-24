@@ -118,6 +118,21 @@ class AuthSession:
         if not self.get_is_admin():
             raise UnauthorisedAccessError(f"Access denied: only accessible by admin users.")
 
+    def json(self) -> dict:
+        """Returns session data."""
+
+        cookie = self.get_cookie()
+
+        # Customer
+        if self.is_customer_session():
+            cookie['table_number'] = self.get_table_number()
+
+        # Waiter
+        if self.get_role() == "Waiter":
+            cookie['table_numbers'] = self.get_table_number()
+
+        return cookie
+
 
 def get_session() -> AuthSession | None:
     """Returns an AuthSession (or None, if not logged in)"""
