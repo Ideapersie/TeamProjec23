@@ -72,7 +72,8 @@ export default function CartItem(props: Props) {
                     <img className = {"rounded-lg "} src= {data.image} height = {"200"} width = {"200"} />  
                 </td>
                 <td className={styles.t_right } >{props.quantity} servings</td>
-                <td className={`${styles.t_right} font-bold text-wahaca-navy`}>£{data.price} £({itemSubtotal.toFixed(2)})</td>
+                <td className={`${styles.t_right} font-bold text-wahaca-navy`}>£{data.price} </td>
+                <td className={`${styles.t_right} font-bold text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
 
                 <td className="p-5 text-center">
                     <button className="default-button" onClick={() => handleDeleteItem(props.id)}>Delete</button>
