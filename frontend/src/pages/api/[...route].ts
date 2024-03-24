@@ -26,7 +26,11 @@ export default async function handler(
 
         const response = await fetch(env.apiHost + "/api/" + path, {
             method: req.method,
-            body: req.body || undefined
+            body: req.body || undefined,
+            credentials: "include",
+            headers: {
+                "cookie": req.headers.cookie || ""
+            }
         });
 
         // Mapping response status code
@@ -34,7 +38,7 @@ export default async function handler(
 
         // Mapping response headers
         response.headers.forEach((value, key, parent) => {
-            res.setHeader(key, value);
+            res.appendHeader(key, value);
         });
 
         // Mapping response body

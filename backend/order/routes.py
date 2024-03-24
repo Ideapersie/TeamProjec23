@@ -39,6 +39,25 @@ def add_order():
     for item in newOrder['items']: #iterate through the list of dicts of items in items
             cursor.execute(f'''INSERT INTO OrderMenu (order_id, menuitem_id, quantity) 
                            VALUES ('{order_id}', '{item['menuitem_id']}', '{item['quantity']}');''') #inserts orders into OrderMenu
+            
+    # Find the waiter associated with the customer
+    staff_id = None
+    for waiter, customers in customer_waiters.items():
+        if int(customer_id) in customers:
+            staff_id = waiter
+            break
+
+    # Insert staff_id and order_id into StaffOrder
+    if staff_id:
+        cursor.execute("""
+                       INSERT INTO StaffOrder (staff_id, order_id)
+                       VALUES (%s, %s)
+                       """, (staff_id, order_id))
+        print(f'SUCCESS: STAFF_ID {staff_id} & ORDER_ID {order_id} INSERTED INTO STAFFORDER')
+    else:
+        print(f'ERROR: CUSTOMER_ID {customer_id} HAS NO ASSOCIATED STAFF_ID, ' +
+                      'YOU WILL NEED TO LOG INTO A WAITER ACCOUNT FIRST')
+
     message = {
         "message" : "Order successfully added."
     }

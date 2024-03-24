@@ -1,10 +1,8 @@
 """
 A Flask web app defining API routes.
 
-This module runs the server-side, API routes expect to be called by the frontend to perform a service.
-
-To run:
-    `flask run` 
+This module runs the server-side, API routes expect to be called by the frontend to
+perform a service.
 """
 from flask import Flask
 from menu.routes import menu_bp
@@ -22,4 +20,5 @@ app.register_blueprint(payment_bp)
 app.register_blueprint(notification_bp)
 app.register_blueprint(staff_bp)
 
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
