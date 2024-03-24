@@ -35,7 +35,7 @@ def invite():
     data = request.get_json(force=True)
     email = data['email']
     token = generate_signup_token(email, secret_key)
-    base_url = 'http://127.0.0.1:3000/auth/signup'
+    base_url = 'http://127.0.0.1:3000/auth/staff/signup'
     
     # Send a SendGrid request
     send_invite(email, token, base_url)

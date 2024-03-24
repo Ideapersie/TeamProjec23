@@ -59,7 +59,7 @@ def validate_signup_token(token, secret_key, salt='signup-salt'):
         print('Token is invalid/expired.')
         return False
 
-def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/signup'):
+def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/staff/signup'):
     """
     Sends an sign-up invite through email to the specified email address.
 
