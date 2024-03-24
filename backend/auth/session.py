@@ -1,6 +1,8 @@
 import jwt
-from flask import request, make_response, jsonify, Response
+
+from flask import request
 from backend.resources import config
+from backend.tables import get_customer_table_number, get_waiter_tables
 
 
 def get_decoded_session_from_cookie() -> dict | None:
@@ -74,6 +76,21 @@ class AuthSession:
     def get_is_admin(self) -> bool | None:
         """Returns user admin status (or None if user is customer)"""
         return self.get_user().get('is_admin', None)
+
+    def get_table_number(self) -> int | list[int] | None:
+        """If customer return table number sat at, if waiter return list of tables tending to, else return None."""
+
+        # Customer
+        if self.is_customer_session():
+            return get_customer_table_number(self.get_user_id())
+
+        # Waiter
+        elif self.get_role() == "Waiter":
+            return get_waiter_tables(self.get_user_id())
+
+        # Kitchen (or other)
+        else:
+            return None
 
 
 def get_session() -> AuthSession | None:
