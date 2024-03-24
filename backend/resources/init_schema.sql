@@ -59,11 +59,11 @@ CREATE TABLE PaymentInfo (
 
 DROP TABLE IF EXISTS "Notification" CASCADE; -- 'Notification' is a reserved keyword, "" required
 CREATE TABLE "Notification" (
+    notification_id SERIAL PRIMARY KEY,
     staff_id INTEGER REFERENCES Staff(staff_id) NOT NULL,
     message VARCHAR(50) NOT NULL,
     seen BOOLEAN NOT NULL,
-    time_sent TIMESTAMP NOT NULL,
-    PRIMARY KEY (staff_id, message)
+    time_sent TIMESTAMP NOT NULL
 );
 
 /* Junction Tables */

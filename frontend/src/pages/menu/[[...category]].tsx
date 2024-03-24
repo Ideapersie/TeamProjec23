@@ -6,7 +6,7 @@ import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilter
 import {env} from "../../../env.config";
 import PageTitle from "@/components/common/text/PageTitle";
 import {CartButton} from "@/components/cart-button";
-import { NotiButton } from "@/components/noti-button";
+import { CallWaiterButton } from "@/components/call-button";
 
 
 // Declaring expected prop types
@@ -28,9 +28,10 @@ export default function ViewMenu(props: Props) {
                             Go back to all items
                         </Link>
                     }
-                    <PageTitle>MENU</PageTitle>
-
-                    <NotiButton/>
+                    <div className="flex-grow flex justify-center">
+                        <PageTitle>MENU</PageTitle>
+                    </div>
+                    <CallWaiterButton/>   
                     <CartButton/>
 
                 </div>
