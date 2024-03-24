@@ -7,3 +7,6 @@ config.py
 .idea/
 **/venv/
 
+/backend/resources/docs/_build
+/backend/resources/docs/_static
+/backend/resources/docs/_templates
