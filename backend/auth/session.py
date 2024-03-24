@@ -24,6 +24,10 @@ class NoSessionError(Exception):
     """Raised when a valid session cookie is required but not found"""
 
 
+class UnauthorisedAccessError(Exception):
+    """Raised when a user's permissions are not sufficient to perform a given function"""
+
+
 class AuthSession:
     """A class for interacting with an open auth session"""
 
@@ -91,6 +95,28 @@ class AuthSession:
         # Kitchen (or other)
         else:
             return None
+
+    def assert_staff(self) -> None:
+        """Asserts that user is staff."""
+
+        if not self.is_staff_session():
+            raise UnauthorisedAccessError(f"Access denied: only accessible by staff members. You are: {self.get_session_type()}")
+
+    def assert_role(self, role: str) -> None:
+        """Asserts that user is staff, and has the specified role."""
+
+        self.assert_staff()
+
+        if role != self.get_role():
+            raise UnauthorisedAccessError(f"Access denied: only accessible by {role} role. You are {self.get_role()}")
+
+    def assert_admin(self) -> None:
+        """Asserts that user is staff, and an admin."""
+
+        self.assert_staff()
+
+        if not self.get_is_admin():
+            raise UnauthorisedAccessError(f"Access denied: only accessible by admin users.")
 
 
 def get_session() -> AuthSession | None:
