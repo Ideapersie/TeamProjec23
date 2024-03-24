@@ -1,2 +1,1 @@
-export const sessionCookieName = 'token';
-export const userInfoCookieName = 'user_info';
+export const sessionCookieName = 'session';
