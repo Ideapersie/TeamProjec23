@@ -69,6 +69,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     ))
                 ]
             }
+
+            links["Orders"] = {
+                links: [
+                    {
+                        display: "Pay bill",
+                        path: "/menu",
+                    },
+                    {
+                        display: "Track order",
+                        path: "/menu"
+                    },
+                    {
+                        display: "Order history",
+                        path: "/menu"
+                    }
+                ]
+            }
         } else if (session.session_type === "staff") {
             links["Menu"] = {
                 links: [
