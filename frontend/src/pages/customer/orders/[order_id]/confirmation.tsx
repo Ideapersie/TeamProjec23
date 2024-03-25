@@ -91,7 +91,7 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                                     <th className="text-left">Product</th>
                                     <th >Quantity</th>
                                     <th>Price</th>
-                                    <th>Total</th>
+                                    <th>Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,15 +121,17 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                     <h4 className={"text-wahaca-white"}>Track your order</h4>
                     <div>Displays check list for tracking order</div>
                     <br></br>
-                    <p>Status: {props.data.order.status}</p>
-                    <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'})}</p>
+                        <p>Status: {props.data.order.status}</p>
+                        <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'})}</p>
                     <br></br>
                     <div>
                         <ul>
                             <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
                             <li>Email: {props.data.order.customer.email}</li>
                             <li className = "font-sans font-bold">Table Number: {props.data.order.customer.table_number}</li>
+                            
                         </ul>
+                    <div className = "text-2xl font-sans font-bold absolute bottom-10 "> Total Price: <span className="italic">£{props.data.order.total}</span></div>
                     </div>
                 </div>
             </div>
@@ -154,7 +156,7 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                     <Link href={`/customer/orders/${props.data.order.id}/pay`}>
                         <button className={"m-0 font-bold text-xl bg-wahaca-blue h-full"}
                                 style={{fontFamily: "verdana, sans-serif"}}>
-                            Pay £{subtotal}
+                            Pay £{props.data.order.total}
                         </button>
                     </Link>
                 }
