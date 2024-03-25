@@ -2,7 +2,7 @@ import jwt
 
 from flask import request
 from resources import config
-from tables import get_customer_table_number, get_waiter_tables
+from tables import get_customer_table_number, get_waiter_tables, get_waiter_by_table_number
 
 
 def get_decoded_session_from_cookie() -> dict | None:
@@ -124,6 +124,14 @@ class AuthSession:
         if not self.is_customer_session():
             raise UnauthorisedAccessError(f"Access denied: only accessible by customers")
 
+    def get_waiter_id(self) -> int | None:
+        """Returns the wait"""
+
+        self.assert_customer()
+        table_number = self.get_table_number()
+
+        return get_waiter_by_table_number(table_number)
+
     def json(self) -> dict:
         """Returns session data."""
 
@@ -132,6 +140,7 @@ class AuthSession:
         # Customer
         if self.is_customer_session():
             cookie['table_number'] = self.get_table_number()
+            cookie['waiter_id'] = self.get_waiter_id()
 
         # Waiter
         if self.get_role() == "Waiter":
