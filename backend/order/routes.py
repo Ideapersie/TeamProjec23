@@ -25,7 +25,7 @@ def add_order():
     This route expects a JSON payload containing the menu items and quantity ordered.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        A JSON response and a HTTP code.
     """
 
     conn = get_db_connection()
@@ -102,7 +102,7 @@ def delete_order():
     This route expects a JSON payload which contains an order_id to be deleted.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        A JSON response and a HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -116,7 +116,7 @@ def delete_order():
                         ''')
         existing_order = cursor.fetchall()
 
-        if(existing_order != None): #Checks if the order exists in the database before executing SQL query
+        if(existing_order != None): #Checks if the order exists in the database before executing SQL queries
             cursor.execute(f'''
                             DELETE FROM OrderMenu WHERE order_id = '{order_id}';
                             DELETE FROM stafforder WHERE order_id = '{order_id}';
@@ -129,7 +129,7 @@ def delete_order():
         else:
             return jsonify({
             'message': 'Order does not exist'
-            }), 500
+            }), 406 #Error code used as the order being requested to delete does not exist
     except Exception as e:
         print(e)
         return jsonify({
@@ -145,7 +145,7 @@ def fetch_orders():
      An API endpoint to fetch and return all current orders.
 
      Returns:
-        str: A JSON response and a HTTP code.
+        The orders as JSON and a HTTP code.
      """
      conn = get_db_connection()
      cursor = conn.cursor()
@@ -158,7 +158,7 @@ def fetch_orders():
                      'customer_id': item[1],
                      'status': item[2],
                      'time_ordered': item[3],
-                     'is_paid': item[4]} for item in order]
+                     'is_paid': item[4]} for item in order] #Sorts the relevent database entries into dictionary items
             return jsonify(orders), 200
         else:
             return jsonify({
@@ -204,7 +204,7 @@ def get_order_by_table():
         
         #return data
         return jsonify(formatted_orders)
-        
+       
     except Exception as e:  #database couldn't be reached
         return jsonify("Something went wrong."), 500
 
@@ -216,30 +216,36 @@ def change_order_status():
     This route expects a JSON payload containing an order_id and status change.
     
     Returns:
-        str: A JSON response and a HTTP code.
+        A JSON response and a HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    order_to_change = request.get_json(force = True)
-    order_id = order_to_change['order_id']
-    status_change = order_to_change['status']
+    try:
+        order_to_change = request.get_json(force = True)
+        order_id = order_to_change['order_id']
+        status_change = order_to_change['status']
 
-    cursor.execute(f'''SELECT * FROM "Order" WHERE order_id = '{order_id}';''')
-    existing_order = cursor.fetchall()
-    if (existing_order != None):
-        cursor.execute(f'''UPDATE "Order" SET status = '{status_change}' WHERE order_id = '{order_id}';''')
-        message = {
-            "message" : "Order status has been changed"
-        }
-    else:
-        message = {
-            "message" : "Order status change unsuccessful, order does not exist."
-        }
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(message)
+        cursor.execute(f'''SELECT * FROM "Order" WHERE order_id = '{order_id}';''')
+        existing_order = cursor.fetchall()
+        if (existing_order != None): #Checks if the order exists
+            cursor.execute(f'''UPDATE "Order" SET status = '{status_change}' WHERE order_id = '{order_id}';''') #Updates order to have requested changes
+            conn.commit()
+            return jsonify({
+            'message': 'Order status updated'
+            }), 200
+        else:
+            return jsonify({
+            'message': 'Order does not exist'
+            }), 406 #Error code used as the order being requested to change does not exist
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+    finally:
+        cursor.close() #Closes connections
+        conn.close()
 
 @order_bp.route('/api/fetch_customer_order', methods=['POST'])
 def fetch_customer_order():

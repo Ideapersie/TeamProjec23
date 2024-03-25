@@ -119,15 +119,14 @@ def delete_notification():
         existing_notif = cursor.fetchall()
         if (existing_notif != None): #checks the notification exists in the database
             cursor.execute(f'''DELETE FROM "Notification" WHERE notification_id = '{notification_id}';''') #Deletes the notification from the database
-            message = {
-                'message' : 'Notification has been removed'
-            }
+            cursor.commit() #Commit changes into the database
+            return jsonify({
+            'message': 'Notification deleted'
+            }), 200
         else:
-            message = {
-                'message' : 'Notification does not exist in database'
-            }
-        cursor.commit() #Commit changes into the database
-        return jsonify(message), 200
+            return jsonify({
+            'message': 'Notification does not exist'
+            }), 406 #Error code used as the notification requested to delete does not exist
     except Exception as e:
         print(e)
         return jsonify({
