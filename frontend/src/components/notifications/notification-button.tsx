@@ -20,6 +20,16 @@ export function NotificationButton() {
 
 			if (response.status === 200) {
 				const data = await response.json() as ApiFetchUnseenNotifications;
+
+				// If new notification detected trigger sound
+				if (data.data.notifications.length != notifications.length) {
+					console.log({
+						1: data.data.notifications.length,
+						2: notifications.length
+					})
+					await new Audio("/audio/notification.wav").play();
+				}
+
 				setNotifications(data.data.notifications)
 			} else {
 				alert("Something went wrong");
