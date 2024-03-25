@@ -41,13 +41,7 @@ def fetch_unseen_notification():
             ORDER BY time_sent ASC;
         ''', (staff_id, False))
 
-        data = cursor.fetchall()
-
-        # If no existing notifications for the specified staff_id found
-        if not data:
-            return jsonify({
-                'message': 'No unseen notifications'
-            }), 404
+        data = cursor.fetchall() or []
 
         # Sorts the messages and times into dictionary items
         notifications = [{
