@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
-import styles from "./cart.module.css";
 import {BrowserCartObject} from "@/types";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import CartItem from "@/pages/menu/view/cart-item";
@@ -94,69 +93,76 @@ export default function Cart(props: Props) {
             }, 0);
         }, 1500);
     }
+
+    function handleClearCart() {
+        sessionStorage.removeItem('Cart');
+        setOrderedItems(null);
+    }
     
     return (
         <div>
-			<Link href={"/menu"} className={"text-base text-wahaca-teal hover:text-wahaca-blue"}>
-                Go back to all items
-            </Link>
+            <div className={"flex justify-between items-center mb-10"}>
+                <h1 className={"text-4xl m-0"}>CART</h1>
 
-            <br></br>            
-            <br></br>
-			<h1 className = "text-4xl pl-3"> CART </h1>
-            <div className="grid md:grid-cols-4 md:gap-5">
-                <div className="overflow-x-auto md:col-span-3">
-                    {orderedItems === undefined ?
-                        <p>Loading...</p>
-                        : orderedItems === null ?
-                            <PageSubtitle>No items in cart</PageSubtitle>
-                            :
-                            <table className="min-w-full">
-                                <thead className="border-b">
-                                <tr className="border-b">
-                                    <th className={styles.t_left}>Product</th>
-                                    <th className={styles.t_right}>Quantity</th>
-                                    <th className={styles.t_right}>Price</th>
-                                    <th className={styles.t_right}>Total Price</th>
-                                    <th className="p-5">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {Object.entries(orderedItems).map(([id, quantity]) => (
-                                    <CartItem
-                                        key={id}
-                                        id={parseInt(id)}
-                                        quantity={quantity}
-                                        setOrderedItems={setOrderedItems}
-                                        subtotal={subtotal}
-                                        setSubtotal={setSubtotal}
-                                    />
-                                ))}
-                                </tbody>
-                            </table>
-                    }
-                    <div className="card p-5">
-                        <ul>
-                            <li>
-                                <div className="pb-3 text-xl" style={{fontFamily: "sans-serif"}}>
-                                    Subtotal: £{Object.values(subtotal).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)}
-                                </div>
-                            </li>
-                            <li>
-                                <button onClick={ handleSubmit} className="primary-button w-full" >
-                                    Proceed to checkout
-                                </button>
-                            </li>
-                        </ul>
-                        {showPopup && (
-                            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-                                <div className="bg-gray-100 p-5 rounded-lg">
-                                    <p className="text-center text-xl font-bold text-wahaca-pink">Order Sent!</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                <div>
+                    <button onClick={handleClearCart} className={"m-0 mr-2 bg-wahaca-teal"}>Clear cart</button>
+
+                    <Link href={"/menu"}>
+                        <button className={"bg-white text-wahaca-teal m-0"}>Go back to all items</button>
+                    </Link>
                 </div>
+            </div>
+
+            {orderedItems === undefined ?
+                <p>Loading...</p>
+                    : orderedItems === null ?
+                        <PageSubtitle>No items in cart</PageSubtitle>
+                        :
+                        <table className="w-full">
+                            <thead className="border-b">
+                            <tr className="border-b">
+                                <th className={"text-left"}>Product</th>
+                                <th className={"text-right"}>Quantity</th>
+                                <th className={"text-right"}>Price</th>
+                                <th className={"text-right"}>Total Price</th>
+                                <th className="p-5">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {Object.entries(orderedItems).map(([id, quantity]) => (
+                                <CartItem
+                                    key={id}
+                                    id={parseInt(id)}
+                                    quantity={quantity}
+                                    setOrderedItems={setOrderedItems}
+                                    subtotal={subtotal}
+                                    setSubtotal={setSubtotal}
+                                />
+                            ))}
+                            </tbody>
+                        </table>
+            }
+
+            <div className="card mt-5">
+                <ul>
+                    <li>
+                        <div className="pb-3 text-xl font-bold text-wahaca-navy" style={{fontFamily: "sans-serif"}}>
+                            Subtotal: £{Object.values(subtotal).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)}
+                        </div>
+                    </li>
+                    <li>
+                        <button onClick={ handleSubmit} className="primary-button w-full" >
+                            Proceed to checkout
+                        </button>
+                    </li>
+                </ul>
+                {showPopup && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+                        <div className="bg-gray-100 p-5 rounded-lg">
+                            <p className="text-center text-xl font-bold text-wahaca-pink">Order Sent!</p>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
