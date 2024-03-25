@@ -17,7 +17,17 @@ export interface ApiGetOrderByIdResponse {
             id: number
             is_paid: boolean
             status: string
-            time_ordered: Date
+            time_ordered: string
+            ordered_items: {
+                menuitem_id: number,
+                quantity: number,
+                name: string,
+                description: string,
+                type: string,
+                price: number,
+                subtotal: number,
+                image: string
+            }[]
         }
     }
 }

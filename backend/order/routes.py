@@ -361,6 +361,29 @@ def get_order_by_id(order_id: int):
                 'data': None
             }), 404
 
+        cursor.execute("""
+            SELECT OM.menuitem_id, OM.quantity, name, description, type, price, image
+            FROM ordermenu OM
+            INNER JOIN menuitem MI ON OM.menuitem_id = MI.menuitem_id
+            WHERE order_id = %s;
+        """, (order_id,))
+
+        order_menu_items_raw = cursor.fetchall()
+        ordered_items = []
+
+        if order_menu_items_raw:
+            for item in order_menu_items_raw:
+                ordered_items.append({
+                    'menuitem_id': item[0],
+                    'quantity': item[1],
+                    'name': item[2],
+                    'description': item[3],
+                    'type': item[4],
+                    'price': item[5],
+                    'subtotal': item[1] * item[5],
+                    'image': item[6]
+                })
+
         return jsonify({
             'message': 'Success',
             'data': {
@@ -375,7 +398,8 @@ def get_order_by_id(order_id: int):
                         'last_name': order_data[6],
                         'email': order_data[7],
                         'table_number': order_data[8]
-                    }
+                    },
+                    'ordered_items': ordered_items
                 }
             }
         }), 200
