@@ -3,6 +3,8 @@ import Link from "next/link";
 import {BrowserCartObject} from "@/types";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import CartItem from "@/pages/menu/view/cart-item";
+import {ApiAddOrderResponse} from "@/api.types";
+import {useRouter} from "next/router";
 
 interface Props {
     name: string
@@ -17,6 +19,7 @@ interface Props {
  */
 export default function Cart(props: Props) {
 
+    const router = useRouter();
     const [orderedItems, setOrderedItems] = useState<BrowserCartObject | null | undefined>(undefined);
     const [showPopup, setShowPopup] = useState(false);
     const [subtotal, setSubtotal] = useState<{[id: number]: number}>({});
@@ -43,36 +46,29 @@ export default function Cart(props: Props) {
         return JSON.parse(cart);
     }
 
-    const handleSubmit = async (e:any) => {
+    async function handleSubmit(e: any) {
         e.preventDefault();
 
         // Using function to obtain data
         const cart = handleRetrieveFromCart();
-        if (Object.keys(cart).length ===0) {
+        if (Object.keys(cart).length === 0) {
             console.log("Cart is Empty, please add items in the Order page")
             return;
         }
 
         // Format the data as how backend wants
-        const orderData = {
-            customer_id: 1234,
-            time_ordered: new Date().toUTCString(), // Add current time
-            table_number: 1,
+        const payload = {
             items: Object.entries(cart).map(([menuitem_id, quantity]) => ({
                 menuitem_id: menuitem_id,
                 quantity: quantity
             }))
         };
-    
+
         // Sending the data to the Api route
         try {
-            const response = await fetch("http://127.0.0.1:5000/api/addorder", {
+            const response = await fetch("/api/addorder", {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderData),
-                mode: 'no-cors'
+                body: JSON.stringify(payload),
             });
 
             //Removes the order in browser storage after checkout. 
