@@ -87,7 +87,7 @@ export default function Cart(props: Props) {
 
                     // Refreshes the page, updating the cart to be empty
                     setTimeout(() => {
-                        router.push(`/customer/orders/${newOrderId}/receipt`)
+                        router.push(`/customer/orders/${newOrderId}/confirmation`)
                     }, 0);
                 }, 1500);
 
