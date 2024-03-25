@@ -39,7 +39,7 @@ export function CartButton() {
                 </svg>
 
                 <span className="absolute mt-10 text-xs bg-wahaca-pink rounded-full text-white font-bold px-1 py-0.5 left-0">
-                     {cartCount}
+                    {cartCount}
                 </span>
             </div>
         </Link>
