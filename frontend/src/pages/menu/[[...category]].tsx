@@ -5,9 +5,6 @@ import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
 import {env} from "../../../env.config";
 import PageTitle from "@/components/common/text/PageTitle";
-import {CartButton} from "@/components/cart-button";
-import { CallWaiterButton } from "@/components/call-button";
-
 
 // Declaring expected prop types
 interface Props {
@@ -31,9 +28,6 @@ export default function ViewMenu(props: Props) {
                     <div className="flex-grow flex justify-center">
                         <PageTitle>MENU</PageTitle>
                     </div>
-                    <CallWaiterButton/>   
-                    <CartButton/>
-
                 </div>
 
                 <p className={"text-stone-400"}>

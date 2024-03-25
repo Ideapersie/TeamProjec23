@@ -2,9 +2,7 @@ import {GetServerSidePropsContext} from "next";
 import {useRouter} from "next/router"
 import {Ingredient, MenuItem} from "@/types";
 import styles from "./[id].module.css";
-import Link from "next/link";
 import { useState } from "react";
-import {CartButton} from "@/components/cart-button";
 import { CustomerMenuItem } from "@/components/menu/customer/CustomerMenuItem";
 import AllergenSummary from "@/components/allergens/AllergenSummary";
 
@@ -82,7 +80,6 @@ export default function ItemPage(props: PageProps) {
                         Go back
                     </button>
                 </div>
-                <CartButton/>
             </div>
 
             <div className={"min-h-screen flex-col"}>

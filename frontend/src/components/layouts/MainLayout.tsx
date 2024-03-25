@@ -4,6 +4,9 @@ import Link from "next/link";
 import CurrentUser from "@/components/side-menu/CurrentUser";
 import React from "react";
 import Image from "next/image";
+import {NotiButton} from "@/components/noti-button";
+import {CartButton} from "@/components/cart-button";
+import {CallWaiterButton} from "@/components/call-button";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -53,7 +56,17 @@ export default function MainLayout({ children }: any): React.ReactNode {
 
             {/*Right panel / page contents*/}
             <main className={"p-16"} style={{marginLeft: SIDE_MENU_WIDTH}}>
-                {children}
+                <div className={"relative"}>
+                    {children}
+
+                    <div className={"absolute right-0 top-0"}>
+                        <div className="flex gap-5 items-center">
+                            <CallWaiterButton/>
+                            <CartButton/>
+                            <NotiButton/>
+                        </div>
+                    </div>
+                </div>
             </main>
 
             <style jsx>{`

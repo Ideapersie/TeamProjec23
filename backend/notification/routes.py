@@ -10,8 +10,10 @@ from datetime import datetime
 
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
+from auth.session import AuthSession
 
 notification_bp = Blueprint('notification', __name__)
+
 
 @notification_bp.route('/api/fetchunseennotifications', methods=['GET'])
 def fetch_unseen_notification():
@@ -23,32 +25,48 @@ def fetch_unseen_notification():
     Returns:
         str: A JSON response and a HTTP code.
     """
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
     try:
-        staff = request.get_json(force = True)
-        staff_id = staff['staff_id']
+        session = AuthSession()  # Throws error if no valid session
+        staff_id = session.get_user_id()
 
-        cursor.execute(f'''SELECT message, time_sent FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false' ORDER BY time_sent ASC;''')
-        notification = cursor.fetchall() #Fetches the data from the database
-        if (notification != None): #Checks there are existing notifications for the specified staff_id
-            notifications = [{'message' : item[0], 
-                            'time_sent' : item[1]} for item in notification] #Sorts the messages and times into dictionary items
-            cursor.close()
-            conn.close()
-            return jsonify(notifications), 200
-        else:
-            return jsonify({
-                'message': 'No unseen notifications'
-            }), 200
+        # Fetches the data from the database
+        cursor.execute('''
+            SELECT message, time_sent, seen
+            FROM "Notification"
+            WHERE staff_id = %s AND seen = %s
+            ORDER BY time_sent ASC;
+        ''', (staff_id, False))
+
+        data = cursor.fetchall() or []
+
+        # Sorts the messages and times into dictionary items
+        notifications = [{
+            'message': item[0],
+            'time_sent': item[1],
+            'is_seen': item[2]
+        } for item in data]
+
+        # Success 200 response
+        return jsonify({
+            'message': 'Successfully fetched unseen notifications',
+            'data': {
+                'notifications': notifications
+            }
+        }), 200
+
+    # Any other unhandled exceptions...
     except Exception as e:
         print(e)
         return jsonify({
             'message': 'Something went wrong'
         }), 500
+
     finally:
-        cursor.close() #Closes connections
+        cursor.close()  # Closes connections
         conn.close()
 
 @notification_bp.route('/api/addnotification', methods=['POST'])
