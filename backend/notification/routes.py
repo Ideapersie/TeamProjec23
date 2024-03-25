@@ -22,23 +22,29 @@ def fetch_unseen_notification():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    staff_id = staff['staff_id']
+    try:
+        staff_id = staff['staff_id']
 
-    cursor.execute(f'''SELECT message, time_sent FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false' ORDER BY time_sent ASC;''')
-    notification = cursor.fetchall() #fetches the data from the database
-    if (notification != None): #checks there are existing notifications for the specified staff_id
-        notifications = [{'message' : item[0], 
-                          'time_sent' : item[1]} for item in notification] #sorts the messages and times into dictionary items
+        cursor.execute(f'''SELECT message, time_sent FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false' ORDER BY time_sent ASC;''')
+        notification = cursor.fetchall() #fetches the data from the database
+        if (notification != None): #checks there are existing notifications for the specified staff_id
+            notifications = [{'message' : item[0], 
+                            'time_sent' : item[1]} for item in notification] #sorts the messages and times into dictionary items
+            cursor.close()
+            conn.close()
+            return jsonify(notifications), 200
+        else:
+            return jsonify({
+                'message': 'No unseen notifications'
+            }), 200
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+    finally:
         cursor.close()
         conn.close()
-        return jsonify(notifications)
-    
-    message = {
-        'message' : 'No unseen notifications.'
-        }
-    cursor.close()
-    conn.close()
-    return jsonify(message)
 
 
 @notification_bp.route('/api/addnotification', methods=['POST'])
