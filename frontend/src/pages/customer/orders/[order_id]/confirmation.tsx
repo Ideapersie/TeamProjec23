@@ -53,14 +53,14 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
 
 
     return (
-        <div className={"flex-grow flex flex-col"}>
+        <div className={"flex-grow flex flex-col "}>
             <PageHeader>
                 <PageTitle>Your order has been received!</PageTitle>
-                <PageSubtitle >Order ID: <span className = "text-lg">{props.data.order.id}</span></PageSubtitle>
+                <PageSubtitle>Order ID: <span className = "text-xl">{props.data.order.id}</span></PageSubtitle>
             </PageHeader>
 
-            <div className={"bg-white shadow-lg rounded-xl flex flex-grow overflow-hidden"}>
-                {/*Left column - basket*/}
+            <div className={"bg-white shadow-lg rounded-xl flex flex-grow overflow-hidden "}>
+                
                 {/* <div className={"flex-grow p-10"}>
                     <h4>Ordered items</h4>
                     <br></br>
@@ -83,46 +83,54 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                         ))}
                     </div> 
                 </div> */}
-                    <div>
-                            <table className="border-collapse w-full">
-                                <thead>
-                                    <tr className="border-b text-lg">
-                                        <th className="text-left">Product</th>
-                                        <th className="text-right">Quantity</th>
-                                        <th className="text-right">Price</th>
-                                        <th className="text-right">Total</th>
-                                        <th className="p-2">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {props.data.order.ordered_items.map((item, index) => (
-                                        <tr key={index} className="border-b">
-                                            <td className="text-left">
-                                                <div className="flex flex-col items-center">
-                                                    <h3 className="text-lg font-bold">{item.name}</h3>
-                                                    <img src={item.image} alt={item.name} className="w-60 h-40 mr-5 p-2 rounded-2xl" />
+                {/*Left column - basket*/}
+                    <div className={"flex-grow p-5"}>
+                        <table className="border-collapse w-full m-2">
+                            <thead>
+                                <tr className="border-b text-lg text-wahaca-navy">
+                                    <th className="text-left">Product</th>
+                                    <th >Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {props.data.order.ordered_items.map((item, index) => (
+                                    <tr key={index} className="border-b ">
+                                        <td className="text-left">
+                                            <div className="flex flex-col items-left">
+                                                <div className="w-60 overflow-hidden">
+                                                    <h3 className="text-base font-semibold mb-0 mt-2 break-words">{item.name}</h3>
                                                 </div>
-                                            </td>
-                                            <td className="text-right">{item.quantity}</td>
-                                            <td className="text-right">£{item.price}</td>
-                                            <td className="text-right">£{item.subtotal}</td>
-                                            <td className="p-2">
-                                               
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                                <img src={item.image} alt={item.name} height={50} width ={160} className="mr-5 p-2 rounded-2xl" />
+                                            </div>
+                                        </td>
+                                        <td className="p-5 italic text-center font-semibold">{item.quantity}</td>
+                                        <td className="p-8 italic text-center">£{item.price}</td>
+                                        <td className="italic text-center font-semibold">£{item.subtotal}</td>
+                                        <td className="p-10"></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
 
 
                 {/*Right column - Order status*/}
-                <div className={"p-10 bg-wahaca-navy flex-grow max-w-lg  text-wahaca-white"}>
+                <div className={"p-10 bg-wahaca-navy flex-grow rounded-r-2xl text-wahaca-white"}>
                     <h4 className={"text-wahaca-white"}>Track your order</h4>
                     <div>Displays check list for tracking order</div>
                     <br></br>
                     <p>Status: {props.data.order.status}</p>
                     <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'})}</p>
+                    <br></br>
+                    <div>
+                        <ul>
+                            <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
+                            <li>Email: {props.data.order.customer.email}</li>
+                            <li className = "font-sans font-bold">Table Number: {props.data.order.customer.table_number}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
