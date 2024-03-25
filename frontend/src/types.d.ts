@@ -33,6 +33,7 @@ export type Order = {
 }
 
 export type Notification = {
+    id: number,
     message: string,
     time_sent: string,
     is_seen: boolean

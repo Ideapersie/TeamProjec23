@@ -35,7 +35,7 @@ def fetch_unseen_notification():
 
         # Fetches the data from the database
         cursor.execute('''
-            SELECT message, time_sent, seen
+            SELECT message, time_sent, seen, notification_id
             FROM "Notification"
             WHERE staff_id = %s AND seen = %s
             ORDER BY time_sent ASC;
@@ -47,7 +47,8 @@ def fetch_unseen_notification():
         notifications = [{
             'message': item[0],
             'time_sent': item[1],
-            'is_seen': item[2]
+            'is_seen': item[2],
+            'id': item[3]
         } for item in data]
 
         # Success 200 response
