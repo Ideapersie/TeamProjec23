@@ -7,38 +7,42 @@ export function NotificationButton() {
 
 	const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([]);
-
-	useEffect(() => {
-        void fetchNotifications(); // Fetch notifications when the component mounts
+    const [oldNotifications, setOldNotifications] = useState<Notification[]>([]);
+    useEffect(() => {
+        fetchNotifications(); // Fetch notifications when the component mounts
         const interval = setInterval(fetchNotifications, 5000); // Continuously fetch new notifications every 5 seconds
         return () => clearInterval(interval); // Clean up the interval when the component unmounts
     }, []);
 
-	async function fetchNotifications() {
-		try {
-			const response = await fetch('/api/fetchunseennotifications');
+    async function fetchNotifications() {
+        try {
+            const response = await fetch('/api/fetchunseennotifications');
 
-			if (response.status === 200) {
-				const data = await response.json() as ApiFetchUnseenNotifications;
+            if (response.status === 200) {
+                const data = await response.json() as ApiFetchUnseenNotifications;
+                setNotifications(data.data.notifications);
+            } else {
+                alert("Something went wrong");
+            }
+        } catch (error) {
+            console.error("Failed to fetch notifications:", error);
+        }
+    }
 
-				// If new notification detected trigger sound
-				if (data.data.notifications.length != notifications.length) {
-					console.log({
-						1: data.data.notifications.length,
-						2: notifications.length
-					})
-					await new Audio("/audio/notification.wav").play();
-				}
+    // New useEffect hook for playing sound and updating oldNotifications
+    useEffect(() => {
+        const currentNotificationsString = JSON.stringify(notifications);
+        const oldNotificationsString = JSON.stringify(oldNotifications);
 
-				setNotifications(data.data.notifications)
-			} else {
-				alert("Something went wrong");
-			}
-
-		} catch (error) {
-			console.error("Failed to fetch notifications:", error);
-		}
-	}
+        if (currentNotificationsString !== oldNotificationsString) {
+            // Play sound only if there are new notifications.
+            if (notifications.length > oldNotifications.length) {
+                new Audio("/audio/notification.wav").play();
+            }
+            // Update oldNotifications to match the current state.
+            setOldNotifications(notifications);
+        }
+    }, [notifications]); // Only re-run the effect if notifications change.
 
     return (
 		<section className={"select-none"}>
