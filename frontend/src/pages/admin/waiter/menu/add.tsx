@@ -43,8 +43,6 @@ export default function AddItemPage() {
 
     /**
      * Send the form data to Flask API route.
-     * 
-     * @param e The event object representing the form submission event.
      */
     const handleSubmit = async (e: any) => {
 

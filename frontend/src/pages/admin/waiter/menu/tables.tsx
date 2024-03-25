@@ -35,7 +35,6 @@ export default function ViewTablesPage() {
     const [orders, setOrders] = useState<Order[]>([]);
 
     {/* Fetch order information */}
-    {/* customer_id, customer_full_name, table_number, status, time_ordered, order_id, is_paid, staff_id, waiter_full_name */}
     async function fetchItems(): Promise<Order[]> {
         const response = await fetch('/api/fetch_table_waiter_order');
         const data = await response.json();
@@ -90,7 +89,7 @@ export default function ViewTablesPage() {
                 ))}
             </div>
 
-            {/* Open a sidebar to display table order information */}
+            {/* Open a popup to display table order information */}
             {isSidebarOpen && (
                 <div className={styles.sidebar}>
                     <button className={styles.close} onClick={handleCloseSidebar}>&#10006;</button>

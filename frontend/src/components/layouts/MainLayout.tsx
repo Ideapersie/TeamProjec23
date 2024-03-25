@@ -4,7 +4,7 @@ import Link from "next/link";
 import CurrentUser from "@/components/side-menu/CurrentUser";
 import React from "react";
 import Image from "next/image";
-import {NotiButton} from "@/components/noti-button";
+import {NotificationButton} from "@/components/notifications/notification-button";
 import {CartButton} from "@/components/cart-button";
 import {CallWaiterButton} from "@/components/call-button";
 
@@ -63,7 +63,7 @@ export default function MainLayout({ children }: any): React.ReactNode {
                         <div className="flex gap-5 items-center">
                             <CallWaiterButton/>
                             <CartButton/>
-                            <NotiButton/>
+                            <NotificationButton/>
                         </div>
                     </div>
                 </div>

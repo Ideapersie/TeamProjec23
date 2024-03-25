@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Notification } from "@/types";
 import {ApiFetchUnseenNotifications} from "@/api.types";
 
-export function NotiButton() {
+export function NotificationButton() {
 
 	const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([]);
