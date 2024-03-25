@@ -4,7 +4,6 @@ A Flask blueprint defining the API routes for interacting with the orders.
 The blueprint defines the following endpoints:
     /api/addorder (POST): Adds an order to the database.
     /api/deleteorder (POST): Deletes an order from the database.
-    /api/modifyorder (POST): Modifies an existing order.
     /api/fetchorders (GET): Fetches all current orders.
     /api/getTableOrder (GET): Fetches orders by table number.
     /api/fetch_customer_order (GET): Fetches orders related to a customer.
@@ -22,6 +21,11 @@ order_bp = Blueprint('order', __name__)
 def add_order():
     """
     An API endpoint to add orders to the database.
+
+    This route expects a JSON payload containing the menu items and quantity ordered.
+
+    Returns:
+        str: A JSON response and a HTTP code.
     """
 
     conn = get_db_connection()
@@ -94,6 +98,11 @@ def add_order():
 def delete_order():
     """
     An API endpoint to delete orders from the database.
+
+    This route expects a JSON payload which contains an order_id to be deleted.
+
+    Returns:
+        str: A JSON response and a HTTP code.
     """
     order_to_delete = request.get_json(force = True)
     order_id = order_to_delete['order_id']
@@ -123,47 +132,13 @@ def delete_order():
     conn.close()
     return jsonify(message)
 
-@order_bp.route('/api/modifyorder', methods=['POST'])
-def modify_order():
-    """
-    An API endpoint to modify existing orders in the database.
-    """
-    order_to_modify = request.json(force = True)
-    order_id = order_to_modify['order_id'] 
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute(f'''
-                   SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
-                   ''')
-    existing_order = cursor.fetchall()
-    
-    if (existing_order != None):
-        cursor.execute(f'''
-                       DELETE FROM OrderMenu WHERE order_id = '{order_id}';
-                       ''')
-        for item in order_to_modify['items']:
-            for x in range (int(item['quantity'])):
-                 cursor.execute(f'''
-                                INSERT INTO OrderMenu (customer_id, menuitem_id) VALUES
-                                ('{order_id}', '{item['menuitem_id']}');
-                                ''')
-        message = {
-            "message" : "Order successfully updated."
-        }
-    else:
-        message = {
-            "message" : "Order could not be updated, does not exist."
-        }
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(message)
-
 @order_bp.route('/api/fetchorders', methods=['GET'])
 def fetch_orders():
      """
      An API endpoint to fetch and return all current orders.
+
+     Returns:
+        str: A JSON response and a HTTP code.
      """
      conn = get_db_connection()
      cursor = conn.cursor()
@@ -186,7 +161,7 @@ def get_order_by_table():
     An api endpoint to get each order_id and its corrosponding table number
         
     Returns:
-        A repsponse containing data in the format {table_number, order_id}
+        A response containing data in the format {table_number, order_id}
     """
     try:
         #connect to database
@@ -219,6 +194,11 @@ def get_order_by_table():
 def change_order_status():
     """
     An API endpoint to change the status of an order.
+
+    This route expects a JSON payload containing an order_id and status change.
+    
+    Returns:
+        str: A JSON response and a HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()

@@ -17,6 +17,7 @@ notification_bp = Blueprint('notification', __name__)
 def fetch_unseen_notification():
     """
     An API endpoint to fetch unseen notification messages from the database.
+    
     This route expects a JSON payload containing a staff_id. 
 
     Returns:
@@ -55,6 +56,7 @@ def fetch_unseen_notification():
 def add_notification():
     """
     An API endpoint to add a notification to the database.
+
     This route expects a JSON payload containing a staff_id and message.
 
     Returns:
@@ -104,6 +106,7 @@ def delete_notification():
     """
     An API endpoint to delete a notification.
 
+    This route expects a JSON payload containing a notification_id.
     
     Returns:
         str: A JSON response and a HTTP code.
