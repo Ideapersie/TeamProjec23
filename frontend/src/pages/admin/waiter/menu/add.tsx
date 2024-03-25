@@ -96,16 +96,7 @@ export default function AddItemPage() {
                     </label>
 
                     <label>Item type
-                        <select name="type"  value={newItem.type} onChange={handleChange}>
-                            <option value="Burgers">Burgers</option>
-                            <option value="Sandwiches">Sandwiches</option>
-                            <option value="Pizzas">Pizzas</option>
-                            <option value="Pastas">Pastas</option>
-                            <option value="Salads">Salads</option>
-                            <option value="Seafood">Seafood</option>
-                            <option value="Soups">Soups</option>
-                            <option value="Desserts">Desserts</option>
-                        </select>
+                        <input type="text" name="type"  value={newItem.type} onChange={handleChange} required/>
                     </label>
 
                     <label>Item price
