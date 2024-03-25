@@ -16,7 +16,11 @@ notification_bp = Blueprint('notification', __name__)
 @notification_bp.route('/api/fetchunseennotifications', methods=['GET'])
 def fetch_unseen_notification():
     """
-    An API endpoint to fetch unseen notification messages from the databases.
+    An API endpoint to fetch unseen notification messages from the database.
+    This route expects a JSON payload containing a staff_id. 
+
+    Returns:
+        str: A JSON response and a HTTP code.
     """
     staff = request.get_json(force = True)
     conn = get_db_connection()
@@ -26,10 +30,10 @@ def fetch_unseen_notification():
         staff_id = staff['staff_id']
 
         cursor.execute(f'''SELECT message, time_sent FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false' ORDER BY time_sent ASC;''')
-        notification = cursor.fetchall() #fetches the data from the database
-        if (notification != None): #checks there are existing notifications for the specified staff_id
+        notification = cursor.fetchall() #Fetches the data from the database
+        if (notification != None): #Checks there are existing notifications for the specified staff_id
             notifications = [{'message' : item[0], 
-                            'time_sent' : item[1]} for item in notification] #sorts the messages and times into dictionary items
+                            'time_sent' : item[1]} for item in notification] #Sorts the messages and times into dictionary items
             cursor.close()
             conn.close()
             return jsonify(notifications), 200
@@ -43,7 +47,7 @@ def fetch_unseen_notification():
             'message': 'Something went wrong'
         }), 500
     finally:
-        cursor.close()
+        cursor.close() #Closes connections
         conn.close()
 
 
@@ -51,6 +55,10 @@ def fetch_unseen_notification():
 def add_notification():
     """
     An API endpoint to add a notification to the database.
+    This route expects a JSON payload containing a staff_id and message.
+
+    Returns:
+        str: A JSON response and a HTTP code.
     """
 
     conn = get_db_connection()
@@ -95,25 +103,36 @@ def add_notification():
 def delete_notification():
     """
     An API endpoint to delete a notification.
+
+    
+    Returns:
+        str: A JSON response and a HTTP code.
     """
-    notification = request.get_json(force = True)
     conn = get_db_connection()
     cursor = conn.cursor()
+    try:
+        notification = request.get_json(force = True)
+        staff_id = notification['staff_id']
+        message = notification['message']
 
-    staff_id = notification['staff_id']
-    message = notification['message']
-
-    cursor.execute(f'''SELECT * FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''')
-    existing_notif = cursor.fetchall()
-    if (existing_notif != None): #checks the notification exists in the database
-        cursor.execute(f'''DELETE FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''') #deletes the notification from the database
-        message = {
-        'message' : 'Notification has been removed'
-        }
-    else:
-        message = {
-            'message' : 'Notification does not exist in database'
-        }
-    cursor.close()
-    conn.close()
-    return jsonify(message)
+        cursor.execute(f'''SELECT * FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''')
+        existing_notif = cursor.fetchall()
+        if (existing_notif != None): #checks the notification exists in the database
+            cursor.execute(f'''DELETE FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''') #Deletes the notification from the database
+            message = {
+                'message' : 'Notification has been removed'
+            }
+        else:
+            message = {
+                'message' : 'Notification does not exist in database'
+            }
+        cursor.commit() #Commit changes into the database
+        return jsonify(message), 200
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+    finally: #Closes connections
+        cursor.close()
+        conn.close()
