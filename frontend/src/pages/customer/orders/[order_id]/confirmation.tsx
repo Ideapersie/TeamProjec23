@@ -1,8 +1,6 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
-import CartItem from "@/pages/menu/view/cart-item";
-import {BrowserCartObject} from "@/types";
 import React, {useEffect, useState} from "react";
 
 
@@ -35,7 +33,8 @@ export default function OrderConfirmationPage(props:Props) {
                 </div>
             </div>
             <div>
-                <button onClick={() => { window.location.href = `/customer/orders/${1}/payment` }}>
+                {/* Need to change to order menu ID */}
+                <button onClick={() => { window.location.href = `/customer/orders/${1}/payment` }}> 
                     Pay bill
                 </button>
             </div>
