@@ -11,6 +11,7 @@ from order.routes import order_bp
 from payment.routes import payment_bp
 from notification.routes import notification_bp
 from staff.routes import staff_bp
+from tables.routes import tables_bp
 
 app = Flask(__name__)
 app.register_blueprint(menu_bp)
@@ -19,6 +20,7 @@ app.register_blueprint(order_bp)
 app.register_blueprint(payment_bp)
 app.register_blueprint(notification_bp)
 app.register_blueprint(staff_bp)
+app.register_blueprint(tables_bp)
 
 if __name__ == '__main__':
     app.run(debug=True)
