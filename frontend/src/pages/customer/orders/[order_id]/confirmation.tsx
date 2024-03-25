@@ -5,6 +5,7 @@ import type {GetServerSideProps, InferGetServerSidePropsType} from "next";
 import {env} from "../../../../../env.config";
 import {ApiGetOrderByIdResponse} from "@/api.types";
 import {useEffect, useState} from "react";
+import Link from "next/link";
 
 /**
  * The props required by the page component.
@@ -93,9 +94,12 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                     }
                 </div>
                 {!props.data.order.is_paid &&
-                    <button className={"m-0 font-bold text-xl bg-wahaca-blue"} style={{fontFamily: "verdana, sans-serif"}}>
-                        Pay £{subtotal}
-                    </button>
+                    <Link href={`/customer/orders/${props.data.order.id}/pay`}>
+                        <button className={"m-0 font-bold text-xl bg-wahaca-blue h-full"}
+                                style={{fontFamily: "verdana, sans-serif"}}>
+                            Pay £{subtotal}
+                        </button>
+                    </Link>
                 }
             </div>
         </div>
