@@ -104,33 +104,40 @@ def delete_order():
     Returns:
         str: A JSON response and a HTTP code.
     """
-    order_to_delete = request.get_json(force = True)
-    order_id = order_to_delete['order_id']
-
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute(f'''
-                   SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
-                   ''')
-    existing_order = cursor.fetchall()
 
-    if(existing_order != None):
+    try:
+        order_to_delete = request.get_json(force = True)
+        order_id = order_to_delete['order_id']
+
         cursor.execute(f'''
-                       DELETE FROM OrderMenu WHERE order_id = '{order_id}';
-                       DELETE FROM stafforder WHERE order_id = '{order_id}';
-                       DELETE FROM "Order" WHERE order_id = '{order_id}';
-                       ''')
-        message = {
-            "message" : "Order has been successfully deleted."
-        }
-    else:
-        message = {
-            "message" : "Deleting order unsuccessful, order does not exist."
-        }
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(message)
+                        SELECT order_id FROM "Order" WHERE order_id = '{order_id}';
+                        ''')
+        existing_order = cursor.fetchall()
+
+        if(existing_order != None): #Checks if the order exists in the database before executing SQL query
+            cursor.execute(f'''
+                            DELETE FROM OrderMenu WHERE order_id = '{order_id}';
+                            DELETE FROM stafforder WHERE order_id = '{order_id}';
+                            DELETE FROM "Order" WHERE order_id = '{order_id}';
+                            ''')
+            conn.commit()
+            return jsonify({
+            'message': 'Order successfully deleted'
+            }), 200
+        else:
+            return jsonify({
+            'message': 'Order does not exist'
+            }), 500
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+    finally: #Closes connections
+        cursor.close()
+        conn.close()
 
 @order_bp.route('/api/fetchorders', methods=['GET'])
 def fetch_orders():

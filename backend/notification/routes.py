@@ -51,7 +51,6 @@ def fetch_unseen_notification():
         cursor.close() #Closes connections
         conn.close()
 
-
 @notification_bp.route('/api/addnotification', methods=['POST'])
 def add_notification():
     """
