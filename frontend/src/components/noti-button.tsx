@@ -8,7 +8,7 @@ export function NotiButton() {
     const [notifications, setNotifications] = useState<Notification[]>([]);
 	const fetchNotifications = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/fetchunseennotifications', {
+            const response = await fetch('/api/fetchunseennotifications', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
