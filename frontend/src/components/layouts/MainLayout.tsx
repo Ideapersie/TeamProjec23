@@ -52,13 +52,13 @@ export default function MainLayout({ children }: any): React.ReactNode {
             </nav>
 
             {/*Right panel / page contents*/}
-            <main className={"p-16"} style={{marginLeft: SIDE_MENU_WIDTH}}>
+            <main className={"p-16 min-h-screen flex flex-col"} style={{marginLeft: SIDE_MENU_WIDTH}}>
                 {children}
             </main>
 
             <style jsx>{`
                 .left-panel {
-                    box-shadow: rgba(230, 233, 236, 0.67) 1px 0px 10px;
+                    box-shadow: rgba(230, 233, 236, 0.67) 1px 0 10px;
                 }
             `}</style>
         </div>
