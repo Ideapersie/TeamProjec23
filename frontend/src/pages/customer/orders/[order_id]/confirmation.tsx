@@ -59,9 +59,9 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                 <PageSubtitle >Order ID: <span className = "text-lg">{props.data.order.id}</span></PageSubtitle>
             </PageHeader>
 
-            <div className={"bg-white shadow rounded-xl flex flex-grow overflow-hidden"}>
+            <div className={"bg-white shadow-lg rounded-xl flex flex-grow overflow-hidden"}>
                 {/*Left column - basket*/}
-                <div className={"flex-grow p-10"}>
+                {/* <div className={"flex-grow p-10"}>
                     <h4>Ordered items</h4>
                     <br></br>
                     <div>
@@ -71,12 +71,53 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                             <li className = "font-sans font-bold">Table Number: {props.data.order.customer.table_number}</li>
                         </ul>
                     </div>
+                    <div className="grid grid-cols-4 gap-4 mt-5">
+                        {props.data.order.ordered_items.map((item, index) => (
+                            <div key={index} className="border p-4 rounded-lg">
+                                <img src={item.image} alt={item.name} className="w-full h-auto mb-2" />
+                                <h3 className="text-lg font-bold">{item.name}</h3>
+                                <p className="text-sm">Price: £{item.price}</p>
+                                <p className="text-sm">Quantity: {item.quantity}</p>
+                                <p className="text-sm">Subtotal: £{item.subtotal}</p>
+                            </div>
+                        ))}
+                    </div> 
+                </div> */}
+                    <div>
+                            <table className="border-collapse w-full">
+                                <thead>
+                                    <tr className="border-b text-lg">
+                                        <th className="text-left">Product</th>
+                                        <th className="text-right">Quantity</th>
+                                        <th className="text-right">Price</th>
+                                        <th className="text-right">Total</th>
+                                        <th className="p-2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {props.data.order.ordered_items.map((item, index) => (
+                                        <tr key={index} className="border-b">
+                                            <td className="text-left">
+                                                <div className="flex flex-col items-center">
+                                                    <h3 className="text-lg font-bold">{item.name}</h3>
+                                                    <img src={item.image} alt={item.name} className="w-60 h-40 mr-5 p-2 rounded-2xl" />
+                                                </div>
+                                            </td>
+                                            <td className="text-right">{item.quantity}</td>
+                                            <td className="text-right">£{item.price}</td>
+                                            <td className="text-right">£{item.subtotal}</td>
+                                            <td className="p-2">
+                                               
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
 
-                    {/* TODO: Modify to loop over ordered items, with styling similar to cart */}
-                </div>
 
                 {/*Right column - Order status*/}
-                <div className={"p-10 bg-wahaca-navy flex-grow max-w-lg text-wahaca-white"}>
+                <div className={"p-10 bg-wahaca-navy flex-grow max-w-lg  text-wahaca-white"}>
                     <h4 className={"text-wahaca-white"}>Track your order</h4>
                     <div>Displays check list for tracking order</div>
                     <br></br>
