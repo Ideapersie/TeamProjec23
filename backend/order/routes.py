@@ -25,7 +25,7 @@ def add_order():
     This route expects a JSON payload containing the menu items and quantity ordered.
 
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
     """
 
     conn = get_db_connection()
@@ -102,7 +102,7 @@ def delete_order():
     This route expects a JSON payload which contains an order_id to be deleted.
 
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -145,7 +145,7 @@ def fetch_orders():
      An API endpoint to fetch and return all current orders.
 
      Returns:
-        The orders as JSON and a HTTP code.
+        str: The orders as JSON and a HTTP code.
      """
      conn = get_db_connection()
      cursor = conn.cursor()
@@ -216,7 +216,7 @@ def change_order_status():
     This route expects a JSON payload containing an order_id and status change.
     
     Returns:
-        A JSON response and a HTTP code.
+        str: A JSON response and a HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
