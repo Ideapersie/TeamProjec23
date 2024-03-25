@@ -71,7 +71,7 @@ export default function CartItem(props: Props) {
                     <img className = {"rounded-lg mt-2 "} src= {data.image} height = {"200"} width = {"280"} />  
                 </td>
                 <td className={"text-right italic"} >{props.quantity} serving(s)</td>
-                <td className={"text-right italic font-bold text-wahaca-navy"}>£{data.price} </td>
+                <td className={"text-right italic font-bold text-wahaca-navy"}>£{parseFloat(data.price).toFixed(2)} </td>
                 <td className={`text-right font-bold italic text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
 
                 <td className="p-5 text-center">
