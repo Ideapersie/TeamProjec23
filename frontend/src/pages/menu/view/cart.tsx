@@ -101,8 +101,8 @@ export default function Cart(props: Props) {
     
     return (
         <div>
-            <div className={"flex justify-between items-center mb-10"}>
-                <h1 className={"text-4xl m-0"}>CART</h1>
+            <div className={"flex justify-between items-center mb-5"}>
+                <h1 className={"text-5xl m-0"}>CART</h1>
 
                 <div>
                     <button onClick={handleClearCart} className={"m-0 mr-2 bg-wahaca-teal"}>Clear cart</button>
@@ -120,12 +120,12 @@ export default function Cart(props: Props) {
                         :
                         <table className="w-full">
                             <thead className="border-b">
-                            <tr className="border-b">
+                            <tr className="border-b text-lg">
                                 <th className={"text-left"}>Product</th>
                                 <th className={"text-right"}>Quantity</th>
                                 <th className={"text-right"}>Price</th>
                                 <th className={"text-right"}>Total Price</th>
-                                <th className="p-5">Action</th>
+                                <th className="p-2">Action</th>
                             </tr>
                             </thead>
                             <tbody>
