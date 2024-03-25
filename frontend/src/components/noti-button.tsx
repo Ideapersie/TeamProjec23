@@ -6,27 +6,37 @@ export function NotiButton() {
 
 	const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([]);
-
 	const fetchNotifications = async () => {
         try {
-            const response = await fetch(`http://127.0.0.1:5000/api/fetchunseennotifications`);
+            const response = await fetch('http://127.0.0.1:5000/api/fetchunseennotifications', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+				mode: 'no-cors',
+            });
+			console.log('Response:', response);
             const data = await response.json();
-            if (data && data.length > 0) {
-                setNotifications(data);
+			console.log('Data:', data);
+            if (Array.isArray(data)) {
+                setNotifications(data); // Set notifications to the data returned from the server
+            } else {
+				console.log('Invalid data format:', data);
             }
         } catch (error) {
             console.error("Failed to fetch notifications:", error);
         }
     };
 
-    useEffect(() => {
-        const interval = setInterval(fetchNotifications, 5000); // Fetch new notifications every 5 seconds
 
-        return () => clearInterval(interval); // Clean up the interval on component unmount
-    }, []);
+    useEffect(() => {
+        fetchNotifications(); // Fetch notifications when the component mounts
+        const interval = setInterval(fetchNotifications, 5000); // Continuously fetch new notifications every 5 seconds
+        return () => clearInterval(interval); // Clean up the interval when the component unmounts
+    }, []); 
 
     return (
-		<section className="mt-10">
+		<section className="absolute right-20 top-10 mt-10 mr-40">
 			<div onClick={() => setIsOpen(!isOpen)} className="flex items-right relative  hover:scale-110">
 				<svg xmlns="http://www.w3.org/2000/svg"
 					height={"2.5rem"}
@@ -45,7 +55,7 @@ export function NotiButton() {
 				<div style={{ position: 'absolute', backgroundColor: '#f9f9f9', minWidth: '160px', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', padding: '12px 16px', zIndex: '1' }}>
 					{notifications.length > 0 ? notifications.map((notification, index) => (
 						<p key={index}>
-						Staff ID: {notification.staff_id}, Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString()}
+						Staff ID: {notification.staff_id}, Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}
 						</p>
 					)) : <p>No new notifications.</p>}
 				</div>
