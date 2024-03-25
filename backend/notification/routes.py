@@ -10,7 +10,7 @@ from datetime import datetime
 
 from flask import Blueprint, request, jsonify, Response
 from menu.connection import get_db_connection
-from auth.session import AuthSession
+from auth.session import AuthSession, UnauthorisedAccessError
 
 notification_bp = Blueprint('notification', __name__)
 
@@ -31,6 +31,15 @@ def fetch_unseen_notification():
 
     try:
         session = AuthSession()  # Throws error if no valid session
+
+        try:
+            session.assert_staff()  # Throws error if not staff user
+        except UnauthorisedAccessError as e:
+            print(e)
+            return jsonify({
+                'message': 'Access denied: only accessible by staff members'
+            }), 403
+
         staff_id = session.get_user_id()
 
         # Fetches the data from the database
