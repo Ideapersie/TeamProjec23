@@ -12,59 +12,83 @@ The blueprint defines the following endpoints:
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
 from auth.authentication import customer_waiters
-from datetime import datetime, timedelta
+from datetime import datetime
+from auth.session import AuthSession
 
 order_bp = Blueprint('order', __name__)
+
 
 @order_bp.route('/api/addorder', methods=['POST'])
 def add_order():
     """
     An API endpoint to add orders to the database.
     """
-    newOrder = request.get_json(force = True)
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    customer_id = newOrder['customer_id']
-    time_ordered = newOrder['time_ordered']
+    try:
+        session = AuthSession()  # Get session from cookie
+        session.assert_customer()  # Only allow access to customers
 
-    #insert order into Order table to create the unique order_id 
-    cursor.execute(f'''INSERT INTO "Order" (customer_id, status, time_ordered, is_paid) 
-                   VALUES ('{customer_id}', 'Unconfirmed', '{time_ordered}', 'false');''')
-    
-    cursor.execute(f'''SELECT order_id FROM "Order" WHERE customer_id = '{customer_id}' AND time_ordered = '{time_ordered}';''')
-    find_orderid = cursor.fetchone()
-    order_id = find_orderid[0] #fetch order_id that has just been created
+        data = request.get_json(force=True)
 
-    for item in newOrder['items']: #iterate through the list of dicts of items in items
-            cursor.execute(f'''INSERT INTO OrderMenu (order_id, menuitem_id, quantity) 
-                           VALUES ('{order_id}', '{item['menuitem_id']}', '{item['quantity']}');''') #inserts orders into OrderMenu
-            
-    # Find the waiter associated with the customer
-    staff_id = None
-    for waiter, customers in customer_waiters.items():
-        if int(customer_id) in customers:
-            staff_id = waiter
-            break
+        customer_id = session.get_user_id()
+        time_ordered = datetime.now()
 
-    # Insert staff_id and order_id into StaffOrder
-    if staff_id:
-        cursor.execute("""
-                       INSERT INTO StaffOrder (staff_id, order_id)
-                       VALUES (%s, %s)
-                       """, (staff_id, order_id))
-        print(f'SUCCESS: STAFF_ID {staff_id} & ORDER_ID {order_id} INSERTED INTO STAFFORDER')
-    else:
-        print(f'ERROR: CUSTOMER_ID {customer_id} HAS NO ASSOCIATED STAFF_ID, ' +
-                      'YOU WILL NEED TO LOG INTO A WAITER ACCOUNT FIRST')
+        # Insert order into Order table to create the unique order_id
+        cursor.execute('''
+            INSERT INTO "Order" (customer_id, status, time_ordered, is_paid)
+            VALUES (%s, %s, %s, %s)
+            RETURNING order_id;
+        ''', (customer_id, 'Unconfirmed', time_ordered, False))
 
-    message = {
-        "message" : "Order successfully added."
-    }
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return jsonify(message)
+        order_id = cursor.fetchone()[0]  # fetch order_id that has just been created
+
+        # Insert order items into OrderMenu
+        for item in data['items']:
+            cursor.execute('''
+                INSERT INTO OrderMenu (order_id, menuitem_id, quantity) 
+                VALUES (%s, %s, %s);
+            ''', (order_id, item['menuitem_id'], item['quantity']))
+
+        # Find the waiter associated with the customer
+        staff_id = None
+        for waiter, customers in customer_waiters.items():
+            if int(customer_id) in customers:
+                staff_id = waiter
+                break
+
+        # Insert staff_id and order_id into StaffOrder
+        if staff_id:
+            cursor.execute("""
+                INSERT INTO StaffOrder (staff_id, order_id)
+                VALUES (%s, %s)
+            """, (staff_id, order_id))
+            print(f'SUCCESS: STAFF_ID {staff_id} & ORDER_ID {order_id} INSERTED INTO STAFFORDER')
+        else:
+            print(f'ERROR: CUSTOMER_ID {customer_id} HAS NO ASSOCIATED STAFF_ID, ' +
+                  'YOU WILL NEED TO LOG INTO A WAITER ACCOUNT FIRST')
+            return jsonify({
+                'message': f'ERROR: CUSTOMER_ID {customer_id} HAS NO ASSOCIATED STAFF_ID'
+            }), 503
+
+        conn.commit()
+
+        return jsonify({
+            "message": "Order successfully added.",
+            "new_order_id": order_id
+        }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+
+    finally:
+        cursor.close()
+        conn.close()
 
 @order_bp.route('/api/deleteorder', methods=['POST'])
 def delete_order():
