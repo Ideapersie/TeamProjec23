@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Notification } from "@/types";
 import {ApiFetchUnseenNotifications} from "@/api.types";
+import {NotificationItem} from "@/components/notifications/notification-item";
 
 export function NotificationButton() {
 
@@ -28,14 +29,9 @@ export function NotificationButton() {
 			console.error("Failed to fetch notifications:", error);
 		}
 	}
-    const markNotificationAsSeen = (index: number) => {
-        const updatedNotifications = [...notifications];
-        updatedNotifications[index].is_seen = true;
-        setNotifications(updatedNotifications);
-    };
 
     return (
-		<section>
+		<section className={"select-none"}>
 			<div onClick={() => setIsOpen(!isOpen)}
 				 className="flex items-right relative hover:scale-110"
 				 role={"button"}
@@ -57,15 +53,22 @@ export function NotificationButton() {
 				}
 			</div>
 			{isOpen && (
-                <div className={"absolute right-0 bottom-100 mt-5 w-96 bg-white p-10 shadow rounded-xl"}>
-					{notifications.length > 0 ? notifications.map((notification, index) => (
-						<div key={index} className="flex justify-between items-center">
-							<p>
-								Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}
-							</p>
-							<button onClick={() => markNotificationAsSeen(index)}>Seen</button>
-						</div>
-					)) : <p>No new notifications.</p>}
+                <div className={"absolute right-0 bottom-100 mt-5 w-screen max-w-lg bg-white p-8 shadow rounded-xl"}>
+					<div className={"flex flex-col gap-3"}>
+						{notifications.length > 0 ? notifications.map((notification, index) => (
+							<>
+								{index != 0 &&
+									<hr/>
+								}
+
+								<NotificationItem
+									key={notification.id}
+									data={notification}
+									setNotifications={setNotifications}
+								/>
+							</>
+						)) : <p>No new notifications.</p>}
+					</div>
 				</div>
 			)}
 		</section>
