@@ -8,7 +8,7 @@ The blueprint defines the following endpoints:
 """
 from datetime import datetime
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, Response
 from menu.connection import get_db_connection
 from auth.session import AuthSession
 
@@ -152,5 +152,37 @@ def delete_notification():
             'message': 'Something went wrong'
         }), 500
     finally: #Closes connections
+        cursor.close()
+        conn.close()
+
+@notification_bp.route('/api/notifications/mark/<int:notification_id>')
+def mark_notification_as_seen(notification_id):
+    """Mark an existing notification as seen"""
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+
+        # Mark notification as seen in the database
+        cursor.execute("""
+            UPDATE "Notification"
+            SET seen = true
+            WHERE notification_id = %s
+            RETURNING notification_id;
+        """, (notification_id,))
+
+        if cursor.fetchone() is None:  # I.e. if notification id does not exist
+            return Response(status=404)
+
+        conn.commit()  # Save database changes
+
+        return Response(status=200)  # Success response
+
+    except Exception as e:
+        print(e)
+        return Response(status=500)  # Server-side error response
+
+    finally:
         cursor.close()
         conn.close()
