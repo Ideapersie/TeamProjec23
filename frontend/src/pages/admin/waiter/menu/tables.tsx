@@ -4,7 +4,7 @@ import styles from "@/components/menu/admin/Tables.module.css";
 import { useState } from "react";
 import {Order} from "@/types";
 import { handleCancelOrder, handleStatusChange } from "@/components/menu/admin/OrderUtils";
-import { NotificationBar } from "./notification";
+import { NotiButton } from "@/components/noti-button";
 
 /**
  * View table numbers and the corresponding waiters assigned to them.
@@ -68,7 +68,7 @@ export default function ViewTablesPage() {
                 <PageTitle>
                     TABLES
                 </PageTitle>
-            <NotificationBar/>
+            <NotiButton/>
 
             </PageHeader>
 
