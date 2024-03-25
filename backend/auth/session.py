@@ -118,6 +118,12 @@ class AuthSession:
         if not self.get_is_admin():
             raise UnauthorisedAccessError(f"Access denied: only accessible by admin users.")
 
+    def assert_customer(self) -> None:
+        """Assert that user is a customer."""
+
+        if not self.is_customer_session():
+            raise UnauthorisedAccessError(f"Access denied: only accessible by customers")
+
     def json(self) -> dict:
         """Returns session data."""
 
