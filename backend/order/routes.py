@@ -183,10 +183,10 @@ def fetch_orders():
 @order_bp.route('/api/getTableOrder', methods=['Get'])
 def get_order_by_table():
     """
-    An api endpoint to get each order_id and its corrosponding table number
+    An api endpoint to get each order_id and its corresponding table number
         
     Returns:
-        A repsponse containing data in the format {table_number, order_id}
+        A response containing data in the format {table_number, order_id}
     """
     try:
         #connect to database
@@ -329,3 +329,61 @@ def fetch_table_staff_order():
                   for row in data]
     
     return jsonify(data_dicts), 200
+
+
+@order_bp.route('/api/orders/<int:order_id>', methods=['GET'])
+def get_order_by_id(order_id: int):
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT order_id,
+                    is_paid,
+                    status,
+                    time_ordered,
+                    C.customer_id,
+                    C.first_name,
+                    C.last_name,
+                    C.email,
+                    C.table_number
+            FROM "Order" AS O
+            INNER JOIN customer C ON C.customer_id = O.customer_id
+            WHERE order_id = %s
+        """, (order_id,))
+
+        order_data = cursor.fetchone()
+
+        if order_data is None:
+            return jsonify({
+                'message': 'Not found',
+                'data': None
+            }), 404
+
+        return jsonify({
+            'message': 'Success',
+            'data': {
+                'order': {
+                    'id': order_data[0],
+                    'is_paid': order_data[1],
+                    'status': order_data[2],
+                    'time_ordered': order_data[3],
+                    'customer': {
+                        'id': order_data[4],
+                        'first_name': order_data[5],
+                        'last_name': order_data[6],
+                        'email': order_data[7],
+                        'table_number': order_data[8]
+                    }
+                }
+            }
+        }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'something went wrong'}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
