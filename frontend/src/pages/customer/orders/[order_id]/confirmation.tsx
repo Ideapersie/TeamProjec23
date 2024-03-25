@@ -1,8 +1,18 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
+import CartItem from "@/pages/menu/view/cart-item";
+import {BrowserCartObject} from "@/types";
+import React, {useEffect, useState} from "react";
 
-export default function OrderConfirmationPage() {
+
+interface Props {
+    name: string
+    price: string
+    menuitem_id: number
+};
+
+export default function OrderConfirmationPage(props:Props) {
     return (
         <div className={"flex-grow flex flex-col"}>
             <PageHeader>
@@ -16,9 +26,6 @@ export default function OrderConfirmationPage() {
                 {/*Left column - basket*/}
                 <div className={"flex-grow p-10"}>
                     <h4>Ordered items</h4>
-                    <div>
-                        Loops over items
-                    </div>
                 </div>
 
                 {/*Right column - Order status*/}
@@ -27,9 +34,10 @@ export default function OrderConfirmationPage() {
                     <div>Displays check list for tracking order</div>
                 </div>
             </div>
-
             <div>
-                <button>Pay bill</button>
+                <button onClick={() => { window.location.href = `/customer/orders/${1}/payment` }}>
+                    Pay bill
+                </button>
             </div>
         </div>
     )
