@@ -16,9 +16,12 @@ export function CartButton() {
         }
 
         window.addEventListener("add-to-cart", () => {
-            console.log("test");
             setCartCount((old) => old + 1);
         });
+
+        window.addEventListener("delete-from-cart", () => {
+            setCartCount((old) => old - 1);
+        })
     }, []);
 
 
