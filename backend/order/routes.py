@@ -370,9 +370,12 @@ def get_order_by_id(order_id: int):
 
         order_menu_items_raw = cursor.fetchall()
         ordered_items = []
+        bill_total = 0
 
         if order_menu_items_raw:
             for item in order_menu_items_raw:
+                subtotal = item[1] * item[5]
+                bill_total += subtotal
                 ordered_items.append({
                     'menuitem_id': item[0],
                     'quantity': item[1],
@@ -380,7 +383,7 @@ def get_order_by_id(order_id: int):
                     'description': item[3],
                     'type': item[4],
                     'price': item[5],
-                    'subtotal': item[1] * item[5],
+                    'subtotal': subtotal,
                     'image': item[6]
                 })
 
@@ -399,7 +402,8 @@ def get_order_by_id(order_id: int):
                         'email': order_data[7],
                         'table_number': order_data[8]
                     },
-                    'ordered_items': ordered_items
+                    'ordered_items': ordered_items,
+                    'total': bill_total
                 }
             }
         }), 200

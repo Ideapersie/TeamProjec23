@@ -27,7 +27,8 @@ export interface ApiGetOrderByIdResponse {
                 price: number,
                 subtotal: number,
                 image: string
-            }[]
+            }[],
+            total: number
         }
     }
 }
