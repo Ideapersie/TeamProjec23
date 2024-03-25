@@ -42,7 +42,7 @@ export const getServerSideProps = (async (context) => {
 export default function OrderConfirmationPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
     const [status, setStatus] = useState(props.data.order.status);
-    const [subtotal, setSubtotal] = useState(0)
+    const [subtotal, setSubtotal] = useState(0);
 
     useEffect(() => {
         // Loops ever 10000ms (10 second)
@@ -51,22 +51,27 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
         }, 10 * 1000);
     }, []);
 
+
     return (
         <div className={"flex-grow flex flex-col"}>
             <PageHeader>
                 <PageTitle>Your order has been received!</PageTitle>
-                <PageSubtitle>Order Id: {props.data.order.id}</PageSubtitle>
+                <PageSubtitle >Order ID: <span className = "text-lg">{props.data.order.id}</span></PageSubtitle>
             </PageHeader>
 
             <div className={"bg-white shadow rounded-xl flex flex-grow overflow-hidden"}>
-
                 {/*Left column - basket*/}
                 <div className={"flex-grow p-10"}>
                     <h4>Ordered items</h4>
+                    <br></br>
                     <div>
-                        Loops over items
+                        <ul>
+                            <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
+                            <li>Email: {props.data.order.customer.email}</li>
+                            <li className = "font-sans font-bold">Table Number: {props.data.order.customer.table_number}</li>
+                        </ul>
                     </div>
-                    <pre>{JSON.stringify(props.data, undefined, 2)}</pre>
+
                     {/* TODO: Modify to loop over ordered items, with styling similar to cart */}
                 </div>
 
@@ -74,6 +79,9 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                 <div className={"p-10 bg-wahaca-navy flex-grow max-w-lg text-wahaca-white"}>
                     <h4 className={"text-wahaca-white"}>Track your order</h4>
                     <div>Displays check list for tracking order</div>
+                    <br></br>
+                    <p>Status: {props.data.order.status}</p>
+                    <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'})}</p>
                 </div>
             </div>
 

@@ -6,6 +6,7 @@ export interface ApiAddOrderResponse {
 export interface ApiGetOrderByIdResponse {
     message: string
     data: {
+        [x: string]: ReactNode
         order: {
             customer: {
                 email: string
