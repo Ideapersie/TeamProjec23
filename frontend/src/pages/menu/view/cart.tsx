@@ -71,23 +71,34 @@ export default function Cart(props: Props) {
                 body: JSON.stringify(payload),
             });
 
-            //Removes the order in browser storage after checkout. 
-            sessionStorage.removeItem("Cart");
+            if (response.status === 200) {
+
+                const data = await response.json() as ApiAddOrderResponse;
+
+                const newOrderId = data.new_order_id;
+
+                handleClearCart()
+
+                setShowPopup(true);
+
+                // Hide popup message after 2 seconds
+                setTimeout(() => {
+                    setShowPopup(false);
+
+                    // Refreshes the page, updating the cart to be empty
+                    setTimeout(() => {
+                        router.push(`/customer/orders/${newOrderId}/receipt`)
+                    }, 0);
+                }, 1500);
+
+            } else {
+                alert("Something went wrong");
+            }
 
         } catch (e) {
             console.error(e);
             alert('Order failed to send');
         }
-
-        setShowPopup(true);
-        // Hide popup message after 2 seconds
-        setTimeout(() => {
-            setShowPopup(false);
-            // Refreshes the page, updating the cart to be empty
-            setTimeout(() => {
-                window.location.reload();
-            }, 0);
-        }, 1500);
     }
 
     function handleClearCart() {
