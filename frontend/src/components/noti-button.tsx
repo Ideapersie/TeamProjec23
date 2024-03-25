@@ -1,39 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Notification } from "@/types";
+import {ApiFetchUnseenNotifications} from "@/api.types";
 
 export function NotiButton() {
 
-
 	const [isOpen, setIsOpen] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([]);
-	const fetchNotifications = async () => {
-        try {
-            const response = await fetch('/api/fetchunseennotifications', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-				mode: 'no-cors',
-            });
-			console.log('Response:', response);
-            const data = await response.json();
-			console.log('Data:', data);
-            if (Array.isArray(data)) {
-                setNotifications(data); // Set notifications to the data returned from the server
-            } else {
-				console.log('Invalid data format:', data);
-            }
-        } catch (error) {
-            console.error("Failed to fetch notifications:", error);
-        }
-    };
 
-
-    useEffect(() => {
-        fetchNotifications(); // Fetch notifications when the component mounts
+	useEffect(() => {
+        void fetchNotifications(); // Fetch notifications when the component mounts
         const interval = setInterval(fetchNotifications, 5000); // Continuously fetch new notifications every 5 seconds
         return () => clearInterval(interval); // Clean up the interval when the component unmounts
-    }, []); 
+    }, []);
+
+	async function fetchNotifications() {
+		try {
+			const response = await fetch('/api/fetchunseennotifications');
+
+			if (response.status === 200) {
+				const data = await response.json() as ApiFetchUnseenNotifications;
+				setNotifications(data.data.notifications)
+			} else {
+				alert("Something went wrong");
+			}
+
+		} catch (error) {
+			console.error("Failed to fetch notifications:", error);
+		}
+	}
 
     return (
 		<section className="absolute right-20 top-10 mt-10 mr-40">
@@ -55,7 +49,7 @@ export function NotiButton() {
 				<div style={{ position: 'absolute', backgroundColor: '#f9f9f9', minWidth: '160px', boxShadow: '0px 8px 16px 0px rgba(0,0,0,0.2)', padding: '12px 16px', zIndex: '1' }}>
 					{notifications.length > 0 ? notifications.map((notification, index) => (
 						<p key={index}>
-						Staff ID: {notification.staff_id}, Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}
+						Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}
 						</p>
 					)) : <p>No new notifications.</p>}
 				</div>
