@@ -28,6 +28,11 @@ export function NotiButton() {
 			console.error("Failed to fetch notifications:", error);
 		}
 	}
+    const markNotificationAsSeen = (index: number) => {
+        const updatedNotifications = [...notifications];
+        updatedNotifications[index].is_seen = true;
+        setNotifications(updatedNotifications);
+    };
 
     return (
 		<section>
@@ -52,11 +57,14 @@ export function NotiButton() {
 				}
 			</div>
 			{isOpen && (
-				<div className={"absolute right-0 bottom-100 mt-5 w-96 bg-white p-10 shadow rounded-xl"}>
+                <div className={"absolute right-0 bottom-100 mt-5 w-96 bg-white p-10 shadow rounded-xl"}>
 					{notifications.length > 0 ? notifications.map((notification, index) => (
-						<p key={index}>
-						Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}
-						</p>
+						<div key={index} className="flex justify-between items-center">
+							<p>
+								Message: {notification.message}, Time: {new Date(notification.time_sent).toLocaleTimeString('en-UK', {hour: '2-digit', minute: '2-digit'})}
+							</p>
+							<button onClick={() => markNotificationAsSeen(index)}>Seen</button>
+						</div>
 					)) : <p>No new notifications.</p>}
 				</div>
 			)}
