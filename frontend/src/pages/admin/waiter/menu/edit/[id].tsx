@@ -94,7 +94,7 @@ export default function EditMenuItemPage(props: Props) {
 
                     <hr className={"mb-5"}/>
 
-                    <div className={"flex gap-7"}>
+                    <div className={"flex gap-10"}>
                         {/*Left column*/}
                         <div className={"flex flex-col gap-3 flex-grow"}>
                             <label>
@@ -111,7 +111,7 @@ export default function EditMenuItemPage(props: Props) {
                                 <textarea
                                     value={itemDescription}
                                     onInput={e => setItemDescription(e.currentTarget.value)}
-                                    rows={1}
+                                    rows={5}
                                 />
                             </label>
 
@@ -169,12 +169,12 @@ export default function EditMenuItemPage(props: Props) {
                         </div>
 
                         {/*Right column*/}
-                        <div className={"flex flex-col gap-3 flex-grow max-w-80"}>
+                        <div className={"flex flex-col gap-3 flex-grow max-w-xl"}>
                             <label className={"flex-grow"}>
                                 Image preview
-                                <div className={"bg-white shadow min-h-48 flex-grow rounded-xl overflow-hidden p-5"}>
+                                <div className={"bg-white shadow min-h-48 flex-grow rounded-xl overflow-hidden"}>
                                     <div
-                                        className={"h-full w-full bg-red-200 !bg-center !bg-contain !bg-no-repeat"}
+                                        className={"h-full w-full bg-red-200 !bg-center !bg-cover !bg-no-repeat"}
                                         style={{background: `url(${itemImage})`}}
                                     />
                                 </div>

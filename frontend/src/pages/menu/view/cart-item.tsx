@@ -1,4 +1,3 @@
-import styles from "@/pages/menu/view/cart.module.css";
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {BrowserCartObject, MenuItem} from "@/types";
 
@@ -67,13 +66,13 @@ export default function CartItem(props: Props) {
             <div>Loading</div>
             :
             <tr className="border-b">
-                <td className={`${styles.t_left}  font-semibold`}  >
+                <td className={`text-left font-semibold py-5`}  >
                     {data.name}
                     <img className = {"rounded-lg "} src= {data.image} height = {"200"} width = {"200"} />  
                 </td>
-                <td className={styles.t_right } >{props.quantity} servings</td>
-                <td className={`${styles.t_right} font-bold text-wahaca-navy`}>£{data.price} </td>
-                <td className={`${styles.t_right} font-bold text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
+                <td className={"text-right"} >{props.quantity} servings</td>
+                <td className={"text-right font-bold text-wahaca-navy"}>£{data.price} </td>
+                <td className={`text-right font-bold text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
 
                 <td className="p-5 text-center">
                     <button className="default-button" onClick={() => handleDeleteItem(props.id)}>Delete</button>

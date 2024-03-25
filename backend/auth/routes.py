@@ -168,7 +168,7 @@ def login(mode: str):
                 return jsonify({"message": "No waiters currently logged in!"}), 409
 
             # Prevent customer login, if no free tables
-            if len(occupied_tables) >= 25:
+            if len(occupied_tables) >= 9:
                 print('ERROR: NO FREE TABLES')
                 return jsonify({'message': 'There are currently no free tables'}), 409
 
@@ -203,10 +203,14 @@ def login(mode: str):
             print(f'WAITERS MAPPED TO CUSTOMERS: {customer_waiters}')  # Debug
 
             # Assigned customer/user to an unoccupied table
-            unoccupied_table = random.randint(1, 25)
-            while unoccupied_table in occupied_tables:
-                unoccupied_table = random.randint(1, 25)
-            occupied_tables.add(unoccupied_table)
+            unoccupied_table = -1
+            for i in range(1, 9):
+                print(i)
+                if i not in occupied_tables:
+                    occupied_tables.add(i)
+                    unoccupied_table = i
+                    break
+
             print(f'OCCUPIED TABLES: {occupied_tables}')  # Debug
 
             # TODO: Do we need to store table number in customer table

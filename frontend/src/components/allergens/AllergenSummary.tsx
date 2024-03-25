@@ -7,6 +7,7 @@ import {allergens, allergens as knownAllergens} from "@/components/allergens/hel
  */
 interface Props {
     ingredients: Ingredient[]
+    horizontal?: boolean
 }
 
 export default function AllergenSummary(props: Props) {
@@ -42,7 +43,7 @@ export default function AllergenSummary(props: Props) {
             {containedAllergens === undefined ?
                 <div>Loading...</div>
                 :
-                <div className={`flex flex-col gap-2 text-xs font-medium`}>
+                <div className={`flex ${props.horizontal ? "flex-wrap gap-4 gap-y-2" : "flex-col gap-2"} text-xs font-medium`}>
                     {knownAllergens.map(allergen => (
                         <div key={allergen}
                              className={`flex items-center gap-1.5

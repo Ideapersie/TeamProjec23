@@ -1,12 +1,17 @@
 /*all styles for order page*/
 .name {
-	font-weight: bold;
-	font-size: 50px;
+	font-weight: 1000;
+	font-size: 3rem;
+	max-width: 650px;
+	line-height: 1.2;
 }
 
 .description {
-	font-size: 15px;
+	font-size: 22px;
+	font-weight: 500;
 	font-style: italic;
+	max-width: 500px;
+	margin-bottom: 15px;
 }
 
 .price	{
