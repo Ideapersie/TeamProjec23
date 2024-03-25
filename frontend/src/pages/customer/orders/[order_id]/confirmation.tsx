@@ -4,7 +4,7 @@ import PageSubtitle from "@/components/common/text/PageSubtitle";
 
 export default function OrderConfirmationPage() {
     return (
-        <div className={"bg-red-200 flex-grow flex flex-col"}>
+        <div className={"flex-grow flex flex-col"}>
             <PageHeader>
                 <PageTitle>Your order has been received!</PageTitle>
                 <PageSubtitle>Order Id: 9340</PageSubtitle>
@@ -12,7 +12,7 @@ export default function OrderConfirmationPage() {
 
             <hr/>
 
-            <div className={"bg-white mt-5 shadow rounded-xl flex  overflow-hidden"}>
+            <div className={"bg-white mt-5 shadow rounded-xl flex flex-grow overflow-hidden"}>
                 {/*Left column - basket*/}
                 <div className={"flex-grow p-10"}>
                     <h4>Ordered items</h4>
