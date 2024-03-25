@@ -149,18 +149,29 @@ def fetch_orders():
      """
      conn = get_db_connection()
      cursor = conn.cursor()
-     cursor.execute(f'''SELECT * FROM "Order" ORDER BY time_ordered asc;''')
-     order = cursor.fetchall()
+     try:
+        cursor.execute(f'''SELECT * FROM "Order" ORDER BY time_ordered asc;''')
+        order = cursor.fetchall()
 
-     orders = [{'order_id': item[0],
-                'customer_id': item[1],
-                'status': item[2],
-                'time_ordered': item[3],
-                'is_paid': item[4]} for item in order]
-     
-     cursor.close()
-     conn.close()
-     return jsonify(orders)
+        if (order != None): #Check if there are orders available in the database
+            orders = [{'order_id': item[0],
+                     'customer_id': item[1],
+                     'status': item[2],
+                     'time_ordered': item[3],
+                     'is_paid': item[4]} for item in order]
+            return jsonify(orders), 200
+        else:
+            return jsonify({
+            'message': 'No orders made yet'
+            }), 200
+     except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+     finally:
+        cursor.close() #Closes the connections
+        conn.close()
 
 @order_bp.route('/api/getTableOrder', methods=['Get'])
 def get_order_by_table():
