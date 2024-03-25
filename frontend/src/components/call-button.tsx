@@ -52,7 +52,7 @@ export function CallWaiterButton(){
 
     return (
         <button
-            className="bg-wahaca-blue hover:bg-wahaca-teal text-white font-bold py-2 px-4 rounded-lg transition-colors ease-in-out mr-4"
+            className="bg-wahaca-blue hover:bg-wahaca-teal text-white text-sm m-0 font-bold py-2 px-4 rounded-lg transition-colors ease-in-out"
             onClick={handleCallWaiter}
             disabled={waiterCalled}
         >
