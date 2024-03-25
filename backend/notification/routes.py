@@ -17,17 +17,17 @@ notification_bp = Blueprint('notification', __name__)
 def fetch_unseen_notification():
     """
     An API endpoint to fetch unseen notification messages from the database.
-    
+
     This route expects a JSON payload containing a staff_id. 
 
     Returns:
         str: A JSON response and a HTTP code.
     """
-    staff = request.get_json(force = True)
     conn = get_db_connection()
     cursor = conn.cursor()
 
     try:
+        staff = request.get_json(force = True)
         staff_id = staff['staff_id']
 
         cursor.execute(f'''SELECT message, time_sent FROM "Notification" WHERE staff_id = '{staff_id}' AND seen = 'false' ORDER BY time_sent ASC;''')
@@ -62,7 +62,6 @@ def add_notification():
     Returns:
         str: A JSON response and a HTTP code.
     """
-
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -115,13 +114,12 @@ def delete_notification():
     cursor = conn.cursor()
     try:
         notification = request.get_json(force = True)
-        staff_id = notification['staff_id']
-        message = notification['message']
-
-        cursor.execute(f'''SELECT * FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''')
+        notification_id = notification['notification_id']
+        
+        cursor.execute(f'''SELECT * FROM "Notification" WHERE notification_id = '{notification_id}';''')
         existing_notif = cursor.fetchall()
         if (existing_notif != None): #checks the notification exists in the database
-            cursor.execute(f'''DELETE FROM "Notification" WHERE staff_id = '{staff_id}' AND message = '{message}';''') #Deletes the notification from the database
+            cursor.execute(f'''DELETE FROM "Notification" WHERE notification_id = '{notification_id}';''') #Deletes the notification from the database
             message = {
                 'message' : 'Notification has been removed'
             }
