@@ -124,7 +124,7 @@ export default function Cart(props: Props) {
                                 <th className={"text-left"}>Product</th>
                                 <th className={"text-right"}>Quantity</th>
                                 <th className={"text-right"}>Price</th>
-                                <th className={"text-right"}>Total Price</th>
+                                <th className={"text-right"}>Total</th>
                                 <th className="p-2">Action</th>
                             </tr>
                             </thead>

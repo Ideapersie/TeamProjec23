@@ -1,5 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {BrowserCartObject, MenuItem} from "@/types";
+import Link from "next/link";
 
 interface Props {
     id: number
@@ -67,12 +68,19 @@ export default function CartItem(props: Props) {
             :
             <tr className="border-b">
                 <td className={`text-left font-semibold py-5`}  >
-                    {data.name}
-                    <img className = {"rounded-lg mt-2 "} src= {data.image} height = {"200"} width = {"280"} />  
+                    <Link href={`/menu/view/${props.id}`} className={"flex items-center gap-5"}>
+                        <img className={"rounded-lg"} src={data.image} height={100} width={100} />
+                        <span>
+                            <h4>{data.name}</h4>
+                            <div className={"text-xs font-medium text-wahaca-teal max-w-xl truncate"}>
+                                {data.description}
+                            </div>
+                        </span>
+                    </Link>
                 </td>
-                <td className={"text-right italic"} >{props.quantity} serving(s)</td>
-                <td className={"text-right italic font-bold text-wahaca-navy"}>£{parseFloat(data.price).toFixed(2)} </td>
-                <td className={`text-right font-bold italic text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
+                <td className={"text-right text-sm italic text-wahaca-light-navy"} >{props.quantity} serving(s)</td>
+                <td className={"text-right text-sm font-medium italic text-wahaca-light-navy"}>£{parseFloat(data.price).toFixed(2)} </td>
+                <td className={`text-right text-lg font-bold italic text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
 
                 <td className="p-5 text-center">
                     <button className="default-button" onClick={() => handleDeleteItem(props.id)}>Delete</button>
