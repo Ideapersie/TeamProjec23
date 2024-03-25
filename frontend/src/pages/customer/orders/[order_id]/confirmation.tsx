@@ -1,29 +1,73 @@
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
-import React, {useEffect, useState} from "react";
+import type {GetServerSideProps, InferGetServerSidePropsType} from "next";
+import {env} from "../../../../../env.config";
+import {ApiGetOrderByIdResponse} from "@/api.types";
+import {useEffect, useState} from "react";
+import Link from "next/link";
 
+/**
+ * The props required by the page component.
+ */
+type PageProps = {
+    data: ApiGetOrderByIdResponse["data"]
+}
 
-interface Props {
-    name: string
-    price: string
-    menuitem_id: number
-};
+/**
+ * Fetching data during server-side page loading.
+ */
+export const getServerSideProps = (async (context) => {
+    const order_id = context.params?.order_id as string | undefined;
 
-export default function OrderConfirmationPage(props:Props) {
+    const response = await fetch(env.apiHost + "/api/orders/" + order_id);
+
+    if (response.status !== 200) {
+        throw Error("Failed to get order data");
+    }
+
+    const data = await response.json() as ApiGetOrderByIdResponse;
+
+    console.log(data);
+
+    return {props: {data: data.data}}
+}) satisfies GetServerSideProps<PageProps>
+
+/**
+ * Renders the order confirmation page.
+ *
+ * @param props
+ * @constructor
+ */
+export default function OrderConfirmationPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
+    const [status, setStatus] = useState(props.data.order.status);
+    const [subtotal, setSubtotal] = useState(0)
+
+    useEffect(() => {
+        // Loops ever 10000ms (10 second)
+        setInterval(() => {
+            // TODO: Call api to see if updates to order status, and update order status above
+        }, 10 * 1000);
+    }, []);
+
     return (
         <div className={"flex-grow flex flex-col"}>
             <PageHeader>
                 <PageTitle>Your order has been received!</PageTitle>
-                <PageSubtitle>Order Id: 9340</PageSubtitle>
+                <PageSubtitle>Order Id: {props.data.order.id}</PageSubtitle>
             </PageHeader>
 
-            <hr/>
+            <div className={"bg-white shadow rounded-xl flex flex-grow overflow-hidden"}>
 
-            <div className={"bg-white mt-5 shadow rounded-xl flex flex-grow overflow-hidden"}>
                 {/*Left column - basket*/}
                 <div className={"flex-grow p-10"}>
                     <h4>Ordered items</h4>
+                    <div>
+                        Loops over items
+                    </div>
+                    <pre>{JSON.stringify(props.data, undefined, 2)}</pre>
+                    {/* TODO: Modify to loop over ordered items, with styling similar to cart */}
                 </div>
 
                 {/*Right column - Order status*/}
@@ -32,11 +76,31 @@ export default function OrderConfirmationPage(props:Props) {
                     <div>Displays check list for tracking order</div>
                 </div>
             </div>
-            <div>
-                {/* Need to change to order menu ID */}
-                <button onClick={() => { window.location.href = `/customer/orders/${1}/payment` }}> 
-                    Pay bill
-                </button>
+
+            <hr className={"mt-5"}/>
+
+            <div className={"flex justify-end gap-5 items-stretch text-right mt-5"}>
+                <div>
+                    <h3 className={"text-3xl m-0 text-wahaca-navy"}>
+                        <span>Your bill is </span>
+                        {props.data.order.is_paid ?
+                            <strong className={"text-emerald-600"}>PAID</strong>
+                            :
+                            <strong className={"text-wahaca-pink"}>UNPAID</strong>
+                        }
+                    </h3>
+                    {!props.data.order.is_paid &&
+                        <p className={"text-wahaca-light-navy text-sm"}>You can pay now, or after you have finished eating</p>
+                    }
+                </div>
+                {!props.data.order.is_paid &&
+                    <Link href={`/customer/orders/${props.data.order.id}/pay`}>
+                        <button className={"m-0 font-bold text-xl bg-wahaca-blue h-full"}
+                                style={{fontFamily: "verdana, sans-serif"}}>
+                            Pay £{subtotal}
+                        </button>
+                    </Link>
+                }
             </div>
         </div>
     )
