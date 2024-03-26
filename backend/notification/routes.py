@@ -12,7 +12,6 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify, Response
 from menu.connection import get_db_connection
 from auth.session import AuthSession, UnauthorisedAccessError
-from test.test_urllib2 import add_ordered_mock_handlers
 from auth.authentication import customer_waiters
 
 notification_bp = Blueprint('notification', __name__)
