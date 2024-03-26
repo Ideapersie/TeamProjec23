@@ -107,10 +107,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         display: "Kitchen Orders",
                         path: "/staff/kitchen/orders"
                     },
-                    {
-                        display: "Kitchen Orders",
-                        path:"/staff/kitchen/orders"
-                    },
                 ]
             }
         }
