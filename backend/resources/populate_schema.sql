@@ -37,7 +37,7 @@ INSERT INTO Ingredient(ingredient_name) VALUES
 ('Nacho'),
 ('Taco'),
 ('Pineapple'),
-('Coconut')
+('Coconut'),
 ('Ice Cream'),
 ('Avocado'),
 ('Cashews'),
