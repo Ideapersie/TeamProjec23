@@ -21,16 +21,14 @@ export default function TopBarIcons() {
         <div className={`flex gap-5 items-center transition-opacity duration-500 ${session ? "opacity-100" : "opacity-0"}`}>
             {session &&
                 <>
-                    {session.session_type === "staff" ?
+                    {session.session_type === "customer" ?
                         <>
                             <CallWaiterButton/>
-                            <NotificationButton/>
+                            <CartButton/>
                         </>
                         :
-                        <CartButton/>
+                        <NotificationButton/>
                     }
-
-
                 </>
             }
         </div>
