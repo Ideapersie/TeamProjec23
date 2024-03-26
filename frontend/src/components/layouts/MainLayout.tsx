@@ -4,9 +4,9 @@ import Link from "next/link";
 import CurrentUser from "@/components/side-menu/CurrentUser";
 import React from "react";
 import Image from "next/image";
-import {NotificationButton} from "@/components/notifications/notification-button";
-import {CartButton} from "@/components/cart-button";
-import {CallWaiterButton} from "@/components/call-button";
+import {NotificationButton} from "@/components/top-bar/notification-button";
+import {CartButton} from "@/components/top-bar/cart-button";
+import {CallWaiterButton} from "@/components/top-bar/call-button";
 
 const inter = Inter({ subsets: ['latin'] });
 
