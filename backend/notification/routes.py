@@ -5,6 +5,7 @@ The blueprint defines the following endpoints:
 - /api/fetchunseennotifications (GET): Fetches all unseen orders for a given staff_id.
 - /api/addnotification (POST): Adds a notification to the database.
 - /api/deletenotification (POST): Deletes a notification from the database.
+- /api/orderReady (POST): Adds a notification to a staff member with a given order ID.
 """
 from datetime import datetime
 
@@ -205,13 +206,13 @@ def mark_notification_as_seen(notification_id):
     conn.close()
     return jsonify(message)
 
-@notification_bp.route('/api/orderReady')
+@notification_bp.route('/api/orderReady', methods=['POST'])
 def order_ready():
     """
     An API endpoint to notify a waiter a specific customers order is ready
 
     Returns:
-        A JSON statement indicating if a notification has been sent successfully.
+        str: A JSON response indicating if a notification has been sent successfully.
     """
     try:
         order_id = request.json(force = True)

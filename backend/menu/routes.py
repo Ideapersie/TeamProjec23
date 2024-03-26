@@ -22,7 +22,7 @@ def get_menuitems(menuitem_id):
         menuitem_id: the ID of a single item to retrieve from the database.
 
     Returns:
-        A JSON object containing all fetched menu items.
+        str: A JSON object containing all fetched menu items.
     """
     
     conn = get_db_connection()

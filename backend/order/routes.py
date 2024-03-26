@@ -179,7 +179,7 @@ def get_order_by_table():
     An api endpoint to get each order_id and its corresponding table number
         
     Returns:
-        A response containing data in the format {table_number, order_id}
+        str: A response containing data in the format {table_number, order_id}
     """
     try:
         #connect to database
