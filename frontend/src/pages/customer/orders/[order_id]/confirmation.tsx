@@ -3,7 +3,7 @@ import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import type {GetServerSideProps, InferGetServerSidePropsType} from "next";
 import {env} from "../../../../../env.config";
-import {ApiGetOrderByIdResponse} from "@/api.types";
+import {ApiGetOrderByIdResponse, ApiGetOrderStatusResponse} from "@/api.types";
 import {useEffect, useState} from "react";
 import Link from "next/link";
 
@@ -41,19 +41,46 @@ export const getServerSideProps = (async (context) => {
  */
 export default function OrderConfirmationPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
+    const [isPaid, setIsPaid] = useState(props.data.order.is_paid);
     const [status, setStatus] = useState(props.data.order.status);
-    const [subtotal, setSubtotal] = useState(0);
+    const [estimatedWait, setEstimatedWait] = useState<ApiGetOrderStatusResponse['data']['order']['estimated_wait']>(null);
 
     useEffect(() => {
-        // Loops ever 10000ms (10 second)
-        setInterval(() => {
-            // TODO: Call api to see if updates to order status, and update order status above
-        }, 10 * 1000);
+        let interval: NodeJS.Timeout | undefined;
+        fetchUpdates()
+            .then(loop => {
+                if (loop) {
+                    interval = setInterval(fetchUpdates, 10 * 1000);  // Fetches updates every 10 seconds
+                }
+            })
+        return () => clearInterval(interval);
     }, []);
 
+    async function fetchUpdates(): Promise<boolean> {
+        try {
+            const response = await fetch(`/api/orders/${props.data.order.id}/status`);
+
+            if (response.status != 200) {
+                console.log("Something went wrong");
+                return false;
+            }
+
+            const data = await response.json() as ApiGetOrderStatusResponse;
+
+            setEstimatedWait(data.data.order.estimated_wait);
+            setStatus(data.data.order.status);
+            setIsPaid(data.data.order.is_paid);
+
+            return true;
+
+        } catch (e: any) {
+            console.error(e.message);
+            return false;
+        }
+    }
 
     return (
-        <div className={"flex-grow flex flex-col "}>
+        <div className={"flex-grow flex flex-col"}>
             <PageHeader>
                 <PageTitle>Your order has been received!</PageTitle>
                 <PageSubtitle>Order ID: <span className = "text-xl">{props.data.order.id}</span></PageSubtitle>
@@ -113,17 +140,37 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                                 ))}
                             </tbody>
                         </table>
+
+                        <h3>Total: £{parseFloat(props.data.order.total).toFixed(2)}</h3>
                     </div>
 
 
                 {/*Right column - Order status*/}
-                <div className={"p-10 bg-wahaca-navy flex-grow rounded-r-2xl text-wahaca-white"}>
+                <div className={"p-10 bg-wahaca-navy flex-grow max-w-md rounded-r-2xl text-wahaca-white"}>
                     <h4 className={"text-wahaca-white"}>Track your order</h4>
-                    <div>Displays check list for tracking order</div>
                     <br></br>
-                        <p>Status: {props.data.order.status}</p>
-                        <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'})}</p>
-                    <br></br>
+                    <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {hour12: true, hour: 'numeric', minute: 'numeric'})}</p>
+                    <p>Status: <strong className={status === "Unconfirmed" ? "text-wahaca-pink" : "text-wahaca-teal"}>{status}</strong></p>
+
+                    <div className={"my-10"}>
+                        <h3 className={"mb-8"}>Estimated time remaining:</h3>
+                        {estimatedWait === null ?
+                            <p>Order not confirmed yet</p>
+                            : status === "Delivered" ?
+                                <div className={"text-4xl text-emerald-500"}>
+                                    <strong>Delivered!</strong>
+                                </div>
+                                : estimatedWait === 0 ?
+                                    <div className={"text-4xl text-wahaca-teal"}>
+                                        <strong>Your food is on its way!</strong>
+                                    </div>
+                                    :
+                                    <div className={"text-4xl text-wahaca-yellow"}>
+                                        <strong>{estimatedWait}</strong> minutes
+                                    </div>
+                        }
+                    </div>
+
                     <div>
                         <ul>
                             <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
@@ -142,21 +189,21 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                 <div>
                     <h3 className={"text-3xl m-0 text-wahaca-navy"}>
                         <span>Your bill is </span>
-                        {props.data.order.is_paid ?
+                        {isPaid ?
                             <strong className={"text-emerald-600"}>PAID</strong>
                             :
                             <strong className={"text-wahaca-pink"}>UNPAID</strong>
                         }
                     </h3>
-                    {!props.data.order.is_paid &&
+                    {!isPaid &&
                         <p className={"text-wahaca-light-navy text-sm"}>You can pay now, or after you have finished eating</p>
                     }
                 </div>
-                {!props.data.order.is_paid &&
+                {!isPaid &&
                     <Link href={`/customer/orders/${props.data.order.id}/pay`}>
                         <button className={"m-0 font-bold text-xl bg-wahaca-blue h-full"}
                                 style={{fontFamily: "verdana, sans-serif"}}>
-                            Pay £{props.data.order.total}
+                            Pay £{parseFloat(props.data.order.total).toFixed(2)}
                         </button>
                     </Link>
                 }
