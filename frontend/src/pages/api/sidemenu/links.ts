@@ -107,8 +107,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             links["Orders"] = {
                 links: [
                     {
-                        display: "Add links here",
-                        path: "/order/addlinkshere"
+                        display: "Kitchen Orders",
+                        path: "/staff/kitchen/orders"
                     },
                 ]
             }
