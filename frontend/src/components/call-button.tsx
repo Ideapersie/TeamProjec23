@@ -20,19 +20,9 @@ export function CallWaiterButton(){
     }, [waiterCalled]);
 
     async function handleCallWaiter() {
-
-        // Define the notification payload
-        const payload = {
-            staff_id: 1,
-            message: 'Table 1 is calling'
-        };
-
         // Try sending the notification to the backend
         try {
-            const response = await fetch('/api/addnotification', {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
+            const response = await fetch('/api/tables/waiter/call');
             
             // If success, alter the customer that the waiter has been called
             if (response.status === 200) {
