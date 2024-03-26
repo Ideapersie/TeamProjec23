@@ -1,24 +1,15 @@
-import {FormEvent} from "react";
+import {Dispatch, FormEvent, SetStateAction} from "react";
 import {useRouter} from "next/router";
-import {GetServerSideProps, InferGetServerSidePropsType} from "next";
 import PageHeader from "@/components/common/text/PageHeader";
 import PageTitle from "@/components/common/text/PageTitle";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 
 interface Props {
-    order_id: number
+    order_id: number,
+    setShowPaymentWindow: Dispatch<SetStateAction<boolean>>
 }
 
-/**
- * Fetching data during server-side page loading.
- */
-export const getServerSideProps = (async (context) => {
-    const order_id = context.params?.order_id as string | undefined;
-
-    return {props: {order_id: parseInt(order_id)}}
-}) satisfies GetServerSideProps<Props>
-
-export default function PaymentPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function PaymentPopup(props: Props) {
 
     const router = useRouter();
 
@@ -39,7 +30,7 @@ export default function PaymentPage(props: InferGetServerSidePropsType<typeof ge
         });
 
         if (response.status === 200) {
-            await router.push(`/customer/orders/${props.order_id}/confirmation`)
+            router.reload()
 
         } else {
             alert("Payment failed!");
@@ -48,6 +39,7 @@ export default function PaymentPage(props: InferGetServerSidePropsType<typeof ge
 
     return (
         <div className={"fixed bg-black bg-opacity-50 inset-0 z-50 flex"}>
+            <div className="absolute inset-0 -z-10" onClick={() => props.setShowPaymentWindow(false)}/>
             <div className={"m-auto bg-white shadow rounded-xl p-10 w-full max-w-lg"}>
                 <PageHeader>
                     <PageTitle>Payment</PageTitle>
