@@ -30,7 +30,7 @@ export interface ApiGetOrderByIdResponse {
                 subtotal: number,
                 image: string
             }[],
-            total: number
+            total: string
         }
     }
 }
