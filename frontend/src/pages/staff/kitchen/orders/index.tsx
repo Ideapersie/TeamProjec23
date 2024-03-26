@@ -42,12 +42,16 @@ export default function KitchenOrdersPage(props: InferGetServerSidePropsType<typ
 
             {
                 props.data.length ?
-                    props.data.map((order) => (
-                        <KitchenOrderItem
-                            key={order.order_id}
-                            data={order}
-                        />
-                    ))
+                    <div className={"grid grid-cols-3 gap-5"}>
+                        {
+                            props.data.map((order) => (
+                                <KitchenOrderItem
+                                    key={order.order_id}
+                                    data={order}
+                                />
+                            ))
+                        }
+                    </div>
                     :
                     <div>No orders</div>
             }
