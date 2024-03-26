@@ -8,7 +8,6 @@ export interface ApiAddOrderResponse {
 export interface ApiGetOrderByIdResponse {
     message: string
     data: {
-        [x: string]: ReactNode
         order: {
             customer: {
                 email: string
@@ -40,5 +39,18 @@ export interface ApiFetchUnseenNotifications {
     message: string,
     data: {
         notifications: Notification[]
+    }
+}
+
+export interface ApiGetOrderStatusResponse {
+    message: string,
+    data: {
+        order: {
+            id: number,
+            ordered_at: string,
+            status: string,
+            is_paid: boolean,
+            estimated_wait: number | null
+        }
     }
 }

@@ -11,7 +11,7 @@ The blueprint defines the following endpoints:
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
 from auth.authentication import customer_waiters
-from datetime import datetime
+from datetime import datetime, timedelta
 from auth.session import AuthSession
 
 order_bp = Blueprint('order', __name__)
@@ -419,3 +419,52 @@ def get_order_by_id(order_id: int):
     finally:
         cursor.close()
         conn.close()
+
+
+@order_bp.route('/api/orders/<int:order_id>/status')
+def get_order_status(order_id: int):
+    """Returns the status and estimated time of an order."""
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT order_id, time_ordered, status, is_paid
+            FROM "Order"
+            WHERE order_id = %s
+        """, (order_id,))
+
+        data = cursor.fetchone()
+
+        if data is None:
+            return jsonify({'message': 'Order not found'}), 404
+
+        estimated_wait = None
+        if data[2] != 'Unconfirmed' or True:
+            estimated_time = data[1] + timedelta(minutes=30)  # 30 minutes after order time
+            if estimated_time >= datetime.now():
+                estimated_wait = (estimated_time - datetime.now()).seconds // 60
+            else:
+                estimated_wait = 0
+
+        return jsonify({
+            'message': 'Success',
+            'data': {
+                'order': {
+                    'id': data[0],
+                    'ordered_at': data[1],
+                    'status': data[2],
+                    'is_paid': data[3],
+                    'estimated_wait': estimated_wait
+                }
+            }
+        }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'something went wrong'}), 500
+
+    finally:
+        conn.close()
+        cursor.close()
