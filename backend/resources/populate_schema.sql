@@ -38,14 +38,11 @@ INSERT INTO Ingredient(ingredient_name) VALUES
 ('Taco'),
 ('Pineapple'),
 ('Coconut'),
-('Ice Cream'),
 ('Avocado'),
-('Cashews'),
 ('Broccoli'),
 ('Lime'),
 ('Rice'),
-('Pickled Onions'),
-('Mayonnaise');
+('Pickled Onions');
 
 INSERT INTO Ingredient(ingredient_name, allergen_name) VALUES
 ('Cheese', 'Milk'),
@@ -71,7 +68,6 @@ INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
 (4, 'Tortilla'),
 (4, 'Cheese'),
 (4, 'Mayonnaise'),
-(4, 'Avocado'),
 (5, 'Tortilla'),
 (5, 'Feta'),
 (5, 'Onion'),
