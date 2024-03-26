@@ -22,7 +22,7 @@ export default function Cart(props: Props) {
     const router = useRouter();
     const [orderedItems, setOrderedItems] = useState<BrowserCartObject | null | undefined>(undefined);
     const [showPopup, setShowPopup] = useState(false);
-    const [subtotal, setSubtotal] = useState<{[id: number]: number}>({});
+    const [total, setTotal] = useState<{[id: number]: number}>({});
 
     
     // On initial browser load...
@@ -108,17 +108,7 @@ export default function Cart(props: Props) {
     
     return (
         <div>
-            <div className={"flex justify-between items-center mb-5"}>
-                <h1 className={"text-5xl m-0"}>CART</h1>
-
-                <div>
-                    <button onClick={handleClearCart} className={"m-0 mr-2 bg-wahaca-teal"}>Clear cart</button>
-
-                    <Link href={"/menu"}>
-                        <button className={"bg-white text-wahaca-teal m-0"}>Go back to all items</button>
-                    </Link>
-                </div>
-            </div>
+            <h1 className={"text-5xl m-0 mb-5"}>CART</h1>
 
             {orderedItems === undefined ?
                 <p>Loading...</p>
@@ -131,7 +121,7 @@ export default function Cart(props: Props) {
                                 <th className={"text-left"}>Product</th>
                                 <th className={"text-right"}>Quantity</th>
                                 <th className={"text-right"}>Price</th>
-                                <th className={"text-right"}>Total</th>
+                                <th className={"text-right"}>Subtotal</th>
                                 <th className="p-2">Action</th>
                             </tr>
                             </thead>
@@ -142,8 +132,8 @@ export default function Cart(props: Props) {
                                     id={parseInt(id)}
                                     quantity={quantity}
                                     setOrderedItems={setOrderedItems}
-                                    subtotal={subtotal}
-                                    setSubtotal={setSubtotal}
+                                    subtotal={total}
+                                    setSubtotal={setTotal}
                                 />
                             ))}
                             </tbody>
@@ -151,18 +141,27 @@ export default function Cart(props: Props) {
             }
 
             <div className="card mt-5">
-                <ul>
-                    <li>
+                <div>
+                    <div>
                         <div className="pb-3 text-xl font-bold text-wahaca-navy" style={{fontFamily: "sans-serif"}}>
-                            Subtotal: £{Object.values(subtotal).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)}
+                            Total: £{Object.values(total).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)}
                         </div>
-                    </li>
-                    <li>
-                        <button onClick={ handleSubmit} className="primary-button" >
+                    </div>
+
+                    <div>
+                        <div>
+                            <button onClick={handleClearCart} className={"m-0 mr-2 bg-wahaca-teal"}>Clear cart</button>
+
+                            <Link href={"/menu"}>
+                                <button className={"bg-white text-wahaca-teal m-0"}>Go back to all items</button>
+                            </Link>
+                        </div>
+
+                        <button onClick={handleSubmit} className="primary-button">
                             Proceed to checkout
                         </button>
-                    </li>
-                </ul>
+                    </div>
+                </div>
                 {showPopup && (
                     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
                         <div className="bg-gray-100 p-5 rounded-lg">
