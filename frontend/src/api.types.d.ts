@@ -54,3 +54,27 @@ export interface ApiGetOrderStatusResponse {
         }
     }
 }
+
+/**
+ * A type for the data stored in the decoded jwt session cookie.
+ */
+export interface SessionJWT {
+    last_login: number,
+    session_type: "customer" | "staff",
+    user: {
+        id: number,
+        role?: "Waiter" | "Kitchen";
+        is_admin?: boolean,
+        first_name: string,
+        last_name: string,
+        email: string
+    }
+}
+
+/**
+ * A type representing the data returned in the response.
+ */
+export interface AuthSessionResponse {
+    message: string
+    session: SessionJWT | null
+}
