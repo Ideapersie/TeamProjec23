@@ -1,10 +1,5 @@
 """
 A Flask blueprint defining the API routes for notifying staff members.
-
-The blueprint defines the following endpoints:
-- /api/fetchunseennotifications (GET): Fetches all unseen orders for a given staff_id.
-- /api/addnotification (POST): Adds a notification to the database.
-- /api/deletenotification (POST): Deletes a notification from the database.
 """
 from datetime import datetime
 
@@ -16,7 +11,6 @@ from auth.authentication import customer_waiters
 
 notification_bp = Blueprint('notification', __name__)
 
-
 @notification_bp.route('/api/fetchunseennotifications', methods=['GET'])
 def fetch_unseen_notification():
     """
@@ -25,7 +19,11 @@ def fetch_unseen_notification():
     This route expects a JSON payload containing a staff_id. 
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        UnauthorisedAccessError: If the user accessing this route is not a staff.
+        Exception: For unexpected behaviours.
     """
 
     conn = get_db_connection()
@@ -89,7 +87,10 @@ def add_notification():
     This route expects a JSON payload containing a staff_id and message.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: If notification could not be added.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -137,7 +138,10 @@ def delete_notification():
     This route expects a JSON payload containing a notification_id.
     
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: If notification could not be deleted.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -168,8 +172,18 @@ def delete_notification():
 
 @notification_bp.route('/api/notifications/mark/<int:notification_id>')
 def mark_notification_as_seen(notification_id):
-    """Mark an existing notification as seen"""
+    """
+    Mark an existing notification as seen.
 
+    Param:
+        notification_id (int): The id of the notification to be seen.
+
+    Returns:
+        response: a JSON message and a HTTP code.
+
+    Raises:
+        Exception: If there was an error in the server-side.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -211,7 +225,10 @@ def order_ready():
     An API endpoint to notify a waiter a specific customers order is ready
 
     Returns:
-        A JSON statement indicating if a notification has been sent successfully.
+        response: A JSON statement indicating if a notification has been sent successfully.
+
+    Raises:
+        Exception: If order status could not be changed.
     """
     try:
         order_id = request.json(force = True)

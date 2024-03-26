@@ -6,10 +6,17 @@ from auth.session import AuthSession
 
 tables_bp = Blueprint('tables', __name__)
 
-
 @tables_bp.route('/api/tables/waiter/call')
 def waiter_call():
+    """
+    Pushes a notification to the waiter the customer is trying to call.
 
+    Returns:
+        response: A JSON message and a HTTP code.
+
+    Raises:
+        Exception: If the notification could not be pushed to the waiter.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
 

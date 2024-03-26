@@ -23,7 +23,7 @@ def invite():
     The route expects a JSON payload containing the email address of the user.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
     """
     # Fetch and set info to go into the SendGrid request
     data = request.get_json(force=True)
@@ -46,10 +46,10 @@ def signup():
     A customer is registered if a token is not provided i.e. customers don't require sign-up authentication.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
 
     Raises:
-        KeyError: If the token is not provided.
+        Exception: If account could not be created.
     """
     try:
         # Fetch data from the request payload
@@ -103,7 +103,10 @@ def login(mode: str):
     This type token cookie can be used to deny a user access to some routes.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: If user could not login due to unexpected behaviours.
     """
 
     conn = get_db_connection()
@@ -257,7 +260,10 @@ def logout():
     customer_waiters and occupied_tables data structures.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: In case of failure to vacate table, or unexpected behaviour.
     """
 
     try:
@@ -328,7 +334,15 @@ def logout():
 
 @auth_bp.route('/api/auth/session')
 def current_session():
-    """Returns the current session"""
+    """
+    Fetches the current session the current session.
+
+    Returns:
+        response: The current session.
+
+    Raises:
+        Exception: If session could not be obtained.
+    """
     try:
         session = get_session()  # Returns AuthSession (or None if user not logged in)
 

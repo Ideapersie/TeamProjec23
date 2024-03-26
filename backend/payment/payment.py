@@ -9,7 +9,7 @@ def get_db_connection():
     Establishes a connection to the Postgres database.
     
     Returns:
-        A psycopg2 connection object.
+        connection: A psycopg2 connection object.
     """
     conn = psycopg2.connect(dbname = config.DATABASE_NAME,
                             user = config.DATABASE_USER,
@@ -25,10 +25,10 @@ def luhn_check(card_number):
     If a card number passes the Luhn check it's typically not a guarantee on validity, but for the sake of simplicity this method assumes it is.
 
     Args:
-        card_number: The card number to validate.
+        card_number (int): The card number to validate.
 
     Returns:
-        A boolean indicating whether the card number is valid.
+        bool: A boolean indicating whether the card number is valid.
     """
     card_number_list = []
 
@@ -58,10 +58,10 @@ def fetch_payment_info(customer_id):
     Fetches the payment information associated with a user.
 
     Args:
-        customer_id: The customer which the data is fetched for.
+        customer_id (id): The customer which the data is fetched for.
 
     Returns:
-        A JSON payload containing the payment information if it exists, None otherwise.
+        json: A JSON payload containing the payment information if it exists, None otherwise.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -87,10 +87,10 @@ def store_payment_info(customer_id, card_number, holder_name, expiration_date):
     Stores the payment information associated to a customer in the database.
 
     Args:
-        customer_id: The customer which the data is being stored for.
-        card_number: The card number to store.
-        holder_name: The full name of the card holder.
-        expiration_date: The expiry date of the card.
+        customer_id (int): The customer which the data is being stored for.
+        card_number (int): The card number to store.
+        holder_name (str): The full name of the card holder.
+        expiration_date (date): The expiry date of the card.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -113,7 +113,7 @@ def update_is_paid(order_id):
     Updates the 'is_paid' attribute to 'True' for an order.
 
     Args:
-        order_id: The order to update.
+        order_id (int): The order to update.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -133,7 +133,7 @@ def fetch_unpaid_delivered():
     Fetches all orders which have attributes 'status' as 'Delivered' and 'is_paid' as 'False'.
 
     Returns:
-        A tuple containing all orders which adhere to the description, None otherwise.
+        tuple: A tuple containing all orders which adhere to the description, None otherwise.
     """
     conn = get_db_connection()
     cursor = conn.cursor()

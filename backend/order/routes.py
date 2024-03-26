@@ -1,12 +1,5 @@
 """
 A Flask blueprint defining the API routes for interacting with the orders.
-
-The blueprint defines the following endpoints:
-    /api/addorder (POST): Adds an order to the database.
-    /api/deleteorder (POST): Deletes an order from the database.
-    /api/fetchorders (GET): Fetches all current orders.
-    /api/getTableOrder (GET): Fetches orders by table number.
-    /api/fetch_customer_order (GET): Fetches orders related to a customer.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
@@ -25,7 +18,10 @@ def add_order():
     This route expects a JSON payload containing the menu items and quantity ordered.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: If order could not be added.
     """
 
     conn = get_db_connection()
@@ -102,7 +98,10 @@ def delete_order():
     This route expects a JSON payload which contains an order_id to be deleted.
 
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: If order could not be deleted.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -145,7 +144,10 @@ def fetch_orders():
      An API endpoint to fetch and return all current orders.
 
      Returns:
-        str: The orders as JSON and a HTTP code.
+        response: The orders as JSON and a HTTP code.
+
+     Raises:
+        Exception: If all orders could not be fetched.
      """
      conn = get_db_connection()
      cursor = conn.cursor()
@@ -176,10 +178,13 @@ def fetch_orders():
 @order_bp.route('/api/getTableOrder', methods=['Get'])
 def get_order_by_table():
     """
-    An api endpoint to get each order_id and its corresponding table number
+    An api endpoint to get each order_id and its corresponding table number.
         
     Returns:
-        A response containing data in the format {table_number, order_id}
+        response: A response containing data in the format {table_number, order_id}.
+
+    Raises:
+        Exception: If database could not be reached.
     """
     try:
         #connect to database
@@ -216,7 +221,10 @@ def change_order_status():
     This route expects a JSON payload containing an order_id and status change.
     
     Returns:
-        str: A JSON response and a HTTP code.
+        response: A JSON response and a HTTP code.
+
+    Raises:
+        Exception: If order status could not be changed.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -258,7 +266,7 @@ def fetch_customer_order():
     The status is also updated based on milestones e.g. if current_time - time_ordered > 5 mins then status is `Cooking`.
 
     Returns:
-        The order information as JSON and a HTTP code.
+        response: The order information as JSON and a HTTP code.
     """
     data = request.get_json(force=True)
     # Sending customer_id via body is for testing purposes
@@ -310,7 +318,7 @@ def fetch_table_staff_order():
     For the order, it fetches the order_id, is_paid attribute, status, and time ordered.
 
     Returns:
-        This information as JSON and an HTTP code.
+        response: This information as JSON and an HTTP code.
     """
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -337,7 +345,18 @@ def fetch_table_staff_order():
 
 @order_bp.route('/api/orders/<int:order_id>', methods=['GET'])
 def get_order_by_id(order_id: int):
+    """
+    Fetches all orders with an associated order id.
 
+    Param:
+        order_id (int): The order id to fetch the data for.
+
+    Returns:
+        response: The JSON data of the order and a HTTP status code.
+
+    Raises:
+        Exception: If such orders could not be fetched.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -423,7 +442,18 @@ def get_order_by_id(order_id: int):
 
 @order_bp.route('/api/orders/<int:order_id>/status')
 def get_order_status(order_id: int):
-    """Returns the status and estimated time of an order."""
+    """
+    Returns the status and estimated time of an order.
+    
+    Param:
+        order_id (int): The order id to return the info for.
+
+    Returns:
+        response: The JSON data and a HTTP status code.
+
+    Raises:
+        Exception: If the order information could not be fetched.
+    """
 
     conn = get_db_connection()
     cursor = conn.cursor()
