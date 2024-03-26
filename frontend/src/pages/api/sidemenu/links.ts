@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     }
                 ]
             }
-        } else if (session.session_type === "staff") {
+        } else if (session.user.role === "Waiter") {
             links["Menu"] = {
                 links: [
                     {
@@ -99,7 +99,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     },
                 ]
             }
-
+        }
+        else if (session.user.role === "Kitchen") {
             links["Orders"] = {
                 links: [
                     {
