@@ -21,27 +21,6 @@ export function KitchenOrderItem(props: Props) {
     }
 
     return (
-            // <div className="hidden">
-            //         <table className="border-collapse w-full m-2">
-            //             <thead>
-            //                 <tr className="border-b text-lg text-wahaca-navy">
-            //                     <th className="text-left">Product</th>
-            //                     <th>Quantity</th>
-            //                     <th>Price</th>
-            //                     <th>Total</th>
-            //                 </tr>
-            //             </thead>
-            //             <tbody>
-            //                 <tr className="border-b ">
-            //                     <td className="text-left"></td>
-            //                     <td className="p-5 italic text-center font-semibold">{props.data.order_id}</td>
-            //                     <td className="p-8 italic text-center">£{props.data.customer_id}</td>
-            //                     {/* <td className="italic text-center font-semibold">£{item.subtotal}</td> */}
-            //                     <td className="p-10"></td>
-            //                 </tr>
-            //             </tbody>
-            //         </table>
-            // </div>
         <div className="">
             <div className={"bg-white p-5 rounded-xl items-center grid grid-cols-4 "}>
                 <div className={"p-5 bg-red-200"}>
