@@ -139,38 +139,58 @@ def delete_order():
         cursor.close()
         conn.close()
 
+
 @order_bp.route('/api/fetchorders', methods=['GET'])
 def fetch_orders():
-     """
-     An API endpoint to fetch and return all current orders.
+    """
+    An API endpoint to fetch and return all current orders.
 
-     Returns:
-        str: The orders as JSON and a HTTP code.
-     """
-     conn = get_db_connection()
-     cursor = conn.cursor()
-     try:
-        cursor.execute(f'''SELECT * FROM "Order" ORDER BY time_ordered asc;''')
+    Returns:
+       str: The orders as JSON and a HTTP code.
+    """
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        filter_confirmed = request.args.get('confirmed', default=False)
+
+        if filter_confirmed:
+            cursor.execute('''
+                SELECT *
+                FROM "Order"
+                WHERE status = 'Confirmed'
+                ORDER BY time_ordered asc;
+            ''')
+        else:
+            cursor.execute('''
+                SELECT *
+                FROM "Order"
+                ORDER BY time_ordered asc;
+            ''')
+
         order = cursor.fetchall()
 
-        if (order != None): #Check if there are orders available in the database
+        if (order != None):  # Check if there are orders available in the database
             orders = [{'order_id': item[0],
-                     'customer_id': item[1],
-                     'status': item[2],
-                     'time_ordered': item[3],
-                     'is_paid': item[4]} for item in order] #Sorts the relevent database entries into dictionary items
+                       'customer_id': item[1],
+                       'status': item[2],
+                       'time_ordered': item[3],
+                       'is_paid': item[4]} for item in order]  # Sorts the relevent database entries into dictionary items
             return jsonify(orders), 200
         else:
             return jsonify({
-            'message': 'No orders made yet'
+                'message': 'No orders made yet'
             }), 200
-     except Exception as e:
+
+    except Exception as e:
         print(e)
         return jsonify({
             'message': 'Something went wrong'
         }), 500
-     finally:
-        cursor.close() #Closes the connections
+
+    finally:
+        cursor.close()  # Closes the connections
         conn.close()
 
 @order_bp.route('/api/getTableOrder', methods=['Get'])
@@ -185,7 +205,7 @@ def get_order_by_table():
         #connect to database
         conn = get_db_connection()
         cursor = conn.cursor()
-        
+
         #execute sql query
         cursor.execute("""
                        SELECT C.table_number, O.order_id
@@ -193,18 +213,18 @@ def get_order_by_table():
                        JOIN "Order" O ON C.customer_id = O.customer_id
                        GROUP BY C.table_number, O.order_id
                        ORDER BY C.table_number ASC
-                       """) 
+                       """)
         orders = cursor.fetchall()
-        
+
         #close connection
         cursor.close()
         conn.close()
 
         formatted_orders = [{"order_id": row[1], "table_number": row[0]} for row in orders]
-        
+
         #return data
         return jsonify(formatted_orders)
-       
+
     except Exception as e:  #database couldn't be reached
         return jsonify("Something went wrong."), 500
 
@@ -331,7 +351,7 @@ def fetch_table_staff_order():
                   'status': row[4], 'time_ordered': row[5], 'order_id': row[6], 'is_paid': row[7],
                   'staff_id': row[8], 'waiter_full_name': f"{row[9]} {row[10]}"}
                   for row in data]
-    
+
     return jsonify(data_dicts), 200
 
 
