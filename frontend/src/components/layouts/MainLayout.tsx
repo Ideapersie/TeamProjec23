@@ -4,9 +4,7 @@ import Link from "next/link";
 import CurrentUser from "@/components/side-menu/CurrentUser";
 import React from "react";
 import Image from "next/image";
-import {NotificationButton} from "@/components/notifications/notification-button";
-import {CartButton} from "@/components/cart-button";
-import {CallWaiterButton} from "@/components/call-button";
+import TopBarIcons from "@/components/top-bar/TopBarIcons";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -60,11 +58,7 @@ export default function MainLayout({ children }: any): React.ReactNode {
                     {children}
 
                     <div className={"absolute right-0 top-0"}>
-                        <div className="flex gap-5 items-center">
-                            <CallWaiterButton/>
-                            <CartButton/>
-                            <NotificationButton/>
-                        </div>
+                        <TopBarIcons/>
                     </div>
                 </div>
             </main>

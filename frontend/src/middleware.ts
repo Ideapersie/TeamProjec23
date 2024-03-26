@@ -1,8 +1,6 @@
 import {NextResponse} from 'next/server'
 import type {NextRequest} from 'next/server'
 import {sessionCookieName} from "@/components/auth/helpers";
-import {SessionJWT} from "@/pages/api/auth/session";
-import {env} from "../env.config";
 
 const whiteList = ["/_next", "/api"];
 
