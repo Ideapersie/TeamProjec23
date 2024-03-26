@@ -56,7 +56,7 @@ export default function MainLayout({ children }: any): React.ReactNode {
 
             {/*Right panel / page contents*/}
             <main className={"p-16 min-h-screen flex flex-col"} style={{marginLeft: SIDE_MENU_WIDTH}}>
-                <div className={"relative flex-grow flex"}>
+                <div className={"relative flex-grow flex flex-col"}>
                     {children}
 
                     <div className={"absolute right-0 top-0"}>
