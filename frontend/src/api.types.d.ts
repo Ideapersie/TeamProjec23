@@ -1,4 +1,4 @@
-import {Notification} from "@/types";
+import {Ingredient, MenuItem, Notification} from "@/types";
 
 export interface ApiAddOrderResponse {
     message: string
@@ -52,5 +52,21 @@ export interface ApiGetOrderStatusResponse {
             is_paid: boolean,
             estimated_wait: number | null
         }
+    }
+}
+
+export type ApiFetchOrdersResponse = {
+    order_id: number,
+    customer_id: number,
+    status: string,
+    time_ordered: string,
+    is_paid: boolean
+}[]
+
+export type ApiGetMenuItemById = {
+    message: string,
+    item: MenuItem & {
+        related: MenuItem[],
+        ingredients: Ingredient[]
     }
 }
