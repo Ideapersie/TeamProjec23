@@ -110,6 +110,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                         display: "Add links here",
                         path: "/order/addlinkshere"
                     },
+                    {
+                        display: "Kitchen Orders",
+                        path:"/staff/kitchen/orders"
+                    },
                 ]
             }
         }
