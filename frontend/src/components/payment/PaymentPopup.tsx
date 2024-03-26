@@ -9,6 +9,13 @@ interface Props {
     setShowPaymentWindow: Dispatch<SetStateAction<boolean>>
 }
 
+/**
+ * Renders a payment popup for paying the bill.
+ *
+ * @param props
+ * @constructor
+ * @author Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk)
+ */
 export default function PaymentPopup(props: Props) {
 
     const router = useRouter();
