@@ -3,14 +3,14 @@ INSERT INTO MenuItem(menuitem_id, name, description, type, price, calories, spic
 (DEFAULT, 'Free Range Pork Pibil Tacos', 'Slow-cooked in citrus and spices, with pink pickled onions, in three soft corn tortillas', 'Street food', 7.25, 500, 1, 'https://i.postimg.cc/nc7m5nj4/image.png'),
 (DEFAULT, 'Free Range Chicken & Avocado Tacos', 'With ancho rub, guacamole and green tomatillo salsa, in two soft corn tortillas', 'Street food', 7.50, 400, 0, 'https://i.postimg.cc/ht6HGbPW/image.png'),
 (DEFAULT, 'Free Range Chicken Club Quesadilla', 'With avocado, lettuce, melted cheese and chipotle mayo', 'Street food', 7.75, 350, 0, 'https://i.postimg.cc/4NVYNw1V/image.png'),
-(DEFAULT, 'Sweet Potato & Feta Taquito', 'With caramelised onion, salsas and chipotle mayo in a crisp blue corn tortilla', 'Street food', 6.95, 50, 0, 'https://i.postimg.cc/Z5WDdBC8/image.png'),
-(DEFAULT, 'Free Range Chicken Burrito', 'With ancho rub', 'Bigger plates', 12.95, 50, 0, 'https://i.postimg.cc/wxtVF86z/image.png'),
-(DEFAULT, 'Free Range Chicken & Chorizo Enchilada', 'Filled corn tortilla', 'Bigger plates', 13.95, 50, 0, 'https://i.postimg.cc/ZnKhtbjw/image.png'),
-(DEFAULT, 'Sweet Potato & Broccoli Rainbow Bowl', 'A wholesome bowl with black beans, green rice, slaw, guacamole, salsa & pink pickled onions.', 'Bigger plates', 10.95, 50, 0, 'https://i.postimg.cc/tRmcCNgq/image.png'),
-(DEFAULT, 'Seasonal Greens', 'Grilled broccoli and winter kale in a mojo de ajo and lime dressing', 'Sides', 5.75, 50, 0, 'https://i.postimg.cc/JhvqCPqv/image.png'),
-(DEFAULT, 'Seasonal Veg Tetela', 'A large crisp tortilla parcel, filled with roasted vegetables and black beans, topped with feta, avocado salsa and cashew crema', 'Specials', 6.50, 50, 0, 'https://i.postimg.cc/Bv9bWFFN/image.png'),
-(DEFAULT, 'Spiced Roast Pineapple', 'With a chipotle agave glaze, vanilla ice cream and a coconut crumb', 'Desserts', 6.95, 50, 0, 'https://i.postimg.cc/MHC2c7qF/image.png'),
-(DEFAULT, 'Build Your Own Tacos', 'Tortillas with lettuce, cheese, slaw and black beans, with veg stick dippers and crunchy chips', 'Kids menu', 6.95, 50, 0, 'https://i.postimg.cc/252sdRCv/image.png');
+(DEFAULT, 'Sweet Potato & Feta Taquito', 'With caramelised onion, salsas and chipotle mayo in a crisp blue corn tortilla', 'Street food', 6.95, 390, 0, 'https://i.postimg.cc/Z5WDdBC8/image.png'),
+(DEFAULT, 'Free Range Chicken Burrito', 'With ancho rub', 'Bigger plates', 12.95, 450, 0, 'https://i.postimg.cc/wxtVF86z/image.png'),
+(DEFAULT, 'Free Range Chicken & Chorizo Enchilada', 'Filled corn tortilla', 'Bigger plates', 13.95, 500, 0, 'https://i.postimg.cc/ZnKhtbjw/image.png'),
+(DEFAULT, 'Sweet Potato & Broccoli Rainbow Bowl', 'A wholesome bowl with black beans, green rice, slaw, guacamole, salsa & pink pickled onions.', 'Bigger plates', 10.95, 400, 0, 'https://i.postimg.cc/tRmcCNgq/image.png'),
+(DEFAULT, 'Seasonal Greens', 'Grilled broccoli and winter kale in a mojo de ajo and lime dressing', 'Sides', 5.75, 90, 0, 'https://i.postimg.cc/JhvqCPqv/image.png'),
+(DEFAULT, 'Seasonal Veg Tetela', 'A large crisp tortilla parcel, filled with roasted vegetables and black beans, topped with feta, avocado salsa and cashew crema', 'Specials', 6.50, 250, 0, 'https://i.postimg.cc/Bv9bWFFN/image.png'),
+(DEFAULT, 'Spiced Roast Pineapple', 'With a chipotle agave glaze, vanilla ice cream and a coconut crumb', 'Desserts', 6.95, 83, 0, 'https://i.postimg.cc/MHC2c7qF/image.png'),
+(DEFAULT, 'Build Your Own Tacos', 'Tortillas with lettuce, cheese, slaw and black beans, with veg stick dippers and crunchy chips', 'Kids menu', 6.95, 150-200, 0, 'https://i.postimg.cc/252sdRCv/image.png');
 
 INSERT INTO Allergen(allergen_name) VALUES
 ('Celery'),
@@ -36,7 +36,13 @@ INSERT INTO Ingredient(ingredient_name) VALUES
 ('Kale'),
 ('Nacho'),
 ('Taco'),
-('Pineapple');
+('Pineapple'),
+('Coconut'),
+('Avocado'),
+('Broccoli'),
+('Lime'),
+('Rice'),
+('Pickled Onions');
 
 INSERT INTO Ingredient(ingredient_name, allergen_name) VALUES
 ('Cheese', 'Milk'),
@@ -44,7 +50,9 @@ INSERT INTO Ingredient(ingredient_name, allergen_name) VALUES
 ('Tortilla', 'Gluten'),
 ('Coleslaw', 'Eggs'),
 ('Feta', 'Milk'),
-('Mayonnaise', 'Eggs');
+('Mayonnaise', 'Eggs'),
+('Ice Cream', 'Milk'),
+('Cashews', 'Nuts');
 
 INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
 (1, 'Cheese'),
@@ -52,12 +60,15 @@ INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
 (1, 'Onion'),
 (2, 'Onion'),
 (2, 'Taco'),
+(2, 'Pickled Onions'),
 (3, 'Chicken'),
 (3, 'Taco'),
+(4, 'Avocado'),
 (4, 'Chicken'),
 (4, 'Tortilla'),
 (4, 'Cheese'),
 (4, 'Mayonnaise'),
+(5, 'Tortilla'),
 (5, 'Feta'),
 (5, 'Onion'),
 (5, 'Mayonnaise'),
@@ -69,11 +80,20 @@ INSERT INTO MenuIngredient(menuitem_id, ingredient_name) VALUES
 (8, 'Black beans'),
 (8, 'Onion'),
 (8, 'Coleslaw'),
+(8, 'Broccoli'),
+(8, 'Avocado'),
+(8, 'Pickled Onions'),
 (9, 'Kale'),
+(9, 'Broccoli'),
+(9, 'Lime'),
 (10, 'Black beans'),
 (10, 'Tortilla'),
 (10, 'Feta'),
+(10, 'Cashews'),
+(10, 'Avocado'),
 (11, 'Pineapple'),
+(11, 'Coconut'),
+(11, 'Ice Cream'),
 (12, 'Black beans'),
 (12, 'Tortilla'),
 (12, 'Coleslaw'),

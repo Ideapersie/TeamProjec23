@@ -182,9 +182,6 @@ def get_order_by_table():
         
     Returns:
         response: A response containing data in the format {table_number, order_id}.
-
-    Raises:
-        Exception: If database could not be reached.
     """
     try:
         #connect to database

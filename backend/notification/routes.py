@@ -6,7 +6,6 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify, Response
 from menu.connection import get_db_connection
 from auth.session import AuthSession, UnauthorisedAccessError
-from test.test_urllib2 import add_ordered_mock_handlers
 from auth.authentication import customer_waiters
 
 notification_bp = Blueprint('notification', __name__)
@@ -219,16 +218,13 @@ def mark_notification_as_seen(notification_id):
     conn.close()
     return jsonify(message)
 
-@notification_bp.route('/api/orderReady')
+@notification_bp.route('/api/orderReady', methods=['POST'])
 def order_ready():
     """
     An API endpoint to notify a waiter a specific customers order is ready
 
     Returns:
         response: A JSON statement indicating if a notification has been sent successfully.
-
-    Raises:
-        Exception: If order status could not be changed.
     """
     try:
         order_id = request.json(force = True)
