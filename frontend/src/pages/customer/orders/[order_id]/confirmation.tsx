@@ -151,7 +151,7 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
 
                     {/*Right column - Order status*/}
                     <div className={"p-10 bg-wahaca-navy flex-grow max-w-md rounded-r-2xl text-wahaca-white"}>
-                        <h4 className={"text-wahaca-white"}>Track your order</h4>
+                        <h4 className={"text-wahaca-white text-lg font-bold"}>Track your order</h4>
                         <br></br>
                         <p>Time Ordered: {new Date(props.data.order.time_ordered).toLocaleTimeString('en-US', {
                             hour12: true,
@@ -162,8 +162,19 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                             className={status === "Unconfirmed" ? "text-wahaca-pink" : "text-wahaca-teal"}>{status}</strong>
                         </p>
 
+                        <div className="mt-10">
+                            <ul>
+                                <li className="font-sans font-semibold text-lg">
+                                    Table Number: {props.data.order.customer.table_number}
+                                </li>
+                                <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
+                                <li>Email: {props.data.order.customer.email}</li>
+                                
+                            </ul>
+                        </div>
+
                         <div className={"my-10"}>
-                            <h3 className={"mb-8"}>Estimated time remaining:</h3>
+                            <h3 className={"mb-5"}>Estimated time remaining:</h3>
                             {estimatedWait === null ?
                                 <p>Order not confirmed yet</p>
                                 : status === "Delivered" ?
@@ -179,15 +190,6 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                                             <strong>{estimatedWait}</strong> minutes
                                         </div>
                             }
-                        </div>
-
-                        <div>
-                            <ul>
-                                <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
-                                <li>Email: {props.data.order.customer.email}</li>
-                                <li className="font-sans font-bold">Table
-                                    Number: {props.data.order.customer.table_number}</li>
-                            </ul>
                         </div>
                     </div>
                 </div>
