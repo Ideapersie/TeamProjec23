@@ -122,7 +122,7 @@ def update_is_paid(order_id):
                    UPDATE "Order"
                    SET is_paid = True
                    WHERE order_id = %s
-                   """, (order_id))
+                   """, (order_id,))
     conn.commit()
 
     cursor.close()
