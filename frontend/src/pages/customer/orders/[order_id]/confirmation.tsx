@@ -162,13 +162,20 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                             className={status === "Unconfirmed" ? "text-wahaca-pink" : "text-wahaca-teal"}>{status}</strong>
                         </p>
 
-                        <div className="mt-10">
-                            <ul>
-                                <li className="font-sans font-semibold text-lg">
-                                    Table Number: {props.data.order.customer.table_number}
+                        <div className="mt-10 ">
+                            <ul className="font-sans font-semibold text-lg">
+                                <li>
+                                    <span className="font-bold italic">Table Number: </span> 
+                                    {props.data.order.customer.table_number}
                                 </li>
-                                <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
-                                <li>Email: {props.data.order.customer.email}</li>
+                                <li>
+                                    <span className="font-bold italic">Name : </span>
+                                    {props.data.order.customer.first_name} {props.data.order.customer.last_name}
+                                </li>
+                                <li>
+                                    <span className="font-bold italic">Email : </span>
+                                    {props.data.order.customer.email}
+                                </li>
                                 
                             </ul>
                         </div>
