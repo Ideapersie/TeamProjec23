@@ -38,6 +38,7 @@ export const getServerSideProps = (async (context) => {
  *
  * @param props
  * @constructor
+ * @author Vincent Chapman-Andrews (zlac465@live.rhul.ac.uk), Idea Khan (zlac177@live.rhul.ac.uk)
  */
 export default function OrderConfirmationPage(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
