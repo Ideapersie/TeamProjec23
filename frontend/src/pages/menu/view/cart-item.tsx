@@ -60,6 +60,9 @@ export default function CartItem(props: Props) {
             // Update the state to reflect the changes
             props.setOrderedItems(cart);
         }
+
+        const deleteFromCartEvent = new CustomEvent("delete-from-cart");
+        window.dispatchEvent(deleteFromCartEvent);
     }
 
     return (

@@ -235,6 +235,7 @@ def login(mode: str):
 
         # Store JWT in browser as cookie
         response.set_cookie('session', encoded_user_info, httponly=False, secure=True)
+        response.set_cookie('type', mode, httponly=False, secure=True)
 
         return response
 
@@ -247,7 +248,6 @@ def login(mode: str):
     finally:
         cursor.close()
         conn.close()
-
 
 
 @auth_bp.route('/api/auth/logout')
@@ -273,10 +273,10 @@ def logout():
                 cursor = conn.cursor()
 
                 cursor.execute("""
-                            SELECT table_number
-                            FROM Customer
-                            WHERE customer_id = %s
-                        """, (customer_id,))
+                    SELECT table_number
+                    FROM Customer
+                    WHERE customer_id = %s
+                """, (customer_id,))
 
                 table_record = cursor.fetchone()
                 table_to_free = int(table_record[0])
@@ -287,10 +287,10 @@ def logout():
                         customer_waiters[key].remove(int(customer_id))
 
                 cursor.execute("""
-                            UPDATE Customer
-                            SET table_number = '-1'
-                            WHERE customer_id = %s
-                        """, (customer_id,))
+                    UPDATE Customer
+                    SET table_number = '-1'
+                    WHERE customer_id = %s
+                """, (customer_id,))
 
                 conn.commit()
                 cursor.close()

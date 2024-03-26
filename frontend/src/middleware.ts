@@ -31,22 +31,16 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/auth/customer/login', request.url));
     }
 
-    const res = await fetch(env.apiHost + '/api/auth/session', {
-        headers: {
-            "cookie": request.headers.get('cookie') || ""
-        }
-    });
-    const data = await res.json();
-    const session = data.session as SessionJWT | null;
+    const sessionType = request.cookies.get('type')?.value || "customer";
 
     if (request.nextUrl.pathname === "/") {
-        if (session?.session_type === "staff") {
+        if (sessionType === "staff") {
             console.log("Middleware: REDIRECT to /admin/waiter/menu/view");
-            return NextResponse.redirect(new URL('/admin/waiter/menu/view', request.url));
+            return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
 
         } else {
             console.log("Middleware: REDIRECT to /menu");
-            return NextResponse.redirect(new URL('/menu', request.url));
+            return NextResponse.rewrite(new URL('/menu', request.url));
         }
     }
 
