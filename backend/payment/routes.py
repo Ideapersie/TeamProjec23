@@ -11,6 +11,7 @@ from payment.payment import (
     luhn_check, fetch_payment_info, store_payment_info,
     update_is_paid,fetch_unpaid_delivered
 )
+from auth.session import AuthSession, UnauthorisedAccessError
 
 payment_bp = Blueprint('payment', __name__)
 
@@ -29,8 +30,12 @@ def pay_bill(order_id):
         HTTP 200 if payment card is valid, HTTP 400 otherwise.
     """
     data = request.get_json(force=True)
-    customer_id = data['customer_id']
-    store_card = data['store_card']
+
+    session = AuthSession()
+    session.assert_customer()
+    customer_id = session.get_user_id()
+
+    store_card = True
     card_number = data['card_number']
     holder_name = data['holder_name']
     expiration_date = data['expiration_date']
