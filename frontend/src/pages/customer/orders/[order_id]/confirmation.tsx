@@ -91,28 +91,6 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
 
                 <div className={"bg-white shadow-lg rounded-xl flex flex-grow overflow-hidden "}>
 
-                    {/* <div className={"flex-grow p-10"}>
-                    <h4>Ordered items</h4>
-                    <br></br>
-                    <div>
-                        <ul>
-                            <li>Name: {props.data.order.customer.first_name} {props.data.order.customer.last_name}</li>
-                            <li>Email: {props.data.order.customer.email}</li>
-                            <li className = "font-sans font-bold">Table Number: {props.data.order.customer.table_number}</li>
-                        </ul>
-                    </div>
-                    <div className="grid grid-cols-4 gap-4 mt-5">
-                        {props.data.order.ordered_items.map((item, index) => (
-                            <div key={index} className="border p-4 rounded-lg">
-                                <img src={item.image} alt={item.name} className="w-full h-auto mb-2" />
-                                <h3 className="text-lg font-bold">{item.name}</h3>
-                                <p className="text-sm">Price: £{item.price}</p>
-                                <p className="text-sm">Quantity: {item.quantity}</p>
-                                <p className="text-sm">Subtotal: £{item.subtotal}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div> */}
                     {/*Left column - basket*/}
                     <div className={"flex-grow p-5"}>
                         <table className="border-collapse w-full m-2">
