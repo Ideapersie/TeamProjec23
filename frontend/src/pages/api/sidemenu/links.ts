@@ -74,11 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 links: [
                     {
                         display: "Pay bill",
-                        path: "/menu",
-                    },
-                    {
-                        display: "Track order",
-                        path: "/menu"
+                        path: "/customer/orders",
                     },
                     {
                         display: "Order history",
@@ -86,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     }
                 ]
             }
-        } else if (session.session_type === "staff") {
+        } else if (session.user.role === "Waiter") {
             links["Menu"] = {
                 links: [
                     {
@@ -103,12 +99,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                     },
                 ]
             }
-
+        }
+        else if (session.user.role === "Kitchen") {
             links["Orders"] = {
                 links: [
                     {
-                        display: "Add links here",
-                        path: "/order/addlinkshere"
+                        display: "Kitchen Orders",
+                        path: "/staff/kitchen/orders"
                     },
                     {
                         display: "Kitchen Orders",
