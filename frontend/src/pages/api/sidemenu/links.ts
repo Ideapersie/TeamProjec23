@@ -74,11 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 links: [
                     {
                         display: "Pay bill",
-                        path: "/menu",
-                    },
-                    {
-                        display: "Track order",
-                        path: "/menu"
+                        path: "/customer/orders",
                     },
                     {
                         display: "Order history",
