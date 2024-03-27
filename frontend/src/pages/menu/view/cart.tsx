@@ -77,7 +77,8 @@ export default function Cart(props: Props) {
 
                 const newOrderId = data.new_order_id;
 
-                handleClearCart()
+                sessionStorage.removeItem('Cart');
+                setOrderedItems(null);
 
                 setShowPopup(true);
 
@@ -87,7 +88,7 @@ export default function Cart(props: Props) {
 
                     // Refreshes the page, updating the cart to be empty
                     setTimeout(() => {
-                        router.push(`/customer/orders/${newOrderId}/confirmation`)
+                        window.location.assign(`/customer/orders/${newOrderId}/confirmation`)
                     }, 0);
                 }, 1500);
 
