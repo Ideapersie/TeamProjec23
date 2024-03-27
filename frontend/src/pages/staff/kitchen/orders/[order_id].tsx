@@ -8,6 +8,7 @@ import {ApiGetOrderByIdResponse} from "@/api.types";
 import KitchenOrderMenuItem from "@/components/kitchen/kitchen-order-menu-item";
 import {useState} from "react";
 import KitchenOrderMenuItemSummary from "@/components/kitchen/kitchen-order-menu-item-summary";
+import Link from "next/link";
 
 
 /**
@@ -48,14 +49,7 @@ export default function KitchenSingleOrderPage(props: InferGetServerSidePropsTyp
 
     const router = useRouter();
 
-    const [selectedItem, setSelectedItem] = useState<number>(props.data.data.order.ordered_items[0].menuitem_id)
-
-    /**
-     * Updates the order status, to keep the customer informed.
-     */
-    function handleUpdateStatus() {
-        // TODO: api - update status (shannon's route)
-    }
+    const [selectedIndex, setSelectedIndex] = useState(0);
 
     /**
      * Notifies the associated waiter that order is ready to be delivered
@@ -67,46 +61,45 @@ export default function KitchenSingleOrderPage(props: InferGetServerSidePropsTyp
     return (
         <>
             <PageHeader>
+                <Link href={"/staff/kitchen/orders"}>
+                    <button className={"m-0 bg-white text-wahaca-teal mb-5"}>Go back</button>
+                </Link>
                 <PageTitle>Order: {router.query.order_id}</PageTitle>
                 <PageSubtitle>Use this page to upgrade your progress while preparing this order.</PageSubtitle>
             </PageHeader>
 
-            {/*TODO: Dropdown to update order status*/}
-
-            <div className={"bg-white rounded-xl shadow flex flex-grow overflow-hidden"}>
-                {/*Left column*/}
-                <div className={"flex-grow"}>
-                    {/*<pre>{JSON.stringify(props.data.data.order, undefined, 2)}</pre>*/}
-
-                    {/*TODO: Display a list of menu items in the order*/}
-                    <div className={"flex flex-col pt-3"}>
-                        {props.data.data.order.ordered_items.length ?
-                            props.data.data.order.ordered_items.map((order, index) => (
-                                <div key={order.menuitem_id}>
-                                    {index != 0 && <hr/>}
-                                    <KitchenOrderMenuItem
-                                        data={order}
-                                        selectedItem={selectedItem}
-                                        setSelectedItem={setSelectedItem}
-                                    />
-                                </div>
-                            ))
-                            :
-                            <div>No ordered items</div>
-                        }
+            <div
+                className="p-2.5 bg-wahaca-light-navy bg-opacity-50 rounded-3xl shadow flex flex-grow">
+                <div className={"rounded-xl shadow-md flex flex-grow overflow-hidden"}>
+                    {/*Left column*/}
+                    <div className={"flex-grow bg-white rounded-tl-2xl"}>
+                        {/*Display a list of menu items in the order*/}
+                        <div className={"flex flex-col"}>
+                            {props.data.data.order.ordered_items.length ?
+                                props.data.data.order.ordered_items.map((order, index) => (
+                                    <div key={order.menuitem_id}>
+                                        {index != 0 && <hr/>}
+                                        <KitchenOrderMenuItem
+                                            data={order}
+                                            isSelected={selectedIndex === index}
+                                        />
+                                    </div>
+                                ))
+                                :
+                                <div>No ordered items</div>
+                            }
+                        </div>
                     </div>
 
-                    {/*TODO: Button to mark order as done*/}
-                    <button onClick={handleMarkReadyToDeliver} className={"m-0"}>
-                        Ready to delivery
-                    </button>
-                </div>
-
-                {/*Right column*/}
-                <div className={"flex-grow w-full max-w-md bg-wahaca-navy p-10 flex"}>
-                    <KitchenOrderMenuItemSummary
-                        order_id={selectedItem}
-                    />
+                    {/*Right column*/}
+                    <div className={"flex-grow w-full max-w-md bg-wahaca-navy p-10 flex"}>
+                        <KitchenOrderMenuItemSummary
+                            itemId={props.data.data.order.ordered_items[selectedIndex].menuitem_id}
+                            numItems={props.data.data.order.ordered_items.length}
+                            selectedIndex={selectedIndex}
+                            setSelectedIndex={setSelectedIndex}
+                        />
+                    </div>
                 </div>
             </div>
         </>
