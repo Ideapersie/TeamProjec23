@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS "Order" CASCADE; -- 'Order' is a reserved keyword, "" requi
 CREATE TABLE "Order" (
     order_id SERIAL PRIMARY KEY,
     customer_id INTEGER REFERENCES Customer(customer_id) NOT NULL,
-    status VARCHAR(15) NOT NULL,
+    status VARCHAR(200) NOT NULL,
     time_ordered TIMESTAMP NOT NULL,
     is_paid BOOLEAN NOT NULL
 );
