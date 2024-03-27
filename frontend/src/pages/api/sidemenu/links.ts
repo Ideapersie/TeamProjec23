@@ -2,7 +2,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
 import {env} from "../../../../env.config";
 import {sessionCookieName} from "@/components/auth/helpers";
 import jwt from "jsonwebtoken";
-import {SessionJWT} from "@/pages/api/auth/session";
+import {SessionJWT} from "@/api.types";
 
 export interface NavLink {
     display: string;
@@ -74,11 +74,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 links: [
                     {
                         display: "Pay bill",
-                        path: "/customer/orders",
+                        path: "/customer/orders/unpaid",
                     },
                     {
-                        display: "Order history",
-                        path: "/menu"
+                        display: "Your orders",
+                        path: "/customer/orders"
                     }
                 ]
             }
