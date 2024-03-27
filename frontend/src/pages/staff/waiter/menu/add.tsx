@@ -59,7 +59,7 @@ export default function AddItemPage() {
             });
 
             if (response.status === 200) {
-                await router.push('/admin/waiter/menu/view');
+                await router.push('/staff/waiter/menu/view');
 
             } else if (response.status === 400) {
                 alert("Item with this name already exists");

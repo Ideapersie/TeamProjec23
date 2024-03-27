@@ -1,7 +1,7 @@
 import {Modal} from "@/components/common/Modal";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {useContext} from "react";
-import {AdminViewMenuPageContext} from "@/pages/admin/waiter/menu/view";
+import {AdminViewMenuPageContext} from "@/pages/staff/waiter/menu/view";
 import {useRouter} from "next/router";
 
 export function DeleteItemPopup() {

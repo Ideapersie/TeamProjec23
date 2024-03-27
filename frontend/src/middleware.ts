@@ -31,28 +31,54 @@ export async function middleware(request: NextRequest) {
 
     const sessionType = request.cookies.get('type')?.value || "customer";
 
+    // Customer route blocking
+    if (request.nextUrl.pathname.startsWith("/customer") && sessionType !== "customer") {
+        console.log("Middleware redirecting away from /customer");
+        return NextResponse.rewrite(new URL('/unauthorised', request.url));
+    }
+
     // Home page routing
     if (request.nextUrl.pathname === "/") {
         if (sessionType === "staff") {
             const roleCookie = request.cookies.get('role')?.value;
             if (roleCookie && roleCookie === "Waiter") {
-                console.log("Middleware redirecting to: /admin/waiter/menu/view")
-                return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
-                // return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
+                console.log("Middleware redirecting to: /staff/waiter/menu/view")
+                return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
 
             } else if (roleCookie && roleCookie === "Kitchen") {
                 console.log("Middleware redirecting to: /staff/kitchen/orders")
                 return NextResponse.rewrite(new URL('/staff/kitchen/orders', request.url));
 
             } else {
-                console.log("Middleware redirecting to: /admin/waiter/menu/view")
-                return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
+                console.log("Middleware redirecting to: /staff/waiter/menu/view")
+                return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
             }
 
         } else {
             console.log("Middleware: REDIRECT to /menu");
             return NextResponse.rewrite(new URL('/menu', request.url));
         }
+    }
+
+    // Admin route blocking
+    const adminCookie = request.cookies.get('admin')?.value
+    if (request.nextUrl.pathname.startsWith("/admin") && (!adminCookie || adminCookie !== "1")) {
+        console.log("Middleware redirecting away from /admin");
+        return NextResponse.rewrite(new URL('/unauthorised', request.url));
+    }
+
+    const roleCookie = request.cookies.get('role')?.value
+
+    // Waiter staff route blocking
+    if (request.nextUrl.pathname.startsWith("/staff/waiter") && (!roleCookie || roleCookie !== "Waiter")) {
+        console.log("Middleware redirecting away from /staff/waiter");
+        return NextResponse.rewrite(new URL('/unauthorised', request.url));
+    }
+
+    // Kitchen staff route blocking
+    if (request.nextUrl.pathname.startsWith("/staff/kitchen") && (!roleCookie || roleCookie !== "Kitchen")) {
+        console.log("Middleware redirecting away from /staff/kitchen");
+        return NextResponse.rewrite(new URL('/unauthorised', request.url));
     }
 
     return NextResponse.next();

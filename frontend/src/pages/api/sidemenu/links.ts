@@ -83,15 +83,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 links: [
                     {
                         display: "View menu items",
-                        path: "/admin/waiter/menu/view"
+                        path: "/staff/waiter/menu/view"
                     },
                     {
                         display: "Add new item",
-                        path: "/admin/waiter/menu/add"
+                        path: "/staff/waiter/menu/add"
                     },
                     {
                         display: "Tables",
-                        path: "/admin/waiter/menu/tables"
+                        path: "/staff/waiter/menu/tables"
                     },
                 ]
             }

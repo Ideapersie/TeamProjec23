@@ -2,7 +2,7 @@ import styles from "./AdminMenu.module.css";
 import {MenuItem} from "@/types";
 import Link from "next/link";
 import {useContext} from "react";
-import {AdminViewMenuPageContext} from "@/pages/admin/waiter/menu/view";
+import {AdminViewMenuPageContext} from "@/pages/staff/waiter/menu/view";
 
 // Describing the props to be passed in to AdminMenuItem
 interface Props {
@@ -50,14 +50,8 @@ export default function AdminMenuItem(props: Props) {
 
             {/*Menu item controls*/}
             <div className={"ml-auto flex gap-1 items-center "}>
-                <Link href={`/menu/view/${props.item.menuitem_id}`}>
+                <Link href={`/staff/waiter/menu/edit/${props.item.menuitem_id}`}>
                     <button className={"m-0 w-full bg-wahaca-blue"}>
-                        View Page
-                    </button>
-                </Link>
-
-                <Link href={`/admin/waiter/menu/edit/${props.item.menuitem_id}`}>
-                    <button className={"m-0 w-full bg-wahaca-teal"}>
                         Edit
                     </button>
                 </Link>
