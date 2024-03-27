@@ -88,9 +88,28 @@ export interface SessionJWT {
 }
 
 /**
- * A type representing the data returned in the response.
+ * A type representing the data returned by /api/auth/session.
  */
 export interface AuthSessionResponse {
     message: string
     session: SessionJWT | null
+}
+
+export interface ApiGetCustomerOrders {
+    message: string
+    data: {
+        orders: {
+            id: number
+            is_paid: boolean
+            items: {
+                id: number
+                price: string
+                quantity: number
+                subtotal: string
+            }[]
+            status: string
+            time_ordered: string
+            total: string
+        }[]
+    }
 }

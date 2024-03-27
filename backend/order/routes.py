@@ -156,6 +156,7 @@ def fetch_orders():
     try:
         filter_confirmed = request.args.get('confirmed', default=False)
 
+        # Gets all confirmed orders for any customer
         if filter_confirmed:
             cursor.execute('''
                 SELECT *
@@ -163,6 +164,8 @@ def fetch_orders():
                 WHERE status = 'Confirmed'
                 ORDER BY time_ordered asc;
             ''')
+
+        # Gets all orders
         else:
             cursor.execute('''
                 SELECT *
@@ -515,3 +518,70 @@ def get_order_status(order_id: int):
     finally:
         conn.close()
         cursor.close()
+
+
+@order_bp.route('/api/orders/customer')
+def get_all_customer_orders():
+    """
+    An API endpoint to return the order history for the current user.
+
+    Returns:
+        response: The order information as JSON and a HTTP code.
+    """
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        session = AuthSession()
+        session.assert_customer()
+        customer_id = session.get_user_id()
+
+        cursor.execute("""
+            SELECT O.order_id, O.is_paid, O.time_ordered, O.status, OM.quantity, MI.price, MI.menuitem_id
+            FROM "Order" O
+            INNER JOIN ordermenu OM ON O.order_id = OM.order_id
+            INNER JOIN menuitem MI ON OM.menuitem_id = MI.menuitem_id 
+            WHERE customer_id = %s;
+        """, (customer_id,))
+
+        data = cursor.fetchall()
+
+        orders = {}
+
+        for order in data:
+            subtotal = order[4] * order[5]
+            menu_item = {
+                'quantity': order[4],
+                'price': order[5],
+                'subtotal': subtotal,
+                'id': order[6]
+            }
+
+            if order[0] not in orders:
+                orders[order[0]] = {
+                    'id': order[0],
+                    'is_paid': order[1],
+                    'time_ordered': order[2],
+                    'status': order[3],
+                    'items': [menu_item],
+                    'total': subtotal
+                }
+            else:
+                orders[order[0]]['items'].append(menu_item)
+                orders[order[0]]['total'] += subtotal
+
+        return jsonify({
+            'message': 'Success',
+            'data': {
+                'orders': list(dict.values(orders))
+            }
+        }), 200
+
+    except Exception as e:
+        print(e)
+        return jsonify({'message': 'something went wrong'}), 200
+
+    finally:
+        cursor.close()
+        conn.close()
