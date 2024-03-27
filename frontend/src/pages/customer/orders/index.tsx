@@ -58,7 +58,7 @@ export default function CustomerOrdersPage(props: InferGetServerSidePropsType<ty
 
             <div className={"p-7 bg-white rounded-xl shadow"}>
                 {!(paid.length || unpaid.length) ?
-                    <div>No orders</div>
+                    <div className={"font-medium text-wahaca-light-blue"}>No orders</div>
                     :
                     <div className={"flex flex-col gap-8"}>
                         {unpaid.length > 0 &&
