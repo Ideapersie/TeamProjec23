@@ -10,7 +10,7 @@ INSERT INTO MenuItem(menuitem_id, name, description, type, price, calories, spic
 (DEFAULT, 'Seasonal Greens', 'Grilled broccoli and winter kale in a mojo de ajo and lime dressing', 'Sides', 5.75, 90, 0, 'https://i.postimg.cc/JhvqCPqv/image.png'),
 (DEFAULT, 'Seasonal Veg Tetela', 'A large crisp tortilla parcel, filled with roasted vegetables and black beans, topped with feta, avocado salsa and cashew crema', 'Specials', 6.50, 250, 0, 'https://i.postimg.cc/Bv9bWFFN/image.png'),
 (DEFAULT, 'Spiced Roast Pineapple', 'With a chipotle agave glaze, vanilla ice cream and a coconut crumb', 'Desserts', 6.95, 83, 0, 'https://i.postimg.cc/MHC2c7qF/image.png'),
-(DEFAULT, 'Build Your Own Tacos', 'Tortillas with lettuce, cheese, slaw and black beans, with veg stick dippers and crunchy chips', 'Kids menu', 6.95, 150-200, 0, 'https://i.postimg.cc/252sdRCv/image.png');
+(DEFAULT, 'Build Your Own Tacos', 'Tortillas with lettuce, cheese, slaw and black beans, with veg stick dippers and crunchy chips', 'Kids menu', 6.95, 200, 0, 'https://i.postimg.cc/252sdRCv/image.png');
 
 INSERT INTO Allergen(allergen_name) VALUES
 ('Celery'),
