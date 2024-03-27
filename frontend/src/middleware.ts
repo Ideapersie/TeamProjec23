@@ -54,5 +54,12 @@ export async function middleware(request: NextRequest) {
         }
     }
 
+    // Admin route blocking
+    const adminCookie = request.cookies.get('admin')?.value
+    if (request.nextUrl.pathname.startsWith("/admin") && (!adminCookie || adminCookie !== "1")) {
+        console.log("Middleware redirecting away from /admin");
+        return NextResponse.rewrite(new URL('/unauthorised', request.url));
+    }
+
     return NextResponse.next();
 }
