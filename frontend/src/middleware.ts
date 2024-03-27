@@ -31,10 +31,23 @@ export async function middleware(request: NextRequest) {
 
     const sessionType = request.cookies.get('type')?.value || "customer";
 
+    // Home page routing
     if (request.nextUrl.pathname === "/") {
         if (sessionType === "staff") {
-            console.log("Middleware: REDIRECT to /admin/waiter/menu/view");
-            return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
+            const roleCookie = request.cookies.get('role')?.value;
+            if (roleCookie && roleCookie === "Waiter") {
+                console.log("Middleware redirecting to: /admin/waiter/menu/view")
+                return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
+                // return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
+
+            } else if (roleCookie && roleCookie === "Kitchen") {
+                console.log("Middleware redirecting to: /staff/kitchen/orders")
+                return NextResponse.rewrite(new URL('/staff/kitchen/orders', request.url));
+
+            } else {
+                console.log("Middleware redirecting to: /admin/waiter/menu/view")
+                return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
+            }
 
         } else {
             console.log("Middleware: REDIRECT to /menu");
