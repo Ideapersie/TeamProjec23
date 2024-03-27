@@ -218,29 +218,32 @@ def mark_notification_as_seen(notification_id):
     conn.close()
     return jsonify(message)
 
-@notification_bp.route('/api/orderReady', methods=['POST'])
-def order_ready():
+@notification_bp.route('/api/orderReady/<int:order_id>')
+def order_ready(order_id: int):
     """
     An API endpoint to notify a waiter a specific customers order is ready
 
     Returns:
         response: A JSON statement indicating if a notification has been sent successfully.
     """
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
     try:
-        order_id = request.json(force = True)
-        
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        #use order id to get customer id
-        cursor.execute(f'SELECT customer_id FROM "Order" WHERE order_id = {order_id}')
-        cust_id = cursor.fetchall()
-        
-        #close connection
-        cursor.close()
-        conn.close()
-        
-        #finding staff_id assigned to the customer id
+        session = AuthSession()
+        session.assert_role("Kitchen")
+
+        # Use order id to get customer id
+        cursor.execute('''
+            SELECT O.customer_id, C.table_number 
+            FROM "Order" O
+            INNER JOIN customer C ON O.customer_id = C.customer_id 
+            WHERE order_id = %s
+        ''', (order_id,))
+
+        [cust_id, table_number] = cursor.fetchone()
+
+        # Finding staff_id assigned to the customer id
         staff_id = None
         for staff, cust_list in customer_waiters.items():
             for id in cust_list:
@@ -248,21 +251,41 @@ def order_ready():
                     staff_id = staff
         
         if staff_id is None:
-            return jsonify("No staff id was found"), 500
+            return jsonify({
+                'message': 'No staff id found'
+            }), 404
         
-        #write message
-        message = f'Order {order_id} is ready to be delivered.'
+        # Write message
+        message = f'Deliver order {order_id} to table {table_number}'
+
+        # Cursor
+        cursor.execute('''
+            UPDATE "Order"
+            SET status = %s
+            WHERE order_id = %s;
+        ''', ("Delivered", order_id))
+
+        # Inserts the notification into the database
+        cursor.execute('''
+            INSERT INTO "Notification"(staff_id, message, seen, time_sent)
+            VALUES (%s, %s, %s, %s)
+            RETURNING notification_id
+        ''', (staff_id, message, False, datetime.now()))
+
+        conn.commit()
         
-        #compile notification data
-        notification = {
-            'staff_id': staff_id,
-            'message': message,
-            'time_sent': datetime.datetime.now()
-            }
-        
-        add_notification(notification)
-        
-        return jsonify("Notification has been sent."), 200
-    
-    except Exception as e:  #database could not be reached
-        return jsonify("Something went wrong."), 500
+        return jsonify({
+            'message': "Waiter notified!"
+        }), 200
+
+    # Unhandled exceptions
+    except Exception as e:
+        print(e)
+        return jsonify({
+            'message': 'Something went wrong'
+        }), 500
+
+    finally:
+        # close connection
+        cursor.close()
+        conn.close()
