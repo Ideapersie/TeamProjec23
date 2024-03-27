@@ -5,17 +5,16 @@ import { useState } from "react";
 import {Order} from "@/types";
 import { handleCancelOrder, handleStatusChange } from "@/components/menu/admin/OrderUtils";
 
+interface Props {
+    data: Order[]
+}
+
 /**
  * View table numbers and the corresponding waiters assigned to them.
  * 
  * @returns A component displaying a list of tables with their respective orders.
  * @author Madeleine Huebner (Madeleine.Huebner.2022@live.rhul.ac.uk)
  */
-
-interface Props {
-    data: Order[]
-}
-
 export default function ViewTablesPage() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
