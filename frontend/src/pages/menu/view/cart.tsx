@@ -158,9 +158,13 @@ export default function Cart(props: Props) {
                             <button onClick={handleClearCart} className={"m-0 mr-2 bg-wahaca-teal"}>Clear cart</button>
                         </div>
 
-                        <button onClick={handleSubmit} className="primary-button">
-                            Proceed to checkout
+                        <button onClick={handleSubmit} className="primary-button mb-2">
+                            Order items
                         </button>
+
+                        <div className={"text-xs font-medium text-wahaca-pink"}>
+                            You are not required to pay until you leave
+                        </div>
                     </div>
                 </div>
                 {showPopup && (

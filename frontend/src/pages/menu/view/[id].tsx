@@ -118,7 +118,8 @@ export default function ItemPage(props: PageProps) {
                         <div className={styles.calories}>Calories: {props.data.calories} Cals</div>
                         <div className={"mt-4 relative"}>
                             <button onClick={(handleAddToCart)} className={`${styles.button} 
-                                text-lg text-white-500 m-0 hover:bg-white-300 hover:translate-x-1`}> ORDER NOW
+                                text-lg text-white-500 m-0 hover:bg-white-300 hover:translate-x-1`}>
+                                ADD TO CART
                             </button>
 
                             {showPopup && (
