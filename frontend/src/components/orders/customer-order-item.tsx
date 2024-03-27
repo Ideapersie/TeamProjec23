@@ -30,7 +30,7 @@ export function CustomerOrderItem(props: Props) {
                     <div className={"ml-auto flex gap-3 items-center"}>
                         {!props.data.is_paid &&
                             <button className={"m-0"} onClick={() => setShowPayPopup(true)}>
-                                Pay bill
+                                Pay bill <span className={"font-mono ml-1"}>£{parseFloat(props.data.total).toFixed(2)}</span>
                             </button>
                         }
 
