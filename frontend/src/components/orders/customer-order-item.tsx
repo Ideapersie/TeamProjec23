@@ -19,7 +19,7 @@ export function CustomerOrderItem(props: Props) {
     return (
         <>
             <div className={`p-1 bg-opacity-100 rounded-xl ${props.data.is_paid ? "bg-wahaca-teal" : "bg-wahaca-pink"}`}>
-                <div className={"bg-white p-3 rounded-lg shadow flex gap-3 items-center"}>
+                <div className={"bg-white p-3 rounded-lg shadow flex gap-7 items-center text-sm font-medium text-wahaca-navy"}>
                     <div>Order: {props.data.id}</div>
                     <div>{props.data.items.length} item{props.data.items.length != 1 && "s"}</div>
                     <div>{new Date(props.data.time_ordered).toLocaleString("en-GB", {
@@ -28,10 +28,14 @@ export function CustomerOrderItem(props: Props) {
                     })}</div>
 
                     <div className={"ml-auto flex gap-3 items-center"}>
-                        {!props.data.is_paid &&
+                        {!props.data.is_paid ?
                             <button className={"m-0"} onClick={() => setShowPayPopup(true)}>
                                 Pay bill <span className={"font-mono ml-1"}>£{parseFloat(props.data.total).toFixed(2)}</span>
                             </button>
+                            :
+                            <div className={"font-mono ml-1 text-wahaca-teal"}>
+                                Total: £{parseFloat(props.data.total).toFixed(2)}
+                            </div>
                         }
 
                         <Link href={`/customer/orders/${props.data.id}/confirmation`}>
