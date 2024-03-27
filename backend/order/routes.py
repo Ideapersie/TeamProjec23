@@ -146,7 +146,8 @@ def fetch_orders():
 
     Returns:
        str: The orders as JSON and a HTTP code.
-   Raises:
+       
+    Raises:
         Exception: If all orders could not be fetched.
     """
 
