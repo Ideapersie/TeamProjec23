@@ -64,7 +64,13 @@ def insert_default_users(conn):
     cursor.execute("""
         INSERT INTO customer(email, password, first_name, last_name, table_number)
         VALUES(%s, %s, %s, %s, %s)
-    """, ("customer@example.com", generate_password_hash("customer"), "Customer", "Role", -1))
+    """, ("customer@example.com", generate_password_hash("customer"), "John", "Smith", -1))
+
+    # Example customer
+    cursor.execute("""
+            INSERT INTO customer(email, password, first_name, last_name, table_number)
+            VALUES(%s, %s, %s, %s, %s)
+        """, ("customer2@example.com", generate_password_hash("customer"), "Jane", "Doe", -1))
 
     conn.commit()
 
