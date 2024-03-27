@@ -53,7 +53,7 @@ export default function KitchenOrdersPage(props: InferGetServerSidePropsType<typ
                         }
                     </div>
                     :
-                    <div>No orders</div>
+                    <div className={"bg-white shadow p-5 rounded-xl font-medium text-wahaca-light-blue"}>No orders</div>
             }
         </>
     )
