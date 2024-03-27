@@ -10,11 +10,14 @@ staff_bp = Blueprint('staff', __name__)
 @staff_bp.route('/api/staff/all', methods=['GET'])
 def get_all_staff():
     """
-    Get all staff
-    Returns:
-        A list of all staff users
-    """
+    Get all staff.
 
+    Returns:
+        list of str: A list of all staff users.
+
+    Raises:
+        Exception: In case database could not be reached.
+    """
     try:
 
         conn = get_db_connection()
@@ -44,6 +47,18 @@ def get_all_staff():
 
 @staff_bp.route('/api/staff/update/<int:id>', methods=['POST'])
 def update_staff(id: int):
+    """
+    Updates info related to staff.
+
+    Param:
+        id (int): The id of the staff member to update.
+
+    Returns:
+        response: A status message and a HTTP code.
+
+    Raises:
+        Exception: In case staff info could not be updated.
+    """
     try:
         body = request.get_json(force=True)
 

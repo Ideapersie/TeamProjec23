@@ -16,3 +16,11 @@ auth.routes module
    :members:
    :undoc-members:
    :show-inheritance:
+
+auth.session module
+-------------------
+
+.. automodule:: auth.session
+   :members:
+   :undoc-members:
+   :show-inheritance:

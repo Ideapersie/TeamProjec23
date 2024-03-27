@@ -1,11 +1,5 @@
 """
 A Flask blueprint defining the API routes for interacting with the menu.
-
-The blueprint defines the following endpoints:
-- /api/menuitems (GET): Retreives a list of all menu items in JSON format.
-- /api/update_item (PUT): Updates an existing items attribute with a new value.
-- /api/add_item (POST): Adds an item to the database.
-- /api/delete_item (POST): Deletes an item to the database.
 """
 from flask import Blueprint, request, jsonify
 from menu.connection import get_db_connection
@@ -19,10 +13,10 @@ def get_menuitems(menuitem_id):
     An API endpoint to retrieve all or one menu items from the database.
     
     Args:
-        menuitem_id: the ID of a single item to retrieve from the database.
+        menuitem_id (int): the ID of a single item to retrieve from the database.
 
     Returns:
-        A JSON object containing all fetched menu items.
+        response: A JSON object containing all fetched menu items.
     """
     
     conn = get_db_connection()
@@ -61,7 +55,10 @@ def get_all_menu_items():
     An endpoint that returns all menu items in the database, including their ingredients.
 
     Returns:
-        A JSON object containing a list of menu items (with their ingredients)
+        response: A JSON object containing a list of menu items (with their ingredients).
+
+    Raises:
+        Exception: If fetching is interrupted due to unexpected behaviours.
     """
     try:
         # Connect to database
@@ -163,10 +160,13 @@ def get_menu_item_by_id(item_id: int):
     An API endpoint to retrieve one menu item from the database.
 
     Args:
-        item_id: the ID of a single item to retrieve from the database.
+        item_id (int): the ID of a single item to retrieve from the database.
 
     Returns:
-        A Response containing the item's data.
+        response: A Response containing the item's data.
+
+    Raises:
+        Exception: If the fetch was interrupted.
     """
 
     try:
@@ -275,30 +275,17 @@ def update_item(menuitem_id):
     """
     An API endpoint to update an existing menu item in the database.
 
-    This function expects a JSON payload and a header to identify the resource:
-    localhost/api/updateitem/<menuitem_id>
-    {
-        'name': '<varchar(50)>',
-        'description': '<text>',
-        'type': '<varchar(20)>',
-        'price': '<numeric(5,2)>',
-        'calories': '<integer>',
-        'image': '<varchar(140)>'
-    }
     The request will only succeed if the user is authenticated as an admin or staff.
 
     Args:
-        menuitem_id: The ID of the menu item to update.
+        menuitem_id (int): The ID of the menu item to update.
     
     Returns: 
-        A JSON statement indicating success.
+        response: A JSON statement indicating success.
+
+    Raises:
+        Exception: If the database connection/query could not be resolved.
     """
-
-    # if not request.cookies.get('token'):
-    #     return jsonify({'message' : 'Unauthorized access.'}), 401
-    # elif not validate_admin_token(request.cookies.get('token'), secret_key) and not validate_staff_token(request.cookies.get('token'), secret_key):
-    #     return jsonify({'message' : 'Unauthorized access.'}), 401
-
     try:
         data = request.get_json(force=True)
 
@@ -368,7 +355,10 @@ def add_item():
     An API endpoint to add a menu item to the database.
 
     Returns:
-        A message to inform the user if the item has been successfully added.
+        response: A message to inform the user if the item has been successfully added.
+
+    Raises:
+        Exception: If database connection/query could not be resolved.
     """
 
     try:
@@ -445,7 +435,10 @@ def delete_item(item_id: int):
     API endpoint to remove a menu item from the database.
 
     Returns:
-        A message to inform the user if the item has been deleted.
+        response: A message to inform the user if the item has been deleted.
+
+    Raises:
+        Exception: If database connection/query could not be resolved.
     """
 
     try:
@@ -487,7 +480,10 @@ def get_all_types():
     API endpoint to return all menu item types currently stored in the database.
 
     Returns:
-        A success message.
+        response: A success message.
+
+    Raises:
+        Exception: If database connection/query could not be resolved.
     """
 
     try:

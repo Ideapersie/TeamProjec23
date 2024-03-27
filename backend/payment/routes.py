@@ -1,10 +1,5 @@
 """
 A Flask blueprint defining API routes for the payment system.
-
-This blueprint defines the following routes:
-    /api/payment/pay_bill/<order_id> (POST)
-    /api/payment/get_payment_info (GET)
-    /api/payment/get_unpaid_delivered (GET)
 """
 from flask import Blueprint, request, jsonify
 from payment.payment import (
@@ -24,10 +19,10 @@ def pay_bill(order_id):
     Payment details can be stored in the database if specified by 'store_card'.
 
     Args:
-        order_id: The order the bill is being paid for.
+        order_id (int): The order the bill is being paid for.
 
     Returns:
-        HTTP 200 if payment card is valid, HTTP 400 otherwise.
+        response: HTTP 200 if payment card is valid, HTTP 400 otherwise.
     """
     data = request.get_json(force=True)
 
@@ -56,7 +51,7 @@ def get_payment_info(customer_id):
     Fetches the payment information associated with a customer.
 
     Returns:
-        A JSON payload if payment information exists, HTTP 400 otherwise.
+        response: A JSON payload if payment information exists, HTTP 400 otherwise.
     """
     out = fetch_payment_info(customer_id)
     if out:
@@ -70,7 +65,7 @@ def get_unpaid_delivered():
     Fetches all orders which have attributes 'status' as 'Delivered' and 'is_paid' as 'False'.
 
     Returns:
-        A JSON payload if such orders exist, HTTP 400 otherwise.
+        response: A JSON payload if such orders exist, HTTP 400 otherwise.
     """
     out = fetch_unpaid_delivered()
     if out:

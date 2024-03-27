@@ -10,8 +10,8 @@ import sys
 sys.path.insert(0, os.path.abspath('../../'))
 
 project = 'CS2810 Team Project Backend'
-copyright = '2024, Ibtesam Ahmad, Shannon Thompson, Sophia Simpson, Henry Perks'
-author = 'Ibtesam Ahmad, Shannon Thompson, Sophia Simpson, Henry Perks'
+copyright = '2024, Ibtesam Ahmad, Shannon Thompson, Sophia Simpson, Henry Perks, Vince Chapman-Andrews'
+author = 'Ibtesam Ahmad, Shannon Thompson, Sophia Simpson, Henry Perks, Vince Chapman-Andrews'
 release = '0.0.0'
 
 # -- General configuration ---------------------------------------------------
