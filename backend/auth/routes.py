@@ -157,8 +157,9 @@ def login(mode: str):
             session['user']["last_name"] = last_name
             session['user']["email"] = email
 
-            # Add staff user to customer_waiters map
-            customer_waiters[staff_id] = []
+            # Add waiters to customer_waiters map
+            if role == "Waiter":
+                customer_waiters[staff_id] = []
 
         else:  # Customer login -------------------------------------------------------------------
 
