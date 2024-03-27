@@ -1,7 +1,7 @@
 import UserProfileIcon from "@/components/common/icons/UserCircle";
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/router";
-import {AuthSessionResponse, SessionJWT} from "@/pages/api/auth/session";
+import {AuthSessionResponse, SessionJWT} from "@/api.types.js";
 import Link from "next/link";
 
 /**
