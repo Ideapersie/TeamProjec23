@@ -448,6 +448,9 @@ def delete_item(item_id: int):
         conn = get_db_connection()
         cursor = conn.cursor()
 
+        # Delete related order menu
+        cursor.execute(f'DELETE FROM ordermenu WHERE menuitem_id = {item_id};')
+
         # Delete related menu ingredients
         cursor.execute(f'DELETE FROM menuingredient WHERE menuitem_id = {item_id};')
 
