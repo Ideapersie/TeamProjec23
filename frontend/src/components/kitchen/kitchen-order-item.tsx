@@ -22,10 +22,13 @@ export function KitchenOrderItem(props: Props) {
 
     return (
         <div className="">
-            <div className={"bg-white shadow p-5 rounded-xl items-center"}>
-                <h4>Ordered items</h4>
-                <div className="gap-5 mt-5">
-                    <div className="border-2 p-5 rounded-xl">
+            <div className={"bg-white shadow-md p-3 rounded-xl items-center"}>
+                <div className={"p-2 pt-1"}>
+                    <h4 className={"mb-0"}>New order!</h4>
+                    <span className={"text-sm font-medium text-wahaca-teal"}>For {props.data.customer.first_name} on Table {props.data.customer.table_number}</span>
+                </div>
+                <div className="gap-5">
+                    <div className="border-2 border-wahaca-pink border-opacity-20 p-5 rounded-xl bg-wahaca-white">
                         <h3 className="text-lg font-bold">Order ID: {props.data.order_id}</h3>
                         <p className="text-sm">Customer ID: {props.data.customer_id}</p>
                         <p className="text-sm">Status: {props.data.status}</p>
@@ -36,7 +39,7 @@ export function KitchenOrderItem(props: Props) {
                                 minute: 'numeric'
                             })}
                         </p>
-                        <button className={"mt-5"}
+                        <button className={"mt-5 mb-0"}
                                 onClick={handleTakeOrder}>
                             Start order
                         </button>
