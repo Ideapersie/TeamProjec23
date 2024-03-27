@@ -159,9 +159,10 @@ def fetch_orders():
         # Gets all confirmed orders for any customer
         if filter_confirmed:
             cursor.execute('''
-                SELECT *
-                FROM "Order"
-                WHERE status = 'Confirmed'
+                SELECT order_id, O.customer_id, status, time_ordered, is_paid, C.first_name, C.table_number
+                FROM "Order" O
+                INNER JOIN customer C ON O.customer_id = C.customer_id 
+                WHERE status <> 'Unconfirmed' AND status <> 'Delivered'
                 ORDER BY time_ordered asc;
             ''')
 
@@ -180,7 +181,12 @@ def fetch_orders():
                        'customer_id': item[1],
                        'status': item[2],
                        'time_ordered': item[3],
-                       'is_paid': item[4]} for item in order]  # Sorts the relevent database entries into dictionary items
+                       'is_paid': item[4],
+                       'customer': {
+                           'first_name': item[5] if len(item) > 5 else None,
+                           'table_number': item[6] if len(item) > 6 else None
+                       }
+                   } for item in order]  # Sorts the relevent database entries into dictionary items
             return jsonify(orders), 200
         else:
             return jsonify({
