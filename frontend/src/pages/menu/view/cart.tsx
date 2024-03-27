@@ -104,6 +104,7 @@ export default function Cart(props: Props) {
     function handleClearCart() {
         sessionStorage.removeItem('Cart');
         setOrderedItems(null);
+        window.location.reload();
     }
     
     return (
