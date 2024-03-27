@@ -60,7 +60,11 @@ export type ApiFetchOrdersResponse = {
     customer_id: number,
     status: string,
     time_ordered: string,
-    is_paid: boolean
+    is_paid: boolean,
+    customer: {
+        first_name: string | null,
+        table_number: number | null
+    }
 }[]
 
 export type ApiGetMenuItemById = {
