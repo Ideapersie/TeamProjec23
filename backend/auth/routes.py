@@ -111,6 +111,8 @@ def login(mode: str):
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    role = "None"
+    admin = False
 
     try:
         # Check valid login mode specified i.e. customer or staff
@@ -240,6 +242,8 @@ def login(mode: str):
         # Store JWT in browser as cookie
         response.set_cookie('session', encoded_user_info, httponly=False, secure=True)
         response.set_cookie('type', mode, httponly=False, secure=True)
+        response.set_cookie('role', role, httponly=False, secure=True)
+        response.set_cookie('admin', "1" if admin else "0", httponly=False, secure=True)
 
         return response
 
@@ -322,6 +326,9 @@ def logout():
 
         # Delete JWT session token cookie
         res.delete_cookie('session')
+        res.delete_cookie('type')
+        res.delete_cookie('role')
+        res.delete_cookie('admin')
 
         return res
 
