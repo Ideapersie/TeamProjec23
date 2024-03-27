@@ -82,7 +82,7 @@ export default function CartItem(props: Props) {
                     </Link>
                 </td>
                 <td className={"text-right text-sm italic text-wahaca-light-navy"} >{props.quantity} serving(s)</td>
-                <td className={"text-right text-sm font-medium italic text-wahaca-light-navy"}>£{parseFloat(data.price).toFixed(2)} </td>
+                <td className={"text-right text-sm font-semibold italic text-wahaca-light-navy"}>£{parseFloat(data.price).toFixed(2)} </td>
                 <td className={`text-right text-lg font-bold italic text-wahaca-navy`}>£{itemSubtotal.toFixed(2)}</td>
 
                 <td className="p-5 text-center">

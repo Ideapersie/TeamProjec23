@@ -110,6 +110,10 @@ export default function Cart(props: Props) {
         <div>
             <h1 className={"text-5xl m-0 mb-5"}>CART</h1>
 
+            <Link href={"/menu"}>
+                <button className={"bg-white text-wahaca-teal  m-0"}>Go back to all items</button>
+            </Link>
+
             {orderedItems === undefined ?
                 <p>Loading...</p>
                     : orderedItems === null ?
@@ -151,10 +155,6 @@ export default function Cart(props: Props) {
                     <div>
                         <div>
                             <button onClick={handleClearCart} className={"m-0 mr-2 bg-wahaca-teal"}>Clear cart</button>
-
-                            <Link href={"/menu"}>
-                                <button className={"bg-white text-wahaca-teal m-0"}>Go back to all items</button>
-                            </Link>
                         </div>
 
                         <button onClick={handleSubmit} className="primary-button">
