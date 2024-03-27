@@ -542,7 +542,8 @@ def get_all_customer_orders():
             FROM "Order" O
             INNER JOIN ordermenu OM ON O.order_id = OM.order_id
             INNER JOIN menuitem MI ON OM.menuitem_id = MI.menuitem_id 
-            WHERE customer_id = %s;
+            WHERE customer_id = %s
+            ORDER BY time_ordered DESC;
         """, (customer_id,))
 
         data = cursor.fetchall()
