@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* grid */
+.tableItem {
+    background-color: var(--wahaca-yellow);
+    padding: 1rem;
+    height: 8rem;
+    color: var(--wahaca-navy);
+    font-family: 'title', sans-serif;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+/* table number title */
+.tableNumber {
+    font-size: 30px;
+    color: var(--wahaca-teal);
+    font-family: 'title', sans-serif;
+    text-align: center;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Darken the page by overlaying semi-transparent black */
+}
+
+/* outer sidebar */
+.sidebar {
+    position: absolute;
+    top: 10%;
+    right: 25%;
+    height: 80%;
+    width: 45%;
+    background-color: var(--wahaca-light-blue);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+/* inner sidebar */
+.sidebarContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    height: 90%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    overflow-y: auto; /* scroll if content exceeds height */
+}
+
+/* close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    z-index: 1;
+    background-color: transparent;
+    color: var(--wahaca-teal);
+    font-size: 30px;
+}
+
+/* whole table */
+.table {
+    border-collapse: collapse;
+}
+
+/* header row */
+.table th {
+    font-family: ''Fira Sans'';
+    color: var(--wahaca-navy);
+    border-bottom: 2px solid var(--wahaca-teal);
+}
+
+/* background colour for odd rows */
+.table tbody tr:nth-child(odd) {
+    background-color: #e7f3f6 
+}
+
+.table tbody {
+    font-family: ''Fira Sans'';
+    color: var(--wahaca-navy);
+    font-weight: 500;
+}
+
+/* centre text for entire table */
+.table th, .table td {
+    padding: 8px;
+    text-align: center;
+}
+
+/* confirm button */
+.confirm {
+    font-size: 18px;
+    background-color: var(--wahaca-blue);
+}
+
+.cancel {
+    font-size: 18px;
+    background-color: var(--wahaca-pink);
+}

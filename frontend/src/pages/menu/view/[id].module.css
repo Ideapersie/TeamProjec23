@@ -1,0 +1,64 @@
+/*all styles for order page*/
+.name {
+	font-weight: 1000;
+	font-size: 3rem;
+	max-width: 650px;
+	line-height: 1.2;
+}
+
+.description {
+	font-size: 22px;
+	font-weight: 500;
+	font-style: italic;
+	max-width: 500px;
+	margin-bottom: 15px;
+}
+
+.price	{
+	font-size: 20px;
+	font-weight: bold;
+	font-style: italic;
+	margin-top:10px;
+	margin-bottom:-10px;
+}
+
+.calories	{
+	font-size: 17px;
+	font-style: italic;
+	
+}
+
+.button {
+	width:200px;
+	height:70px;
+}
+
+.related-food-items {
+	margin: 20px 0;
+  }
+  
+  .grid-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 20px;
+  }
+  
+  .food-item {
+	border: 1px solid #ccc;
+	padding: 10px;
+	text-align: center;
+  }
+  
+  .food-item img {
+	max-width: 100%;
+	height: auto;
+  }
+  
+  .food-item h3 {
+	margin: 10px 0;
+  }
+  
+  .food-item p {
+	margin: 5px 0;
+  }
+  

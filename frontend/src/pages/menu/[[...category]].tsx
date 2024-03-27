@@ -3,7 +3,8 @@ import {GetServerSidePropsContext} from "next";
 import {CustomerMenuItem} from "@/components/menu/customer/CustomerMenuItem";
 import Link from "next/link";
 import {CustomerMenuFilters} from "@/components/menu/customer/CustomerMenuFilters";
-import {useState} from "react";
+import {env} from "../../../env.config";
+import PageTitle from "@/components/common/text/PageTitle";
 
 // Declaring expected prop types
 interface Props {
@@ -11,37 +12,40 @@ interface Props {
     category: string | null
 }
 
+
 // Page component - View Menu
 export default function ViewMenu(props: Props) {
+
     return <>
         <section>
             <div className={"mb-4"}>
-                {props.category &&
-                    <Link href={"/menu"} className={"text-base text-sky-500 hover:text-sky-600  hover:ml-0.5 hover:ease-in"}>
-                        Go back to all items
-                    </Link>
-                }
-                <h1 className={"mb-0 font-semibold"}>{props.category || "All items"}</h1>
-                <p className={"text-stone-400"}>All our food is prepared with only the highest-quality ingredients,
-                    provided by local independent farms.</p>
+                <div className ={"flex justify-between items-center"}>                
+                    {props.category &&
+                        <Link href={"/menu"} className={"text-base text-wahaca-teal hover:text-wahaca-blue  hover:translate-x-1 hover:ease-in"}>
+                            Go back to all items
+                        </Link>
+                    }
+                    <div className="flex-grow flex justify-center">
+                        <PageTitle>MENU</PageTitle>
+                    </div>
+                </div>
+
+                <p className={"text-stone-400"}>
+                    All our food is prepared with only the highest-quality ingredients,
+                    provided by local independent farms.
+                </p>
             </div>
 
             {/*Filters*/}
-            <CustomerMenuFilters />
+            <CustomerMenuFilters/>
 
             {/*Displaying menu items*/}
-            <div className={"grid grid-cols-3 gap-5"}>
+            <div className={"grid grid-cols-4 gap-4"}>
                 {props?.data?.length ?
-                    props.data.map(item => (
+                    props.data.slice().reverse().map(item => (
                         <CustomerMenuItem
                             key={item.menuitem_id}
-                            link={item.link}
-                            name={item.name}
-                            description={item.description}
-                            price={item.price}
-                            calories={item.calories}
-                            image={item.image}
-                            menuitem_id={item.menuitem_id}
+                            data={item}
                         />
                     ))
                     :
@@ -57,13 +61,20 @@ export default function ViewMenu(props: Props) {
 export async function getServerSideProps(context: GetServerSidePropsContext): Promise<{ props: Props }> {
 
     const category = context.query?.category?.[0] as string | undefined;
+    const allergies = context.query.allergies as string | undefined;
 
-    const response = await fetch("http://127.0.0.1:5000/api/menuitems");
-    let menuItems = (await response.json()) as MenuItem[];
+    let endpoint = new URL(env.apiHost + "/api/menu");
 
     if (category) {
-        menuItems = menuItems.filter(item => item.type === category);
+        endpoint.searchParams.set('type', category);
     }
+
+    if (allergies) {
+        endpoint.searchParams.set('allergies', allergies);
+    }
+
+    const response = await fetch(endpoint);
+    let menuItems = (await response.json()) as MenuItem[];
 
     return {
         props: {

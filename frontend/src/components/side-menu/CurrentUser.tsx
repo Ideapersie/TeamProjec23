@@ -1,29 +1,71 @@
 import UserProfileIcon from "@/components/common/icons/UserCircle";
-import {WavesWebShape} from "@/components/common/webshapes/Waves";
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {useRouter} from "next/router";
+import {AuthSessionResponse, SessionJWT} from "@/api.types.js";
+import Link from "next/link";
 
 /**
  * A component that displays the user currently logged in
  */
 export default function CurrentUser() {
-    return (
-        <div className={"border-t border-t-sky-700 px-5 py-3 text-sm mt-auto fill-sky-50 text-sky-100 flex gap-2 items-center current-user-bg relative"}>
-            <div className={"absolute left-0 w-full bottom-10 -z-10"}>
-                <WavesWebShape/>
-            </div>
-            <UserProfileIcon />
-            <span>
-                <strong className={"font-medium"}>Full Name</strong>
-                <div className={"text-xs text-sky-300"}>
-                    example@gmail.com
-                </div>
-            </span>
 
-            <style jsx>{`
-                .current-user-bg {
-                    background-color: var(--grey-2);
+    const [session, setSession] = useState<SessionJWT | undefined | null>(undefined);
+    const router = useRouter();
+
+    useEffect(() => {
+        fetch('/api/auth/session')
+            .then(res => res.json() as Promise<AuthSessionResponse>)
+            .then(data => {
+                setSession(data.session);
+            });
+    }, []);
+
+    async function handleLogout() {
+        const res = await fetch('/api/auth/logout');
+
+        if (res.status === 200) {
+            await router.push(`/auth/${session?.session_type}/login`);
+        }
+    }
+
+    return (
+        <div className={"bg-wahaca-blue px-5 py-3 h-16 text-sm fill-white text-sky-100 flex gap-3 items-center current-user-bg relative"}
+             role={"button"}
+             onClick={handleLogout}>
+            <div className={`relative flex flex-col items-center ${session?.user.role ? "-mt-1" : ""}`}>
+                <UserProfileIcon/>
+                {
+                    session?.user.role &&
+                        <span className={"absolute bottom-0 -mb-3"}>
+                            <span className={"bg-wahaca-yellow text-wahaca-navy font-bold rounded"}
+                                  style={{fontSize: "0.6rem", padding: "1px 3px"}}>
+                                {session.user.role}
+                            </span>
+                        </span>
                 }
-            `}</style>
+            </div>
+
+            {session === undefined ?
+                <span>Loading...</span>
+                : session === null ?
+                    <div className={"flex flex-col"}>
+                        <span className={"text-white font-bold"}>No session</span>
+                        <Link href={'/auth/customer/login'}
+                              className={"text-xs text-wahaca-light-blue"}
+                            >
+                            Log in
+                        </Link>
+                    </div>
+                    :
+                    <span>
+                        <div className={"text-wahaca-white font-bold flex gap-2 items-center"}>
+                            <span>{session.user.first_name} {session.user.last_name}</span>
+                        </div>
+                        <div className={"text-xs text-wahaca-light-blue"}>
+                            {session.user.email}
+                        </div>
+                    </span>
+            }
         </div>
     );
 }

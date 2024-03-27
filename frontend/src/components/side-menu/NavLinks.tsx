@@ -1,20 +1,7 @@
 import Link from "next/link";
 import {useRouter} from "next/router";
 import {JSX, useEffect, useState} from "react";
-import BurgerIcon from "@/components/common/icons/Burger";
-import ReceiptIcon from "@/components/common/icons/Receipt";
-import {MenuItem} from "@/types";
-
-interface NavLink {
-    display: string;
-    path: string;
-    children?: NavLink[];
-}
-
-interface NavGroup {
-    icon?: JSX.Element;
-    links: NavLink[]
-}
+import {ApiSideMenuLinksResponse, NavGroup} from "@/pages/api/sidemenu/links";
 
 /**
  * A component containing all the links we want to display in our navigation bar.
@@ -25,130 +12,58 @@ interface NavGroup {
 export default function NavLinks(): JSX.Element {
 
     const router = useRouter(); // Allows us to access the current path/url
-    const [categories, setCategories] = useState<string[]>([]);
 
-    // Gets menuitems when NavLinks is first mounted
+    const [links, setLinks] = useState<{[group: string]: NavGroup} | null | undefined>();
+
+    // Fetches side-menu links on load
     useEffect(() => {
-        fetch("/api/menuitems")
-            .then(res => res.json())
+        fetch('/api/sidemenu/links')
+            .then(res => res.json() as Promise<ApiSideMenuLinksResponse>)
             .then(data => {
-                getCategories(data.data.menuItems)
-                    .then(categories => setCategories(categories));
-            });
+                setLinks(data.links)
+            })
+            .catch(err => console.error(err));
     }, []);
 
-    // Gets all categories
-    async function getCategories(menuItems: MenuItem[]) {
-        const categories = new Set<string>();
-
-        try {
-            for (const menuItem of menuItems) {
-                categories.add(menuItem.type);
-            }
-
-        } catch (e) {
-            console.error(e);
-        }
-
-        return Array.from(categories);
-    }
-
-    // An object mapping out the structure of our side menu links
-    const LINKS: { [group: string]: NavGroup } = {
-        "Menu Items": {
-            icon: <BurgerIcon/>,
-            links: [
-                {
-                    display: "View menu",
-                    path: "/menu",
-                },
-                ...categories.map(category => (
-                    {
-                        display: category,
-                        path: `/menu/${category}`
-                    }
-                ))
-            ]
-        },
-        "Menu Admin": {
-            links: [
-                {
-                    display: "View menu items",
-                    path: "/admin/waiter/menu/view"
-                },
-                {
-                    display: "Add new item",
-                    path: "/admin/waiter/menu/add"
-                },
-            ]
-        },
-        "Orders": {
-            icon: <ReceiptIcon/>,
-            links: [
-                {
-                    display: "Add links here",
-                    path: "/order/addlinkshere"
-                },
-            ]
-        }
-    };
-
     return (
-        <>
-            {Object.entries(LINKS).map(([groupName, navGroup], index, array) => (
-                <div className={"nav-link-group rounded"} key={groupName}>
-                    <h4 className={"nav-link-group-heading flex items-center gap-1 fill-blue-500"}>
-                        {navGroup.icon}
-                        {groupName}
-                    </h4>
-                    <ul className={"nav-link-list"}>
-                        {navGroup.links.map(link => (
-                            <li key={link.path} className={`nav-link ${router.asPath === link.path ? "active" : ""}`}>
-                                <Link href={link.path}>{link.display}</Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
-
+        <div className={`transition-opacity duration-500 ${links ? "opacity-100" : "opacity-0"}`}>
+            {
+                links &&
+                    Object.entries(links).map(([groupName, navGroup], index, array) => (
+                        <div className="bg-wahaca-light-blue p-3 rounded-sm mb-4" key={groupName}>
+                            <div className="bg-white p-3">
+                                <h4 className="text-xl text-wahaca-navy">
+                                    {groupName}
+                                </h4>
+                                <ul className="text-sm text-wahaca-light-navy">
+                                    {navGroup.links.map(link => (
+                                        <li key={link.path} className={`nav-link ${router.asPath === link.path ? "active" : ""}`}>
+                                            <Link href={link.path}>{link.display}</Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    ))
+            }
+        
             <style jsx>{`
                 .nav-link {
-                    color: #91b4ef;
-                    font-weight: 500;
-                    font-size: 0.8rem;
-                    margin-left: 5px;
                     transition: color 50ms ease, margin-left 50ms ease;
+                    opacity: 80%;
 
                     // Hover
                     &:not(.active):hover {
-                        margin-left: 6px;
-                        color: #5890ee;
+                        color: var(--wahaca-teal);
                     }
 
                     // Active
                     &.active {
-                        color: #001f9a;
-                        //margin-left: 7px;
+                        opacity: 100%
                     }
                 }
-
-                .nav-link-group {
-                    margin-bottom: 10px;
-                    background: var(--grey-1);
-                    padding: 10px;
-                    border: 1px outset rgba(219, 213, 245, 0.16);
-                }
-
-                .nav-link-group-heading {
-                    font-weight: 500;
-                    font-size: 0.9rem;
-                    color: #004383;
-                    padding-bottom: 5px;
-                    margin-bottom: 10px;
-                    margin-left: 5px;
-                    border-bottom: solid #dfdcff 1px;
-                }
             `}</style>
-        </>
+
+        </div>
     );
 }

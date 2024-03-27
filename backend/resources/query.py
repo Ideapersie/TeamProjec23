@@ -25,22 +25,55 @@ def execute_sql(file_path, conn):
 
     cursor.close()
 
-def insert_admin_user(conn):
+
+def insert_default_users(conn):
     """
-    Inserts an admin user with a hashed password into the staff table.
+    Inserts default users with a hashed passwords into the database.
     
     Args:
         conn: an active psycopg2 database connection.
     """
-    email = config.MY_EMAIL
-    password = "teamproject23"
-    hashed_password = generate_password_hash(password)
-    
+
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Staff(email, password, admin, first_name, last_name) VALUES(%s, %s, %s, %s, %s)",
-                   (email, hashed_password, True, "Super", "User"))
-    
+
+    # Admin user (with config email)
+    cursor.execute("""
+            INSERT INTO Staff(email, password, admin, first_name, last_name)
+            VALUES(%s, %s, %s, %s, %s)
+        """, (config.MY_EMAIL, generate_password_hash("admin"), True, "Super", "User"))
+
+    # Admin user
+    cursor.execute("""
+        INSERT INTO Staff(email, password, admin, first_name, last_name)
+        VALUES(%s, %s, %s, %s, %s)
+    """, ("admin@example.com", generate_password_hash("admin"), True, "Admin", "Role"))
+
+    # Example waiter (not admin)
+    cursor.execute("""
+        INSERT INTO Staff(email, password, admin, first_name, last_name, role)
+        VALUES(%s, %s, %s, %s, %s, %s)
+    """, ("waiter@example.com", generate_password_hash("waiter"), False, "Waiter", "Role", "Waiter"))
+
+    # Example kitchen staff (not admin)
+    cursor.execute("""
+        INSERT INTO Staff(email, password, admin, first_name, last_name, role)
+        VALUES(%s, %s, %s, %s, %s, %s)
+    """, ("kitchen@example.com", generate_password_hash("kitchen"), False, "Kitchen", "Role", "Kitchen"))
+
+    # Example customer
+    cursor.execute("""
+        INSERT INTO customer(email, password, first_name, last_name, table_number)
+        VALUES(%s, %s, %s, %s, %s)
+    """, ("customer@example.com", generate_password_hash("customer"), "John", "Smith", -1))
+
+    # Example customer
+    cursor.execute("""
+            INSERT INTO customer(email, password, first_name, last_name, table_number)
+            VALUES(%s, %s, %s, %s, %s)
+        """, ("customer2@example.com", generate_password_hash("customer"), "Jane", "Doe", -1))
+
     conn.commit()
+
 
 def main():
     """
@@ -58,9 +91,10 @@ def main():
     populate_schema_path = "./populate_schema.sql"
     execute_sql(populate_schema_path, conn)
 
-    insert_admin_user(conn)
+    insert_default_users(conn)
 
     conn.close()
+
 
 if __name__ == "__main__":
     main()

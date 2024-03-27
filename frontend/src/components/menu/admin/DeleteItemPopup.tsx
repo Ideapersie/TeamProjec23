@@ -1,16 +1,43 @@
 import {Modal} from "@/components/common/Modal";
 import PageSubtitle from "@/components/common/text/PageSubtitle";
 import {useContext} from "react";
-import {AdminViewMenuPageContext} from "@/pages/admin/waiter/menu/view";
+import {AdminViewMenuPageContext} from "@/pages/staff/waiter/menu/view";
+import {useRouter} from "next/router";
 
 export function DeleteItemPopup() {
 
     // Getting context for View Menu Item page
     const PageContext = useContext(AdminViewMenuPageContext);
 
+    const router = useRouter();
+
     // Deletes item from database
-    function handleDelete() {
-        alert("Add request for deleting item");
+    async function handleDelete() {
+
+        const item = PageContext?.itemToDelete;
+
+        if (!item) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/menu/delete/item/${item.menuitem_id}`, {
+                method: "DELETE"
+            });
+
+            if (response.status === 200) {
+
+                PageContext?.setItemToDelete(undefined);
+                router.reload();
+
+            } else {
+                console.error(response.status);
+                alert("Failed to delete item");
+            }
+
+        } catch (e) {
+            alert("Something went wrong while deleting item");
+        }
     }
 
     return (
