@@ -6,6 +6,7 @@ import {env} from "../../../../../env.config";
 import {ApiGetOrderByIdResponse, ApiGetOrderStatusResponse} from "@/api.types";
 import {useEffect, useState} from "react";
 import PaymentPopup from "@/components/payment/PaymentPopup";
+import LoaderWheel from "@/components/Loader";
 
 /**
  * The props required by the page component.
@@ -136,11 +137,21 @@ export default function OrderConfirmationPage(props: InferGetServerSidePropsType
                             hour: 'numeric',
                             minute: 'numeric'
                         })}</p>
-                        <p>Status: <strong
-                            className={status === "Unconfirmed" ? "text-wahaca-pink" : "text-wahaca-teal"}>{status}</strong>
-                        </p>
 
-                        <div className="mt-10 ">
+                        <div className={"mt-5"}>
+                            <p>Status: </p>
+                            <strong className={status === "Unconfirmed" ? "text-wahaca-pink" : "text-wahaca-teal"}>
+                                {status}
+                            </strong>
+
+                            {status != "Delivered" &&
+                                <div className={"mt-5 opacity-20 !fill-wahaca-teal"}>
+                                    <LoaderWheel/>
+                                </div>
+                            }
+                        </div>
+
+                        <div className="mt-7">
                             <ul className="font-sans font-semibold text-lg">
                                 <li>
                                     <span className="font-bold italic">Table Number: </span> 
