@@ -36,17 +36,16 @@ export async function middleware(request: NextRequest) {
         if (sessionType === "staff") {
             const roleCookie = request.cookies.get('role')?.value;
             if (roleCookie && roleCookie === "Waiter") {
-                console.log("Middleware redirecting to: /admin/waiter/menu/view")
-                return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
-                // return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
+                console.log("Middleware redirecting to: /staff/waiter/menu/view")
+                return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
 
             } else if (roleCookie && roleCookie === "Kitchen") {
                 console.log("Middleware redirecting to: /staff/kitchen/orders")
                 return NextResponse.rewrite(new URL('/staff/kitchen/orders', request.url));
 
             } else {
-                console.log("Middleware redirecting to: /admin/waiter/menu/view")
-                return NextResponse.rewrite(new URL('/admin/waiter/menu/view', request.url));
+                console.log("Middleware redirecting to: /staff/waiter/menu/view")
+                return NextResponse.rewrite(new URL('/staff/waiter/menu/view', request.url));
             }
 
         } else {

@@ -71,7 +71,7 @@ export default function EditMenuItemPage(props: Props) {
 
         // TODO: Add check for success response
 
-        await router.push('/admin/waiter/menu/view');
+        await router.push('/staff/waiter/menu/view');
     }
 
     return (
@@ -222,7 +222,7 @@ export default function EditMenuItemPage(props: Props) {
                     <button
                         className={"bg-wahaca-pink m-0 text-sm"}
                         type={"button"}
-                        onClick={async () => await router.push("/admin/waiter/menu/view")}
+                        onClick={async () => await router.push("/staff/waiter/menu/view")}
                     >
                         Cancel
                     </button>
