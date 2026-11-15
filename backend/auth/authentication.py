@@ -1,3 +1,4 @@
+import os
 """
 Auxiliary methods used in authentication routes.
 
@@ -85,7 +86,7 @@ def send_invite(email, token, base_url='http://127.0.0.1:3000/auth/staff/signup'
 
     # Send the message via SendGrid
     try:
-        sg = SendGridAPIClient('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') # SendGrid API key
+        sg = SendGridAPIClient(os.environ['SENDGRID_API_KEY'])
         sg.send(message)
     except Exception as e:
         print(f'ERROR: COULD NOT SEND VIA SENDGRID: {e.message}')
